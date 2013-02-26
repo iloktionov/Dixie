@@ -1,0 +1,8 @@
+_ReSharper*
+bin/
+*.swp
+obj/
+*.user
+*.suo
+.gitk*
+Properties/AssemblyTitle.cs
