@@ -7,7 +7,7 @@
     <ProjectGuid>{8BE8E9DC-1418-4C7D-83F7-D7A48C24B351}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dixie.Core</RootNamespace>
+    <RootNamespace>Dixie</RootNamespace>
     <AssemblyName>Dixie.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -30,12 +30,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>ExternalAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\AssemblyInfo.cs" />
+    <Compile Include="Core\MasterFakeNode.cs" />
+    <Compile Include="Core\INode.cs" />
+    <Compile Include="Core\Node.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
