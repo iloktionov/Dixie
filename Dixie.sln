@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dixie.Core", "Dixie.Core.csproj", "{8BE8E9DC-1418-4C7D-83F7-D7A48C24B351}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dixie.Core", "Core\Dixie.Core.csproj", "{8BE8E9DC-1418-4C7D-83F7-D7A48C24B351}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

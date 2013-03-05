@@ -31,16 +31,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>ExternalAssemblies\nunit.framework.dll</HintPath>
+      <HintPath>..\ExternalAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\ExternalAssemblies\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\AssemblyInfo.cs" />
-    <Compile Include="Core\MasterFakeNode.cs" />
-    <Compile Include="Core\INode.cs" />
-    <Compile Include="Core\Node.cs" />
+    <Compile Include="NetworkLink.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MasterFakeNode.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Topology_Tests.cs" />
+    <Compile Include="Topology.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

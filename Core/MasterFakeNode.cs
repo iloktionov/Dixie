@@ -6,7 +6,7 @@ namespace Dixie.Core
 	/// Тип ноды, обозначающий место Мастера в топологии грида.  
 	/// </summary>
 	[Serializable]
-	internal class MasterFakeNode : INode
+	public class MasterFakeNode : INode
 	{
 		public Guid Id
 		{
