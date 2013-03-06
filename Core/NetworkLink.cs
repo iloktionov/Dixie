@@ -13,5 +13,10 @@ namespace Dixie.Core
 		}
 
 		public TimeSpan Latency { get; private set; }
+
+		public override string ToString()
+		{
+			return String.Format("[{0} ----({1:0.00}ms)---> {2}]", Source.Id, Latency.TotalMilliseconds, Target.Id);
+		}
 	}
 }

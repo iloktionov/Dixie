@@ -45,6 +45,7 @@
     <Compile Include="MasterFakeNode.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="QuickGraph_Tests.cs" />
     <Compile Include="Topology_Tests.cs" />
     <Compile Include="Topology.cs" />
   </ItemGroup>
