@@ -49,6 +49,9 @@
     <Compile Include="QuickGraph_Tests.cs" />
     <Compile Include="Topology_Tests.cs" />
     <Compile Include="Topology.cs" />
+    <Compile Include="ComputationalTask.cs" />
+    <Compile Include="WorkBuffer.cs" />
+    <Compile Include="WorkBuffer_Tests.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
