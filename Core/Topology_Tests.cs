@@ -125,12 +125,20 @@ namespace Dixie.Core
 				topology.AddNode(node1, topology.masterNode, TimeSpan.FromMilliseconds(1));
 				topology.AddNode(node2, topology.masterNode, TimeSpan.FromMilliseconds(1));
 				topology.AddNode(node3, topology.masterNode, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node4, node3, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node5, node3, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node6, node5, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node7, node6, TimeSpan.FromMilliseconds(1));
 
 				var stream = new MemoryStream();
 				topology.Serialize(stream);
 				stream.Seek(0, SeekOrigin.Begin);
 				Topology deserializedTopology = Deserialize(stream);
+
 				Assert.True(deserializedTopology.GetWorkerNodes().SequenceEqual(topology.GetWorkerNodes()));
+				Assert.AreEqual(topology.graph.VertexCount, deserializedTopology.graph.VertexCount);
+				Assert.AreEqual(topology.graph.EdgeCount, deserializedTopology.graph.EdgeCount);
+				Assert.True(deserializedTopology.workerLatencies.SequenceEqual(topology.workerLatencies));
 			}
 
 			private static void PrintTopology(Topology topology)
