@@ -12,7 +12,7 @@ namespace Dixie.Core
 			Latency = latency;
 		}
 
-		public TimeSpan Latency { get; private set; }
+		public TimeSpan Latency { get; set; }
 
 		public override string ToString()
 		{

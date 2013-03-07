@@ -9,10 +9,9 @@ using QuickGraph.Serialization;
 
 namespace Dixie.Core
 {
-	// Concurrency scenario:
-	// 1.) Thread that adds/removes nodes, reweights edges
-	// 2.) Thread that forwards HB messages and responses
-
+	// Сценарий многопоточной работы:
+	// 1.) Один поток, осуществляющий добавление/удаление нод + повторное взвешивание ребер.
+	// 2.) Один или более потоков, получающих список всех нод, узнающих для них latency.
 	public partial class Topology
 	{
 		public Topology(BidirectionalGraph<INode, NetworkLink> graph, Dictionary<Guid, Node> workerNodes, Dictionary<Guid, TimeSpan> workerLatencies, MasterFakeNode masterNode)
@@ -42,14 +41,7 @@ namespace Dixie.Core
 				return workerLatencies.TryGetValue(nodeId, out latency);
 		}
 
-		/// <summary>
-		/// Adds a new node to topology and connects it with parent node.
-		/// </summary>
-		/// <param name="newNode"></param>
-		/// <param name="parentNode">Any of existing nodes. Null is treated like a master-node.</param>
-		/// <param name="linkLatency"></param>
-		/// <returns>True on success; false if parent didn't exist.</returns>
-		public bool AddNode(Node newNode, Node parentNode, TimeSpan linkLatency)
+		public bool AddNode(Node newNode, INode parentNode, TimeSpan linkLatency)
 		{
 			if (newNode == null)
 				throw new ArgumentNullException("newNode");
@@ -60,19 +52,12 @@ namespace Dixie.Core
 			{
 				if (workerNodes.ContainsKey(newNode.Id))
 					throw new InvalidOperationException(String.Format("Node with id {0} is already in topology.", newNode.Id));
-				INode parent;
-				if (parentNode == null)
-					parent = masterNode;
-				else
-				{
-					if (!workerNodes.ContainsKey(parentNode.Id))
-						return false;
-					parent = parentNode;
-				}
+				if (!IsValidParent(parentNode))
+					return false;
 				graph.AddVertex(newNode);
-				graph.AddEdge(new NetworkLink(newNode, parent, linkLatency));
+				graph.AddEdge(new NetworkLink(newNode, parentNode, linkLatency));
 				workerNodes.Add(newNode.Id, newNode);
-				workerLatencies.Add(newNode.Id, linkLatency + workerLatencies[parent.Id]);
+				workerLatencies.Add(newNode.Id, linkLatency + workerLatencies[parentNode.Id]);
 				return true;
 			}
 		}
@@ -94,9 +79,19 @@ namespace Dixie.Core
 				workerLatencies.Remove(node.Id);
 				// Вместе с нодой удалились рёбра в графе. Нужно соединить детей удаленной ноды с бывшим родителем.
 				foreach (NetworkLink childLink in childLinks)
-					graph.AddEdge(new NetworkLink(childLink.Source, parent, childLink.Latency));
-				// TODO: adjust children latencies
+				{
+					var newLink = new NetworkLink(childLink.Source, parent, childLink.Latency);
+					graph.AddEdge(newLink);
+					AdjustWorkerLatencies(newLink, parentLink.Latency.Negate());
+				}
 			}
+		}
+
+		private void AdjustWorkerLatencies(NetworkLink newLink, TimeSpan amount)
+		{
+			workerLatencies[newLink.Source.Id] += amount;
+			foreach (NetworkLink childLink in GetChildLinks((Node)newLink.Source))
+				AdjustWorkerLatencies(childLink, amount);
 		}
 
 		public void Serialize(Stream stream)
@@ -143,6 +138,13 @@ namespace Dixie.Core
 		internal BidirectionalGraph<INode, NetworkLink> Graph
 		{
 			get { return graph; }
+		}
+
+		private bool IsValidParent(INode parentNode)
+		{
+			if (ReferenceEquals(parentNode, masterNode))
+				return true;
+			return parentNode is Node && workerNodes.ContainsKey(parentNode.Id);
 		}
 
 		private NetworkLink GetParentLink(Node node)
