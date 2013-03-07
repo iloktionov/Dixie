@@ -15,8 +15,7 @@ namespace Dixie.Core
 			{
 				Topology topology = CreateEmpty();
 				Assert.Throws<ArgumentNullException>(() => topology.AddNode(null, null, TimeSpan.FromMilliseconds(1)));
-				Assert.Throws<ArgumentOutOfRangeException>(
-					() => topology.AddNode(new Node(0, 0), topology.masterNode, TimeSpan.FromMilliseconds(1).Negate()));
+				Assert.Throws<ArgumentException>(() => topology.AddNode(new Node(0, 0), topology.masterNode, TimeSpan.FromMilliseconds(1).Negate()));
 				// Добавим новую ноду к мастеру.
 				Assert.True(topology.AddNode(node1, topology.masterNode, TimeSpan.FromMilliseconds(1)));
 				// Нельзя добавить одну ноду дважды.

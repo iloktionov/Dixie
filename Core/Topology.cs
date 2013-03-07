@@ -43,15 +43,12 @@ namespace Dixie.Core
 
 		public bool AddNode(Node newNode, INode parentNode, TimeSpan linkLatency)
 		{
-			if (newNode == null)
-				throw new ArgumentNullException("newNode");
-			if (linkLatency < TimeSpan.Zero)
-				throw new ArgumentOutOfRangeException("linkLatency", "Latency must be non-negative.");
-
+			Preconditions.CheckNotNull(newNode, "newNode");
+			Preconditions.CheckNotNull(parentNode, "parentNode");
+			Preconditions.CheckArgument(linkLatency >= TimeSpan.Zero, "linkLatency", "Latency must be not negative.");
 			lock (syncObject)
 			{
-				if (workerNodes.ContainsKey(newNode.Id))
-					throw new InvalidOperationException(String.Format("Node with id {0} is already in topology.", newNode.Id));
+				CheckNodeNotPresent(newNode);
 				if (!IsValidParent(parentNode))
 					return false;
 				graph.AddVertex(newNode);
@@ -62,21 +59,19 @@ namespace Dixie.Core
 			}
 		}
 
-		public void RemoveNode(Node node, out INode parent)
+		public void RemoveNode(Node nodeToRemove, out INode parent)
 		{
-			if (node == null)
-				throw new ArgumentNullException("node");
+			Preconditions.CheckNotNull(nodeToRemove, "node");
 			lock (syncObject)
 			{
-				if (!workerNodes.ContainsKey(node.Id))
-					throw new InvalidOperationException(String.Format("Node with id {0} not found in topology.", node.Id));
-				NetworkLink parentLink = GetParentLink(node);
-				var childLinks = GetChildLinks(node);
+				CheckNodeIsPresent(nodeToRemove);
+				NetworkLink parentLink = GetParentLink(nodeToRemove);
+				var childLinks = GetChildLinks(nodeToRemove);
 				parent = parentLink.Target;
 
-				graph.RemoveVertex(node);
-				workerNodes.Remove(node.Id);
-				workerLatencies.Remove(node.Id);
+				graph.RemoveVertex(nodeToRemove);
+				workerNodes.Remove(nodeToRemove.Id);
+				workerLatencies.Remove(nodeToRemove.Id);
 				// Вместе с нодой удалились рёбра в графе. Нужно соединить детей удаленной ноды с бывшим родителем.
 				foreach (NetworkLink childLink in childLinks)
 				{
@@ -85,13 +80,6 @@ namespace Dixie.Core
 					AdjustWorkerLatencies(newLink, parentLink.Latency.Negate());
 				}
 			}
-		}
-
-		private void AdjustWorkerLatencies(NetworkLink newLink, TimeSpan amount)
-		{
-			workerLatencies[newLink.Source.Id] += amount;
-			foreach (NetworkLink childLink in GetChildLinks((Node)newLink.Source))
-				AdjustWorkerLatencies(childLink, amount);
 		}
 
 		public void Serialize(Stream stream)
@@ -150,16 +138,33 @@ namespace Dixie.Core
 		private NetworkLink GetParentLink(Node node)
 		{
 			IEnumerable<NetworkLink> outEdges;
-			if (!graph.TryGetOutEdges(node, out outEdges))
-				return null;
-			return outEdges.FirstOrDefault();
+			return !graph.TryGetOutEdges(node, out outEdges) ? null : outEdges.FirstOrDefault();
 		}
 
 		private IEnumerable<NetworkLink> GetChildLinks(Node node)
 		{
 			IEnumerable<NetworkLink> inEdges;
 			return graph.TryGetInEdges(node, out inEdges) ? inEdges.ToList() : new List<NetworkLink>();
-		} 
+		}
+
+		private void AdjustWorkerLatencies(NetworkLink newLink, TimeSpan amount)
+		{
+			workerLatencies[newLink.Source.Id] += amount;
+			foreach (NetworkLink childLink in GetChildLinks((Node)newLink.Source))
+				AdjustWorkerLatencies(childLink, amount);
+		}
+
+		private void CheckNodeNotPresent(Node node)
+		{
+			if (workerNodes.ContainsKey(node.Id))
+				throw new InvalidOperationException(String.Format("Node with id {0} is already in topology.", node.Id));
+		}
+
+		private void CheckNodeIsPresent(Node node)
+		{
+			if (!workerNodes.ContainsKey(node.Id))
+				throw new InvalidOperationException(String.Format("Node with id {0} not found in topology.", node.Id));
+		}
 
 		private readonly BidirectionalGraph<INode, NetworkLink> graph;
 		private readonly Dictionary<Guid, Node> workerNodes;

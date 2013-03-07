@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NetworkLink.cs" />
+    <Compile Include="Preconditions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MasterFakeNode.cs" />
     <Compile Include="INode.cs" />
