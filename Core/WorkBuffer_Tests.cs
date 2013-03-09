@@ -42,5 +42,21 @@ namespace Dixie.Core
 			Assert.Null(buffer.PopCompletedOrNull());
 			Assert.AreEqual(0, buffer.Size);
 		}
+
+		[Test]
+		public void Test_StopResumeComputing()
+		{
+			var buffer = new WorkBuffer();
+			buffer.PutTask(Guid.NewGuid(), TimeSpan.FromMilliseconds(25));
+			Thread.Sleep(20);
+			buffer.StopComputing();
+			Thread.Sleep(20);
+			Assert.Null(buffer.PopCompletedOrNull());
+			Assert.AreEqual(1, buffer.Size);
+			buffer.ResumeComputing();
+			Thread.Sleep(6);
+			Assert.AreEqual(1, buffer.PopCompletedOrNull().Count);
+			Assert.AreEqual(0, buffer.Size);
+		}
 	}
 }

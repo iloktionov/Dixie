@@ -32,6 +32,18 @@ namespace Dixie.Core
 			return result;
 		}
 
+		public void StopComputing()
+		{
+			if (watch.IsRunning)
+				watch.Stop();
+		}
+
+		public void ResumeComputing()
+		{
+			if (!watch.IsRunning)
+				watch.Start();
+		}
+
 		public int Size { get { return records.Count; } }
 
 		private readonly Stopwatch watch;

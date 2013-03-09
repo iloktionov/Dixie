@@ -30,6 +30,16 @@ namespace Dixie.Core
 					workBuffer.PutTask(task.Id, GetCalculationTime(task));
 		}
 
+		public void StopComputing()
+		{
+			workBuffer.StopComputing();
+		}
+
+		public void ResumeComputing()
+		{
+			workBuffer.ResumeComputing();
+		}
+
 		public Guid Id { get; private set; }
 
 		/// <summary>
