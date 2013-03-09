@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Dixie.Core
@@ -12,6 +13,19 @@ namespace Dixie.Core
 			FailureProbability = failureProbability;
 			Id = Guid.NewGuid();
 			workBuffer = new WorkBuffer();
+		}
+
+		public HeartBeatMessage GetHeartBeatMessage()
+		{
+			List<Guid> completedTasks = workBuffer.PopCompletedOrNull(); 
+			return new HeartBeatMessage(Id, workBuffer.Size, completedTasks);
+		}
+
+		public void HandleHeartBeatResponse(HeartBeatResponse response)
+		{
+			if (response.Tasks != null)
+				foreach (ComputationalTask task in response.Tasks)
+					workBuffer.PutTask(task.Id, GetCalculationTime(task));
 		}
 
 		public Guid Id { get; private set; }
@@ -44,6 +58,11 @@ namespace Dixie.Core
 			workBuffer = new WorkBuffer();
 		} 
 		#endregion
+
+		private TimeSpan GetCalculationTime(ComputationalTask task)
+		{
+			return TimeSpan.FromMilliseconds(task.Volume / Performance);
+		}
 
 		[NonSerialized]
 		private WorkBuffer workBuffer;

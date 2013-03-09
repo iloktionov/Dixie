@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	internal class ComputationalTask
+	public class ComputationalTask
 	{
 		public ComputationalTask(double volume)
 		{

@@ -40,6 +40,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HeartBeatMessage.cs" />
+    <Compile Include="HeartBeatResponse.cs" />
     <Compile Include="NetworkLink.cs" />
     <Compile Include="Node_Tests.cs" />
     <Compile Include="Preconditions.cs" />
