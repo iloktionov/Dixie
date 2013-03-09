@@ -40,16 +40,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HeartBeatMessage.cs" />
-    <Compile Include="HeartBeatResponse.cs" />
+    <Compile Include="Communication\HeartBeatMessage.cs" />
+    <Compile Include="Communication\HeartBeatResponse.cs" />
     <Compile Include="Topology\ITopologyConfigurator.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
-    <Compile Include="Node_Tests.cs" />
+    <Compile Include="Node\Node_Tests.cs" />
     <Compile Include="Utilities\Preconditions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MasterFakeNode.cs" />
-    <Compile Include="INode.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="Node\MasterFakeNode.cs" />
+    <Compile Include="Node\INode.cs" />
+    <Compile Include="Node\Node.cs" />
     <Compile Include="QuickGraph_Tests.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Topology\TopologyBuilder.cs" />
@@ -58,8 +58,8 @@
     <Compile Include="Topology\Topology_Tests.cs" />
     <Compile Include="Topology\Topology.cs" />
     <Compile Include="ComputationalTask.cs" />
-    <Compile Include="Topology\WorkBuffer.cs" />
-    <Compile Include="WorkBuffer_Tests.cs" />
+    <Compile Include="Node\WorkBuffer.cs" />
+    <Compile Include="Node\WorkBuffer_Tests.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
