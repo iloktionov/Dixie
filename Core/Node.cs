@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Dixie.Core
 {
 	[Serializable]
-	public class Node : INode
+	public partial class Node : INode, IDeserializationCallback
 	{
 		public Node(double performance, double failureProbability)
 		{
 			Performance = performance;
 			FailureProbability = failureProbability;
 			Id = Guid.NewGuid();
+			workBuffer = new WorkBuffer();
 		}
 
 		public Guid Id { get; private set; }
@@ -35,5 +37,15 @@ namespace Dixie.Core
 			return Id.GetHashCode();
 		} 
 		#endregion
+
+		#region Serialization
+		public void OnDeserialization(object sender)
+		{
+			workBuffer = new WorkBuffer();
+		} 
+		#endregion
+
+		[NonSerialized]
+		private WorkBuffer workBuffer;
 	}
 }
