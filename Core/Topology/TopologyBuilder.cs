@@ -5,12 +5,12 @@ namespace Dixie.Core
 {
 	public class TopologyBuilder
 	{
-		public TopologyBuilder(int minChildren, int maxChildren)
+		public TopologyBuilder(ITopologyConfigurator configurator)
 		{
-			this.minChildren = minChildren;
-			this.maxChildren = maxChildren;
-			random = new Random();
+			this.configurator = configurator;
 		}
+
+		public TopologyBuilder() : this (TopologyConfigurator.CreateDefault()) { }
 
 		public Topology Build(int nodesCount)
 		{
@@ -27,12 +27,11 @@ namespace Dixie.Core
 			var newLayer = new List<Node>();
 			foreach (INode parentNode in previousLayer)
 			{
-				int childrenCount = random.Next(minChildren, maxChildren + 1);
+				int childrenCount = configurator.GenerateChildrenCount();
 				for (int i = 0; i < childrenCount; i++)
 				{
-					// TODO(iloktionov): select performace randomly
-					var newNode = new Node(1, 1);
-					topology.AddNode(newNode, parentNode, TimeSpan.FromMilliseconds(1));
+					var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability());
+					topology.AddNode(newNode, parentNode, configurator.GenerateLinkLatency());
 					newLayer.Add(newNode);
 					nodesGenerated++;
 					if (nodesGenerated >= nodesCount)
@@ -42,8 +41,6 @@ namespace Dixie.Core
 			return newLayer;
 		}
 
-		private readonly int minChildren;
-		private readonly int maxChildren;
-		private readonly Random random;
+		private readonly ITopologyConfigurator configurator;
 	}
 }

@@ -10,7 +10,7 @@ namespace Dixie.Core
 		[Test]
 		public void Test_CorrectWork()
 		{
-			var builder = new TopologyBuilder(3, 20);
+			var builder = new TopologyBuilder();
 			Topology topology = builder.Build(1000);
 			Assert.AreEqual(1001, topology.Graph.VertexCount);
 			Assert.AreEqual(1000, topology.Graph.EdgeCount);
@@ -18,6 +18,7 @@ namespace Dixie.Core
 			var algo = new WeaklyConnectedComponentsAlgorithm<INode, NetworkLink>(topology.Graph);
 			algo.Compute();
 			Assert.AreEqual(1, algo.ComponentCount);
+			Console.Out.WriteLine(topology);
 		}
 	}
 }
