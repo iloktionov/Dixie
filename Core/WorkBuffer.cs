@@ -18,10 +18,18 @@ namespace Dixie.Core
 			records.Add(taskId, watch.Elapsed + calculationTime);
 		}
 
-		public List<Guid> RemoveCompletedTasks()
+		public List<Guid> PopCompletedOrNull()
 		{
-			var result = (from pair in records where watch.Elapsed >= pair.Value select pair.Key).ToList();
-			result.ForEach(taskId => records.Remove(taskId));
+			List<Guid> result = null;
+			foreach (KeyValuePair<Guid, TimeSpan> pair in records)
+				if (watch.Elapsed >= pair.Value)
+				{
+					if (result == null)
+						result = new List<Guid>();
+					result.Add(pair.Key);
+				}
+			if (result != null)
+				result.ForEach(taskId => records.Remove(taskId));
 			return result;
 		}
 

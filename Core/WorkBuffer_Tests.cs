@@ -23,23 +23,23 @@ namespace Dixie.Core
 			Assert.AreEqual(4, buffer.Size);
 			
 
-			Assert.AreEqual(task1, buffer.RemoveCompletedTasks().Single());
+			Assert.AreEqual(task1, buffer.PopCompletedOrNull().Single());
 			Assert.AreEqual(3, buffer.Size);
 
 			Thread.Sleep(TimeSpan.FromMilliseconds(50));
-			Assert.AreEqual(task2, buffer.RemoveCompletedTasks().Single());
+			Assert.AreEqual(task2, buffer.PopCompletedOrNull().Single());
 			Assert.AreEqual(2, buffer.Size);
 
 			Thread.Sleep(TimeSpan.FromMilliseconds(100));
-			Assert.AreEqual(task3, buffer.RemoveCompletedTasks().Single());
+			Assert.AreEqual(task3, buffer.PopCompletedOrNull().Single());
 			Assert.AreEqual(1, buffer.Size);
 
 			Thread.Sleep(TimeSpan.FromMilliseconds(100));
-			Assert.AreEqual(task4, buffer.RemoveCompletedTasks().Single());
+			Assert.AreEqual(task4, buffer.PopCompletedOrNull().Single());
 			Assert.AreEqual(0, buffer.Size);
 
 			Thread.Sleep(TimeSpan.FromMilliseconds(50));
-			Assert.AreEqual(0, buffer.RemoveCompletedTasks().Count);
+			Assert.Null(buffer.PopCompletedOrNull());
 			Assert.AreEqual(0, buffer.Size);
 		}
 	}
