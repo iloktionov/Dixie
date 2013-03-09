@@ -9,6 +9,8 @@ namespace Dixie.Core
 	{
 		public Node(double performance, double failureProbability)
 		{
+			Preconditions.CheckArgument(performance > 0, "performance", "Must be positive.");
+			Preconditions.CheckArgument(failureProbability >= 0 && failureProbability <= 1, "failureProbability", "Must be in [0; 1].");
 			Performance = performance;
 			FailureProbability = failureProbability;
 			Id = Guid.NewGuid();
@@ -29,7 +31,15 @@ namespace Dixie.Core
 		}
 
 		public Guid Id { get; private set; }
+
+		/// <summary>
+		/// Measured in work/msec.
+		/// </summary>
 		public Double Performance { get; private set; }
+
+		/// <summary>
+		/// In [0;1] interval.
+		/// </summary>
 		public Double FailureProbability { get; private set; }
 
 		#region Equality members

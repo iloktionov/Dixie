@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using NUnit.Framework;
 
 namespace Dixie.Core
@@ -10,6 +13,53 @@ namespace Dixie.Core
 		[TestFixture]
 		internal class Node_Tests
 		{
+			[Test]
+			public void Test_GetHeartBeatMessage()
+			{
+				var node = new Node(0.1, 0.1);
+				Guid task1 = Guid.NewGuid();
+				Guid task2 = Guid.NewGuid();
+				node.workBuffer.PutTask(task1, TimeSpan.Zero);
+				node.workBuffer.PutTask(task2, TimeSpan.FromMilliseconds(25));
+
+				HeartBeatMessage hbm1 = node.GetHeartBeatMessage();
+				Thread.Sleep(TimeSpan.FromMilliseconds(30));
+				HeartBeatMessage hbm2 = node.GetHeartBeatMessage();
+				HeartBeatMessage hbm3 = node.GetHeartBeatMessage();
+
+				Assert.AreEqual(node.Id, hbm1.NodeId);
+				Assert.AreEqual(node.Id, hbm2.NodeId);
+				Assert.AreEqual(node.Id, hbm3.NodeId);
+
+				Assert.AreEqual(1, hbm1.WorkBufferSize);
+				Assert.AreEqual(0, hbm2.WorkBufferSize);
+				Assert.AreEqual(0, hbm3.WorkBufferSize);
+
+				Assert.AreEqual(task1, hbm1.CompletedTasks.Single());
+				Assert.AreEqual(task2, hbm2.CompletedTasks.Single());
+				Assert.Null(hbm3.CompletedTasks);
+			}
+
+			[Test]
+			public void Test_HandleHeartBeatResponse()
+			{
+				var node = new Node(0.1, 0.1);
+				node.HandleHeartBeatResponse(new HeartBeatResponse());
+				Assert.AreEqual(0, node.workBuffer.Size);
+				node.HandleHeartBeatResponse(new HeartBeatResponse(new List<ComputationalTask>()));
+				Assert.AreEqual(0, node.workBuffer.Size);
+				node.HandleHeartBeatResponse(new HeartBeatResponse(new List<ComputationalTask>{new ComputationalTask(34534)}));
+				Assert.AreEqual(1, node.workBuffer.Size);
+			}
+
+			[Test]
+			public void Test_GetCalculationTime()
+			{
+				var node = new Node(100, 0.1);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(50), node.GetCalculationTime(new ComputationalTask(5000)));
+				Assert.AreEqual(TimeSpan.FromMilliseconds(0.01), node.GetCalculationTime(new ComputationalTask(1)));
+			}
+
 			[Test]
 			public void Test_WorkBufferNotSerialized()
 			{
