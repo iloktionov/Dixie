@@ -123,6 +123,11 @@ namespace Dixie.Core
 			return builder.ToString();
 		}
 
+		internal MasterFakeNode MasterNode
+		{
+			get { return masterNode; }
+		}
+
 		internal BidirectionalGraph<INode, NetworkLink> Graph
 		{
 			get { return graph; }

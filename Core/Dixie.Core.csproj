@@ -50,6 +50,8 @@
     <Compile Include="INode.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="QuickGraph_Tests.cs" />
+    <Compile Include="TopologyBuilder.cs" />
+    <Compile Include="TopologyBuilder_Tests.cs" />
     <Compile Include="Topology_Tests.cs" />
     <Compile Include="Topology.cs" />
     <Compile Include="ComputationalTask.cs" />
