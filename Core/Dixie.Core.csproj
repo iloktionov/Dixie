@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatResponse.cs" />
+    <Compile Include="Mutation\ITopologyMutator.cs" />
     <Compile Include="Topology\ITopologyConfigurator.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Node\INode.cs" />
     <Compile Include="Node\Node.cs" />
     <Compile Include="QuickGraph_Tests.cs" />
+    <Compile Include="Utilities\RandomExtensions.cs" />
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Topology\TopologyBuilder.cs" />
     <Compile Include="Topology\TopologyBuilder_Tests.cs" />

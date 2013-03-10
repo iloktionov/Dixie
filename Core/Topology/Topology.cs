@@ -27,7 +27,7 @@ namespace Dixie.Core
 		{
 			lock (syncObject)
 				return new List<Node>(workerNodes.Values);
-		} 
+		}
 
 		public bool TryGetNode(Guid nodeId, out Node node)
 		{
