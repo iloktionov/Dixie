@@ -101,6 +101,14 @@ namespace Dixie.Core
 			return new Topology(graph, workerNodes, workerLatencies, masterNode);
 		}
 
+		public Topology Clone()
+		{
+			var stream = new MemoryStream();
+			Serialize(stream);
+			stream.Seek(0, SeekOrigin.Begin);
+			return Deserialize(stream);
+		}
+
 		public static Topology CreateEmpty()
 		{
 			var graph = new BidirectionalGraph<INode, NetworkLink>();
