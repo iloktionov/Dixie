@@ -5,6 +5,7 @@
 		public ReturnNodesMutator(OfflineNodesPool offlineNodesPool, ITopologyConfigurator configurator)
 		{
 			Preconditions.CheckNotNull(offlineNodesPool, "offlineNodesPool");
+			Preconditions.CheckNotNull(configurator, "configurator");
 			this.offlineNodesPool = offlineNodesPool;
 			this.configurator = configurator;
 		}

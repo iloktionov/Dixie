@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatResponse.cs" />
+    <Compile Include="Mutation\AddNodesMutator.cs" />
+    <Compile Include="Mutation\AddNodesMutator_Tests.cs" />
     <Compile Include="Mutation\ReturnNodesMutator.cs" />
     <Compile Include="Mutation\ITopologyMutator.cs" />
     <Compile Include="Mutation\NodeFailureHelper.cs" />
