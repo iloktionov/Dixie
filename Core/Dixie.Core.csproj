@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Configuration">
+      <HintPath>..\ExternalAssemblies\Configuration.exe</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\ExternalAssemblies\nunit.framework.dll</HintPath>
     </Reference>
