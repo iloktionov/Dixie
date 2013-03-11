@@ -10,7 +10,7 @@ namespace Dixie.Core
 			this.configurator = configurator;
 		}
 
-		public TopologyBuilder() : this (TopologyConfigurator.CreateDefault()) { }
+		public TopologyBuilder() : this (new TopologyConfigurator()) { }
 
 		public Topology Build(int nodesCount)
 		{

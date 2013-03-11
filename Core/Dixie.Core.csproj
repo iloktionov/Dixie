@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatResponse.cs" />
+    <Compile Include="Config\TopologySettings.cs" />
     <Compile Include="Mutation\AddNodesMutator.cs" />
     <Compile Include="Mutation\AddNodesMutator_Tests.cs" />
     <Compile Include="Mutation\ReturnNodesMutator.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Mutation\RemoveNodesMutator.cs" />
     <Compile Include="Mutation\RemoveNodesMutator_Tests.cs" />
     <Compile Include="Mutation\ReturnNodesMutator_Tests.cs" />
-    <Compile Include="Topology\ITopologyConfigurator.cs" />
+    <Compile Include="Config\ITopologyConfigurator.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
     <Compile Include="Utilities\Preconditions.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Utilities\Range.cs" />
     <Compile Include="Topology\TopologyBuilder.cs" />
     <Compile Include="Topology\TopologyBuilder_Tests.cs" />
-    <Compile Include="Topology\TopologyConfigurator.cs" />
+    <Compile Include="Config\TopologyConfigurator.cs" />
     <Compile Include="Topology\Topology_Tests.cs" />
     <Compile Include="Topology\Topology.cs" />
     <Compile Include="ComputationalTask.cs" />
@@ -78,6 +79,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(TargetDir)Configuration.exe"   "$(TargetPath)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

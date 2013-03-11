@@ -12,12 +12,7 @@ namespace Dixie.Core
 		{
 			var topology = Topology.CreateEmpty();
 			var offlinePool = new OfflineNodesPool();
-			var configurator = new TopologyConfigurator(
-				new Range<int>(1, 2), 
-				new Range<double>(1, 2), 
-				new Range<double>(0, 1), 
-				new Range<TimeSpan>(TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(10))
-			);
+			var configurator = new TopologyConfigurator();
 			var mutator = new ReturnNodesMutator(offlinePool, configurator);
 
 			var nodes = new List<Node>();
