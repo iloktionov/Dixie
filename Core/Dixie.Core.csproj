@@ -43,6 +43,9 @@
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatResponse.cs" />
     <Compile Include="Mutation\ITopologyMutator.cs" />
+    <Compile Include="Mutation\NodeFailureType.cs" />
+    <Compile Include="Mutation\OfflineNodeInfo.cs" />
+    <Compile Include="Mutation\OfflineNodesPool.cs" />
     <Compile Include="Topology\ITopologyConfigurator.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
