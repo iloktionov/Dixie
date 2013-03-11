@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Dixie.Core
 {
-	public class TopologyBuilder
+	internal class TopologyBuilder
 	{
 		public TopologyBuilder(ITopologyConfigurator configurator)
 		{

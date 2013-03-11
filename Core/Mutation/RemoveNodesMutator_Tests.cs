@@ -13,7 +13,7 @@ namespace Dixie.Core
 			var offlinePool = new OfflineNodesPool();
 			var random = new Random();
 			const int minRemainingCount = 998;
-			var mutator = new RemoveNodesMutator(offlinePool, random, minRemainingCount);
+			var mutator = new RemoveNodesMutator(offlinePool, random, new TopologyConfigurator(), minRemainingCount);
 			mutator.Mutate(topology);
 			Assert.AreEqual(minRemainingCount, topology.WorkerNodesCount);
 			for (int i = 0; i < 10; i++)
@@ -27,7 +27,7 @@ namespace Dixie.Core
 			Topology topology = GenerateTopology(1000);
 			var offlinePool = new OfflineNodesPool();
 			var random = new Random();
-			var mutator = new RemoveNodesMutator(offlinePool, random, 1);
+			var mutator = new RemoveNodesMutator(offlinePool, random, new TopologyConfigurator(),  1);
 			mutator.Mutate(topology);
 
 			Assert.AreEqual(1, topology.WorkerNodesCount);

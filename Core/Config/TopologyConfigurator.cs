@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public class TopologyConfigurator : ITopologyConfigurator
+	internal class TopologyConfigurator : ITopologyConfigurator
 	{
 		public TopologyConfigurator(TopologySettings topologySettings, Random random)
 		{
@@ -33,7 +33,23 @@ namespace Dixie.Core
 
 		public TimeSpan GenerateLinkLatency()
 		{
-			return TimeSpan.FromMilliseconds(random.NextDouble() * (topologySettings.MaxLinkLatency.TotalMilliseconds - topologySettings.MinLinkLatency.TotalMilliseconds) + topologySettings.MinLinkLatency.TotalMilliseconds);
+			return GenerateRandomTimespan(topologySettings.MinLinkLatency, topologySettings.MaxLinkLatency);
+		}
+
+		public TimeSpan GenerateOfflineTime(NodeFailureType failureType)
+		{
+			switch (failureType)
+			{
+				case NodeFailureType.ShortTerm: return GenerateRandomTimespan(topologySettings.MinShortTermOffline, topologySettings.MaxShortTermOffline);
+				case NodeFailureType.LongTerm: return GenerateRandomTimespan(topologySettings.MinLongTermOffline, topologySettings.MaxLongTermOffline);
+				default:
+					throw new ArgumentOutOfRangeException("failureType");
+			}
+		}
+
+		private TimeSpan GenerateRandomTimespan(TimeSpan from, TimeSpan to)
+		{
+			return TimeSpan.FromMilliseconds(random.NextDouble() * (to.TotalMilliseconds - from.TotalMilliseconds) + from.TotalMilliseconds);
 		}
 
 		private readonly TopologySettings topologySettings;

@@ -23,5 +23,10 @@ namespace Dixie.Core
 
 		public TimeSpan MinLinkLatency = TimeSpan.FromMilliseconds(0.1);
 		public TimeSpan MaxLinkLatency = TimeSpan.FromMilliseconds(10);
+
+		public TimeSpan MinShortTermOffline = TimeSpan.FromSeconds(2);
+		public TimeSpan MaxShortTermOffline = TimeSpan.FromSeconds(5);
+		public TimeSpan MinLongTermOffline = TimeSpan.FromMinutes(1);
+		public TimeSpan MaxLongTermOffline = TimeSpan.FromMinutes(3);
 	}
 }
