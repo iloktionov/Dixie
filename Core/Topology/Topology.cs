@@ -29,6 +29,11 @@ namespace Dixie.Core
 				return new List<Node>(workerNodes.Values);
 		}
 
+		public IEnumerable<Node> GetWorkerNodesUnsafe()
+		{
+			return workerNodes.Values;
+		} 
+
 		public bool TryGetNode(Guid nodeId, out Node node)
 		{
 			lock (syncObject)

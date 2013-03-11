@@ -2,8 +2,8 @@
 {
 	internal enum NodeFailureType
 	{
-		ShortTerm,
-		LongTerm,
-		Permanent
+		ShortTerm = 1,
+		LongTerm = 2,
+		Permanent = 3,
 	}
 }

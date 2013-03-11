@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	public interface ITopologyMutator
+	internal interface ITopologyMutator
 	{
 		void Mutate(Topology topology);
 	}

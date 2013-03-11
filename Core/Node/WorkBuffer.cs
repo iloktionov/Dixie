@@ -32,6 +32,11 @@ namespace Dixie.Core
 			return result;
 		}
 
+		public bool IsComputing()
+		{
+			return watch.IsRunning;
+		}
+
 		public void StopComputing()
 		{
 			if (watch.IsRunning)

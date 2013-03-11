@@ -30,6 +30,11 @@ namespace Dixie.Core
 					workBuffer.PutTask(task.Id, GetCalculationTime(task));
 		}
 
+		public bool IsComputing()
+		{
+			return workBuffer.IsComputing();
+		}
+
 		public void StopComputing()
 		{
 			workBuffer.StopComputing();
@@ -62,7 +67,7 @@ namespace Dixie.Core
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
+			if (obj.GetType() != GetType()) return false;
 			return Equals((Node)obj);
 		}
 
