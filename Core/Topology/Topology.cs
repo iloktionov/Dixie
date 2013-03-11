@@ -141,6 +141,11 @@ namespace Dixie.Core
 			get { return graph; }
 		}
 
+		internal int WorkerNodesCount
+		{
+			get { return workerNodes.Count; }
+		}
+
 		private bool IsValidParent(INode parentNode)
 		{
 			if (ReferenceEquals(parentNode, masterNode))
