@@ -7,16 +7,22 @@ namespace Dixie.Core
 		public Master()
 		{
 			nodesManager = new NodesManager(TimeSpan.Zero);
+			taskManager = new TaskManager();
 			syncObject = new object();
 		}
 
 		public HeartBeatResponse HandleHeartBeatMessage(HeartBeatMessage message)
 		{
-			nodesManager.HandleHeartBeatMessage(message);
-			return new HeartBeatResponse(message.NodeId, null);
+			lock (syncObject)
+			{
+				nodesManager.HandleHeartBeatMessage(message);
+				taskManager.ReportTasksCompletion(message.NodeId, message.CompletedTasks);
+				return new HeartBeatResponse(message.NodeId, taskManager.GetTasksForNodeOrNull(message.NodeId));
+			}
 		}
 
 		private readonly NodesManager nodesManager;
+		private readonly TaskManager taskManager;
 		private readonly object syncObject;
 	}
 }
