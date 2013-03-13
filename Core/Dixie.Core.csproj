@@ -56,6 +56,7 @@
     <Compile Include="Engine\Engine_Tests.cs" />
     <Compile Include="Engine\IntermediateTestResult.cs" />
     <Compile Include="Engine\TasksGenerator.cs" />
+    <Compile Include="FirstNodeAlgorithm.cs" />
     <Compile Include="ISchedulerAlgorithm.cs" />
     <Compile Include="Master\Master.cs" />
     <Compile Include="Master\NodeInfo.cs" />
