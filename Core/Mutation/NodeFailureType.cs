@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	internal enum NodeFailureType
+	public enum NodeFailureType
 	{
 		ShortTerm = 1,
 		LongTerm = 2,
