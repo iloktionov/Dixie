@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Diagnostics;
+using NUnit.Framework;
 
 namespace Dixie.Core
 {
@@ -11,8 +13,11 @@ namespace Dixie.Core
 		{
 			Topology topology = GenerateInitialTopology(1000);
 			var mutator = new CompositeMutator(24234, 1000, 0.1, 0.1);
-			for (int i = 0; i < 10 * 1000; i++)
+			const int MutationsCount = 10 * 1000;
+			var watch = Stopwatch.StartNew();
+			for (int i = 0; i < MutationsCount; i++)
 				mutator.Mutate(topology);
+			Console.Out.WriteLine("Did {0} mutations in {1}.", MutationsCount, watch.Elapsed);
 		}
 
 		private Topology GenerateInitialTopology(int nodesCount)

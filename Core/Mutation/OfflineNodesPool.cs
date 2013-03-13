@@ -21,8 +21,9 @@ namespace Dixie.Core
 		public IEnumerable<OfflineNodeInfo> PopNodesReadyForReturn()
 		{
 			List<OfflineNodeInfo> result = null;
+			TimeSpan timeElapsed = watch.Elapsed;
 			foreach (OfflineNodeInfo info in offlineNodes)
-				if (watch.Elapsed >= info.ReturnTimestamp)
+				if (timeElapsed >= info.ReturnTimestamp)
 				{
 					if (result == null)
 						result = new List<OfflineNodeInfo>();
