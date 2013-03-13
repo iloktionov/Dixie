@@ -18,7 +18,6 @@ namespace Dixie.Core
 		public Double Performance { get; private set; }
 		public List<Guid> CompletedTasks { get; private set; }
 		public int WorkBufferSize { get; private set; }
-		// TODO(iloktionov): set it in HB processor
 		public TimeSpan CommunicationLatency { get; set; }
 	}
 }

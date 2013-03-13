@@ -15,6 +15,7 @@ namespace Dixie.Core
 			FailureProbability = failureProbability;
 			Id = Guid.NewGuid();
 			workBuffer = new WorkBuffer();
+			LastHBTimestamp = TimeSpan.MinValue;
 		}
 
 		public HeartBeatMessage GetHeartBeatMessage()
@@ -57,6 +58,9 @@ namespace Dixie.Core
 		/// </summary>
 		public Double FailureProbability { get; private set; }
 
+		[NonSerialized]
+		internal TimeSpan LastHBTimestamp;
+
 		#region Equality members
 		protected bool Equals(Node other)
 		{
@@ -81,6 +85,7 @@ namespace Dixie.Core
 		public void OnDeserialization(object sender)
 		{
 			workBuffer = new WorkBuffer();
+			LastHBTimestamp = TimeSpan.MinValue;
 		} 
 		#endregion
 

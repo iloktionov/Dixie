@@ -21,6 +21,11 @@ namespace Dixie.Core
 			}
 		}
 
+		internal TaskManager TaskManager
+		{
+			get { return taskManager; }
+		}
+
 		private readonly NodesManager nodesManager;
 		private readonly TaskManager taskManager;
 		private readonly object syncObject;
