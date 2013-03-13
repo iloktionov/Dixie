@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Dixie.Core
 {
-	internal class NodesManager
+	internal partial class NodesManager
 	{
 		public NodesManager(TimeSpan deadabilityThreshold)
 		{
@@ -41,9 +41,9 @@ namespace Dixie.Core
 					aliveNodeInfos.Remove(pair.Key);
 		}
 
-		public GridInfo GetGridInfo()
+		public IEnumerable<NodeInfo> GetAliveNodeInfos()
 		{
-			return new GridInfo(new List<NodeInfo>(aliveNodeInfos.Values));
+			return aliveNodeInfos.Values;
 		}
 
 		private readonly Dictionary<Guid, TimeSpan> hbmTimestamps;
