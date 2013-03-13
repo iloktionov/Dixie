@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Dixie.Core
 {
@@ -18,6 +19,16 @@ namespace Dixie.Core
 				nodesManager.HandleHeartBeatMessage(message);
 				taskManager.ReportTasksCompletion(message.NodeId, message.CompletedTasks);
 				return new HeartBeatResponse(message.NodeId, taskManager.GetTasksForNodeOrNull(message.NodeId));
+			}
+		}
+
+		public void ExecuteSchedulerAlgorithm(ISchedulerAlgorithm algorithm)
+		{
+			lock (syncObject)
+			{
+				List<Guid> deads = nodesManager.RemoveDeadsOrNull();
+				taskManager.ReportDeadNodes(deads);
+				algorithm.Work(nodesManager.GetAliveNodeInfos(), taskManager);
 			}
 		}
 

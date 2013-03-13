@@ -48,9 +48,9 @@ namespace Dixie.Core
 			return result;
 		}
 
-		public IEnumerable<NodeInfo> GetAliveNodeInfos()
+		public List<NodeInfo> GetAliveNodeInfos()
 		{
-			return aliveNodeInfos.Values;
+			return new List<NodeInfo>(aliveNodeInfos.Values);
 		}
 
 		private readonly Dictionary<Guid, TimeSpan> hbmTimestamps;
