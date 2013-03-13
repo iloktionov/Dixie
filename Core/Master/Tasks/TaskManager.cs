@@ -11,6 +11,7 @@ namespace Dixie.Core
 			taskStates = new Dictionary<Guid, TaskState>();
 			assignationsMap = new Dictionary<Guid, List<Task>>();
 			completedTasksCount = 0;
+			TotalWorkDone = 0;
 		}
 
 		internal void PutTasks(IEnumerable<Task> tasks)
@@ -45,6 +46,8 @@ namespace Dixie.Core
 			}
 		}
 
+		public Double TotalWorkDone { get; private set; }
+
 		internal void ReportDeadNodes(List<Guid> deads)
 		{
 			if (deads == null)
@@ -63,8 +66,11 @@ namespace Dixie.Core
 			{
 				TaskState state;
 				if (taskStates.TryGetValue(completedTask, out state))
+				{
 					state.ReportCompletion(nodeId);
-				completedTasksCount++;
+					completedTasksCount++;
+					TotalWorkDone += state.Task.Volume;
+				}
 			}
 		}
 
