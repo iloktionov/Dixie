@@ -15,8 +15,8 @@ namespace Dixie.Core
 		public int MinChildrenCount = 3;
 		public int MaxChildrenCount = 10;
 
-		public double MinPerformance = 500;
-		public double MaxPerformance = 4000;
+		public double MinPerformance = 5;
+		public double MaxPerformance = 40;
 
 		public double MinFailureProbability = 0;
 		public double MaxFailureProbability = 0.25;
