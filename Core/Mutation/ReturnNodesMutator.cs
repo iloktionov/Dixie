@@ -12,7 +12,7 @@
 
 		public void Mutate(Topology topology)
 		{
-			foreach (OfflineNodeInfo info in offlineNodesPool.GetNodesReadyForReturn())
+			foreach (OfflineNodeInfo info in offlineNodesPool.PopNodesReadyForReturn())
 			{
 				if (info.FailureType == NodeFailureType.LongTerm)
 					info.OfflineNode.ResumeComputing();

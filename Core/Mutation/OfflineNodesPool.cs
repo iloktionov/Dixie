@@ -18,9 +18,21 @@ namespace Dixie.Core
 			offlineNodes.Add(new OfflineNodeInfo(node, parent, watch.Elapsed + offlineTime, failureType));
 		}
 
-		public IEnumerable<OfflineNodeInfo> GetNodesReadyForReturn()
+		public IEnumerable<OfflineNodeInfo> PopNodesReadyForReturn()
 		{
-			return offlineNodes.Where(info => info.ReturnTimestamp <= watch.Elapsed);
+			List<OfflineNodeInfo> result = null;
+			foreach (OfflineNodeInfo info in offlineNodes)
+				if (watch.Elapsed >= info.ReturnTimestamp)
+				{
+					if (result == null)
+						result = new List<OfflineNodeInfo>();
+					result.Add(info);
+				}
+			if (result == null)
+				return Enumerable.Empty<OfflineNodeInfo>();
+			foreach (OfflineNodeInfo info in result)
+				offlineNodes.Remove(info);
+			return result;
 		}
 
 		internal List<OfflineNodeInfo> OfflineNodes
