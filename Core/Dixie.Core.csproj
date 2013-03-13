@@ -46,6 +46,8 @@
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatResponse.cs" />
     <Compile Include="Config\TopologySettings.cs" />
+    <Compile Include="Master\Master.cs" />
+    <Compile Include="Master\NodesManager.cs" />
     <Compile Include="Mutation\AddNodesMutator.cs" />
     <Compile Include="Mutation\AddNodesMutator_Tests.cs" />
     <Compile Include="Mutation\CompositeMutator.cs" />
