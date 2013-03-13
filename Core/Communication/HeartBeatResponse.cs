@@ -5,13 +5,13 @@ namespace Dixie.Core
 {
 	public class HeartBeatResponse
 	{
-		public HeartBeatResponse(Guid nodeId, List<ComputationalTask> tasks = null)
+		public HeartBeatResponse(Guid nodeId, List<Task> tasks = null)
 		{
 			NodeId = nodeId;
 			Tasks = tasks;
 		}
 
 		public Guid NodeId { get; private set; }
-		public List<ComputationalTask> Tasks { get; private set; }
+		public List<Task> Tasks { get; private set; }
 	}
 }

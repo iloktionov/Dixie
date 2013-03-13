@@ -50,6 +50,8 @@
     <Compile Include="Master\NodeInfo.cs" />
     <Compile Include="Master\NodesManager.cs" />
     <Compile Include="Master\NodesManager_Tests.cs" />
+    <Compile Include="Master\Tasks\TaskState.cs" />
+    <Compile Include="Master\Tasks\TaskState_Tests.cs" />
     <Compile Include="Mutation\AddNodesMutator.cs" />
     <Compile Include="Mutation\AddNodesMutator_Tests.cs" />
     <Compile Include="Mutation\CompositeMutator.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Mutation\RemoveNodesMutator_Tests.cs" />
     <Compile Include="Mutation\ReturnNodesMutator_Tests.cs" />
     <Compile Include="Config\ITopologyConfigurator.cs" />
+    <Compile Include="Master\Tasks\TaskStatus.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
     <Compile Include="Utilities\Preconditions.cs" />
@@ -78,7 +81,7 @@
     <Compile Include="Config\TopologyConfigurator.cs" />
     <Compile Include="Topology\Topology_Tests.cs" />
     <Compile Include="Topology\Topology.cs" />
-    <Compile Include="ComputationalTask.cs" />
+    <Compile Include="Master\Tasks\Task.cs" />
     <Compile Include="Node\WorkBuffer.cs" />
     <Compile Include="Node\WorkBuffer_Tests.cs" />
   </ItemGroup>

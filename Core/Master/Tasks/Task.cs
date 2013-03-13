@@ -2,9 +2,9 @@
 
 namespace Dixie.Core
 {
-	public class ComputationalTask
+	public class Task
 	{
-		public ComputationalTask(double volume)
+		public Task(double volume)
 		{
 			Volume = volume;
 			Id = Guid.NewGuid();
@@ -14,7 +14,7 @@ namespace Dixie.Core
 		public Double Volume { get; private set; }
 
 		#region Equality members
-		protected bool Equals(ComputationalTask other)
+		protected bool Equals(Task other)
 		{
 			return Id.Equals(other.Id);
 		}
@@ -24,7 +24,7 @@ namespace Dixie.Core
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
 			if (obj.GetType() != this.GetType()) return false;
-			return Equals((ComputationalTask)obj);
+			return Equals((Task)obj);
 		}
 
 		public override int GetHashCode()

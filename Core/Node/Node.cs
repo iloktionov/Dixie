@@ -26,7 +26,7 @@ namespace Dixie.Core
 		public void HandleHeartBeatResponse(HeartBeatResponse response)
 		{
 			if (response.Tasks != null)
-				foreach (ComputationalTask task in response.Tasks)
+				foreach (Task task in response.Tasks)
 					workBuffer.PutTask(task.Id, GetCalculationTime(task));
 		}
 
@@ -84,7 +84,7 @@ namespace Dixie.Core
 		} 
 		#endregion
 
-		private TimeSpan GetCalculationTime(ComputationalTask task)
+		private TimeSpan GetCalculationTime(Task task)
 		{
 			return TimeSpan.FromMilliseconds(task.Volume / Performance);
 		}

@@ -46,9 +46,9 @@ namespace Dixie.Core
 				var node = new Node(0.1, 0.1);
 				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id));
 				Assert.AreEqual(0, node.workBuffer.Size);
-				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id, new List<ComputationalTask>()));
+				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id, new List<Task>()));
 				Assert.AreEqual(0, node.workBuffer.Size);
-				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id, new List<ComputationalTask>{new ComputationalTask(34534)}));
+				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id, new List<Task>{new Task(34534)}));
 				Assert.AreEqual(1, node.workBuffer.Size);
 			}
 
@@ -56,8 +56,8 @@ namespace Dixie.Core
 			public void Test_GetCalculationTime()
 			{
 				var node = new Node(100, 0.1);
-				Assert.AreEqual(TimeSpan.FromMilliseconds(50), node.GetCalculationTime(new ComputationalTask(5000)));
-				Assert.AreEqual(TimeSpan.FromMilliseconds(0.01), node.GetCalculationTime(new ComputationalTask(1)));
+				Assert.AreEqual(TimeSpan.FromMilliseconds(50), node.GetCalculationTime(new Task(5000)));
+				Assert.AreEqual(TimeSpan.FromMilliseconds(0.01), node.GetCalculationTime(new Task(1)));
 			}
 
 			[Test]
