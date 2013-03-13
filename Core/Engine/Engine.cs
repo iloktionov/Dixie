@@ -14,7 +14,7 @@ namespace Dixie.Core
 		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration)
 		{
 			topology = initialState.Topology.Clone();
-			master = new Master();
+			master = new Master(initialState.EngineSettings.DeadabilityThreshold);
 			schedulerAlgorithm = algorithm;
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
 				initialState.EngineSettings.RemoveNodesProbability, 
@@ -33,7 +33,7 @@ namespace Dixie.Core
 			var watch = Stopwatch.StartNew();
 			while (watch.Elapsed < testDuration)
 			{
-				Thread.Sleep(ExtendedMath.Min(TimeSpan.FromMilliseconds(100), testDuration - watch.Elapsed));
+				Thread.Sleep(TimeSpan.FromMilliseconds(100));
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			}
 

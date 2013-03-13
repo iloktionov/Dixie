@@ -5,9 +5,9 @@ namespace Dixie.Core
 {
 	internal class Master
 	{
-		public Master()
+		public Master(TimeSpan deadabilityThreshold)
 		{
-			nodesManager = new NodesManager(TimeSpan.Zero);
+			nodesManager = new NodesManager(deadabilityThreshold);
 			taskManager = new TaskManager();
 			syncObject = new object();
 		}

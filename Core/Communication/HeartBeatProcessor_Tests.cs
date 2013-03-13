@@ -13,7 +13,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_DeliverMessagesAndResponses()
 			{
-				var master = new Master();
+				var master = new Master(TimeSpan.Zero);
 				var topology = Topology.CreateEmpty();
 				var node1 = new Node(100, 0.2);
 				var node2 = new Node(100, 0.2);
