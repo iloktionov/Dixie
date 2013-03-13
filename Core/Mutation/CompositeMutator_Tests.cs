@@ -16,7 +16,11 @@ namespace Dixie.Core
 			const int MutationsCount = 10 * 1000;
 			var watch = Stopwatch.StartNew();
 			for (int i = 0; i < MutationsCount; i++)
+			{
 				mutator.Mutate(topology);
+				if (i % 500 == 0)
+					Console.Out.WriteLine("Remaining nodes = {0}", topology.WorkerNodesCount);
+			}
 			Console.Out.WriteLine("Did {0} mutations in {1}.", MutationsCount, watch.Elapsed);
 		}
 

@@ -11,9 +11,9 @@ namespace Dixie.Core
 			random = new Random(seed);
 			configurator = new TopologyConfigurator(random);
 			var offlinePool = new OfflineNodesPool();
-			removeMutator = new RemoveNodesMutator(offlinePool, random, configurator, Math.Max(1, (int)(initialNodesCount * 0.7d)));
+			removeMutator = new RemoveNodesMutator(offlinePool, random, configurator, Math.Max(1, (int)(initialNodesCount * MinNodesCountMultiplier)));
 			returnMutator = new ReturnNodesMutator(offlinePool, configurator);
-			addMutator = new AddNodesMutator(random, configurator, (int)(initialNodesCount * 1.3d));
+			addMutator = new AddNodesMutator(random, configurator, (int)(initialNodesCount * MaxNodesCountMultiplier));
 		}
 
 		public void Mutate(Topology topology)
@@ -30,8 +30,10 @@ namespace Dixie.Core
 		private readonly RemoveNodesMutator removeMutator;
 		private readonly ReturnNodesMutator returnMutator;
 		private readonly AddNodesMutator addMutator;
-
 		private readonly double removeNodesProbability;
 		private readonly double addNodesProbability;
+
+		private const double MinNodesCountMultiplier = 0.7d;
+		private const double MaxNodesCountMultiplier = 1.15d;
 	}
 }
