@@ -12,6 +12,7 @@ namespace Dixie.Core
 			assignationsMap = new Dictionary<Guid, List<Task>>();
 			completedTasksCount = 0;
 			TotalWorkDone = 0;
+			accumulateNewResults = true;
 		}
 
 		internal void PutTasks(IEnumerable<Task> tasks)
@@ -69,7 +70,8 @@ namespace Dixie.Core
 				{
 					state.ReportCompletion(nodeId);
 					completedTasksCount++;
-					TotalWorkDone += state.Task.Volume;
+					if (accumulateNewResults)
+						TotalWorkDone += state.Task.Volume;
 				}
 			}
 		}
@@ -83,8 +85,14 @@ namespace Dixie.Core
 			return nodeAssignations;
 		}
 
+		internal void DisableAccumulatingNewResults()
+		{
+			accumulateNewResults = false;
+		}
+
 		private readonly Dictionary<Guid, List<Task>> assignationsMap;
 		private Dictionary<Guid, TaskState> taskStates;
 		private int completedTasksCount;
+		private volatile bool accumulateNewResults;
 	}
 }

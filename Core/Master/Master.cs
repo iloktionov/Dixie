@@ -47,6 +47,12 @@ namespace Dixie.Core
 				return taskManager.TotalWorkDone;
 		}
 
+		public void DisableAccumulatingResults()
+		{
+			lock (syncObject)
+				taskManager.DisableAccumulatingNewResults();
+		}
+
 		internal int AliveNodesCount
 		{
 			get { return nodesManager.AliveNodesCount; }

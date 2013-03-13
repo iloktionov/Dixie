@@ -27,33 +27,47 @@ namespace Dixie.Core
 			schedulerAlgorithm = algorithm;
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
 				initialState.EngineSettings.RemoveNodesProbability, 
-				initialState.EngineSettings.AddNodesProbability,
+				initialState.EngineSettings.AddNodesProbability, 
 				initialState.TopologySettings
 			);
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
 			tasksGenerator = new TasksGenerator(initialState);
 
-			Thread hbThread = StartHeartBeatsMechanism();
-			WaitForMasterStateWarmup();
-			Thread mutatorThread = StartTopologyMutations();
-			Thread tasksThread = StartTaskGeneration();
-
+			var engineThreads = new Thread[4];
+			var hbSyncEvent = new ManualResetEvent(false);
+			var commonSyncEvent = new ManualResetEvent(false);
+			engineThreads[0] = StartHeartBeatsMechanism(hbSyncEvent);
+			engineThreads[1] = StartTopologyMutations(commonSyncEvent);
+			engineThreads[2] = StartTaskGeneration(commonSyncEvent);
+			engineThreads[3] = StartSchedulerAlgorithm(commonSyncEvent);
+			var watch = new Stopwatch();
 			var testResult = new AlgorithmTestResult();
-			Thread algorithmThread = StartSchedulerAlgorithm();
-			var watch = Stopwatch.StartNew();
+
+			// (iloktionov): Включим механизм HBM и дождемся, пока все ноды пропингуют Мастера. 
+			hbSyncEvent.Set();
+			WaitForMasterStateWarmup();
+			// (iloktionov): Теперь запустим остальные потоки и таймер теста.
+			commonSyncEvent.Set();
+			watch.Start();
+
 			while (watch.Elapsed < testDuration)
 			{
-				Thread.Sleep(intermediateCheckPeriod);
+				TimeSpan timeBeforeEnd = testDuration - watch.Elapsed;
+				if (timeBeforeEnd <= TimeSpan.Zero)
+					break;
+				Thread.Sleep(ExtendedMath.Min(intermediateCheckPeriod, timeBeforeEnd + TimeSpan.FromMilliseconds(1)));
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			}
-
-			ThreadRunner.StopThreads(hbThread, algorithmThread, tasksThread, mutatorThread);
+			// (iloktionov): Теперь остановим подсчет результатов и возьмем финальное значение перед завершением потоков.
+			master.DisableAccumulatingResults();
+			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
+			ThreadRunner.StopThreads(engineThreads);
 			return testResult;
 		}
 
-		private Thread StartHeartBeatsMechanism()
+		private Thread StartHeartBeatsMechanism(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1));
+			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1), syncEvent);
 		}
 
 		private void WaitForMasterStateWarmup()
@@ -62,19 +76,19 @@ namespace Dixie.Core
 				Thread.Sleep(10);
 		}
 
-		private Thread StartTopologyMutations()
+		private Thread StartTopologyMutations(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), TimeSpan.FromMilliseconds(10));
+			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), TimeSpan.FromMilliseconds(10), syncEvent);
 		}
 
-		private Thread StartTaskGeneration()
+		private Thread StartTaskGeneration(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), TimeSpan.FromMilliseconds(10));
+			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), TimeSpan.FromMilliseconds(10), syncEvent);
 		}
 
-		private Thread StartSchedulerAlgorithm()
+		private Thread StartSchedulerAlgorithm(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), TimeSpan.FromMilliseconds(10));
+			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), TimeSpan.FromMilliseconds(10), syncEvent);
 		}
 
 		private readonly InitialGridState initialState;

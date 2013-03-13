@@ -17,28 +17,17 @@ namespace Dixie.Core
 			return t;
 		}
 
-		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, Action<Thread> tuneThreadBeforeStart = null)
+		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, WaitHandle waitHandle)
 		{
 			return Run(() =>
 			{
+				waitHandle.WaitOne();
 				while (true)
 				{
 					Thread.Sleep(period);
 					periodicAction();
 				}
-			}, tuneThreadBeforeStart);
-		}
- 
-		public static Thread Run(Action<object> threadRoutine, object threadRoutineParameter, Action<Thread> tuneThreadBeforeStart = null)
-		{
-			var t = new Thread(ThreadRoutineWrapper.Wrap(threadRoutine))
-				{
-					IsBackground = true
-				};
-			if (tuneThreadBeforeStart != null)
-				tuneThreadBeforeStart(t);
-			t.Start(threadRoutineParameter);
-			return t;
+			});
 		}
 
 		public static void StopThreads(params Thread[] threads)
