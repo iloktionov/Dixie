@@ -11,6 +11,11 @@ namespace Dixie.Core
 			TimeElapsed = timeElapsed;
 		}
 
+		public override string ToString()
+		{
+			return String.Format("{0}: {1:0.000}", TimeElapsed, WorkDone);
+		}
+
 		public Double WorkDone;
 		public TimeSpan TimeElapsed;
 	}

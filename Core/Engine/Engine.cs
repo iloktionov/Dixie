@@ -36,19 +36,17 @@ namespace Dixie.Core
 			WaitForMasterStateWarmup();
 			Thread mutatorThread = StartTopologyMutations();
 			Thread tasksThread = StartTaskGeneration();
-			
+
 			var testResult = new AlgorithmTestResult();
-			var watch = Stopwatch.StartNew();
 			Thread algorithmThread = StartSchedulerAlgorithm();
+			var watch = Stopwatch.StartNew();
 			while (watch.Elapsed < testDuration)
 			{
 				Thread.Sleep(intermediateCheckPeriod);
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			}
 
-			Thread.Sleep(testDuration);
 			ThreadRunner.StopThreads(hbThread, algorithmThread, tasksThread, mutatorThread);
-			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			return testResult;
 		}
 

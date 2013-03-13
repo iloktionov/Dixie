@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Dixie.Core
 {
@@ -16,6 +17,15 @@ namespace Dixie.Core
 		{
 			IntermediateResults.Add(new IntermediateTestResult(workDone, timeElapsed));
 			TotalWorkDone = workDone; 
+		}
+
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendFormat("Total: {0:0.000}{1}", TotalWorkDone, Environment.NewLine);
+			foreach (IntermediateTestResult result in IntermediateResults)
+				builder.AppendLine(result.ToString());
+			return builder.ToString();
 		}
 
 		public double TotalWorkDone { get; private set; }
