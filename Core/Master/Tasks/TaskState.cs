@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Dixie.Core
 {
-	public class TaskState
+	internal class TaskState
 	{
 		public TaskState(Task task)
 		{
@@ -24,7 +24,7 @@ namespace Dixie.Core
 
 		public void ReportNodeFailure(Guid nodeId)
 		{
-			if (Status == TaskStatus.Completed)
+			if (Status != TaskStatus.Assigned)
 				return;
 			AssignedNodes.Remove(nodeId);
 			if (AssignedNodes.Count <= 0)
@@ -38,6 +38,6 @@ namespace Dixie.Core
 
 		public Task Task { get; private set; }
 		public TaskStatus Status { get; private set; }
-		internal List<Guid> AssignedNodes { get; private set; }
+		public List<Guid> AssignedNodes { get; private set; }
 	}
 }

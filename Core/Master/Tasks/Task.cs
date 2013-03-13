@@ -4,7 +4,7 @@ namespace Dixie.Core
 {
 	public class Task
 	{
-		public Task(double volume)
+		internal Task(double volume)
 		{
 			Volume = volume;
 			Id = Guid.NewGuid();

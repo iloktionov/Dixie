@@ -50,6 +50,8 @@
     <Compile Include="Master\NodeInfo.cs" />
     <Compile Include="Master\NodesManager.cs" />
     <Compile Include="Master\NodesManager_Tests.cs" />
+    <Compile Include="Master\Tasks\TaskManager.cs" />
+    <Compile Include="Master\Tasks\TaskManager_Tests.cs" />
     <Compile Include="Master\Tasks\TaskState.cs" />
     <Compile Include="Master\Tasks\TaskState_Tests.cs" />
     <Compile Include="Mutation\AddNodesMutator.cs" />
