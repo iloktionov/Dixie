@@ -59,6 +59,7 @@
     <Compile Include="FirstNodeAlgorithm.cs" />
     <Compile Include="ISchedulerAlgorithm.cs" />
     <Compile Include="Master\Master.cs" />
+    <Compile Include="Master\NodeFailureHistory.cs" />
     <Compile Include="Master\NodeInfo.cs" />
     <Compile Include="Master\NodesManager.cs" />
     <Compile Include="Master\NodesManager_Tests.cs" />
