@@ -6,12 +6,12 @@ namespace Dixie.Core
 	// TODO(iloktionov): optimize speed
 	internal class CompositeMutator : ITopologyMutator
 	{
-		public CompositeMutator(int seed, int initialNodesCount, double removeNodesProbability, double addNodesProbability)
+		public CompositeMutator(int seed, int initialNodesCount, double removeNodesProbability, double addNodesProbability, TopologySettings topologySettings)
 		{
 			this.removeNodesProbability = removeNodesProbability;
 			this.addNodesProbability = addNodesProbability;
 			random = new Random(seed);
-			configurator = new TopologyConfigurator(random);
+			configurator = new TopologyConfigurator(topologySettings, random);
 			var offlinePool = new OfflineNodesPool();
 			removeMutator = new RemoveNodesMutator(offlinePool, random, configurator, Math.Max(1, (int)(initialNodesCount * MinNodesCountMultiplier)));
 			returnMutator = new ReturnNodesMutator(offlinePool, configurator);

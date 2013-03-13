@@ -27,7 +27,8 @@ namespace Dixie.Core
 			schedulerAlgorithm = algorithm;
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
 				initialState.EngineSettings.RemoveNodesProbability, 
-				initialState.EngineSettings.AddNodesProbability
+				initialState.EngineSettings.AddNodesProbability,
+				initialState.TopologySettings
 			);
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
 			tasksGenerator = new TasksGenerator(initialState);
