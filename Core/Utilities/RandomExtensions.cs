@@ -13,5 +13,10 @@ namespace Dixie.Core
 		{
 			return random.NextDouble() <= probability;
 		}
+
+		public static double NextDouble(this Random random, double from, double to)
+		{
+			return random.NextDouble() * (to - from) + from;
+		}
 	}
 }

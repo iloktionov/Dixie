@@ -23,12 +23,12 @@ namespace Dixie.Core
 
 		public double GeneratePerformance()
 		{
-			return random.NextDouble() * (topologySettings.MaxPerformance - topologySettings.MinPerformance) + topologySettings.MinPerformance;
+			return random.NextDouble(topologySettings.MinPerformance, topologySettings.MaxPerformance);
 		}
 
 		public double GenerateFailureProbability()
 		{
-			return random.NextDouble() * (topologySettings.MaxFailureProbability - topologySettings.MinFailureProbability) + topologySettings.MinFailureProbability;
+			return random.NextDouble(topologySettings.MinFailureProbability, topologySettings.MaxFailureProbability);
 		}
 
 		public TimeSpan GenerateLinkLatency()
@@ -49,7 +49,7 @@ namespace Dixie.Core
 
 		private TimeSpan GenerateRandomTimespan(TimeSpan from, TimeSpan to)
 		{
-			return TimeSpan.FromMilliseconds(random.NextDouble() * (to.TotalMilliseconds - from.TotalMilliseconds) + from.TotalMilliseconds);
+			return TimeSpan.FromMilliseconds(random.NextDouble(from.TotalMilliseconds, to.TotalMilliseconds));
 		}
 
 		private readonly TopologySettings topologySettings;

@@ -14,7 +14,8 @@ namespace Dixie.Core
 
 		public Double RemoveNodesProbability = 0.05d;
 		public Double AddNodesProbability = 0.05d;
-
 		public TimeSpan HeartBeatPeriod = TimeSpan.FromMilliseconds(50);
+		public Double MinTaskVolume = 500 * 1000d;
+		public Double MaxTaskVolume = 4000 * 1000d;
 	}
 }

@@ -32,6 +32,15 @@ namespace Dixie.Core
 			}
 		}
 
+		public void RefillTasksIfNeeded(TasksGenerator tasksGenerator)
+		{
+			lock (syncObject)
+			{
+				if (taskManager.NeedsRefill())
+					taskManager.PutTasks(tasksGenerator.GenerateTasks());
+			}
+		}
+
 		internal int AliveNodesCount
 		{
 			get { return nodesManager.AliveNodesCount; }
