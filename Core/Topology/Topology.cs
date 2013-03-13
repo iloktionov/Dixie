@@ -146,6 +146,11 @@ namespace Dixie.Core
 			get { return graph; }
 		}
 
+		internal Dictionary<Guid, TimeSpan> WorkerLatencies
+		{
+			get { return workerLatencies; }
+		}
+
 		internal int WorkerNodesCount
 		{
 			get { return workerNodes.Count; }
