@@ -15,8 +15,8 @@ namespace Dixie.Core
 			ISchedulerAlgorithm algorithm1 = new RandomAlgorithm(new Random(123));
 			ISchedulerAlgorithm algorithm2 = new RandomAlgorithm(new Random(123));
 
-			var result1 = engine.TestAlgorithm(algorithm1, TimeSpan.FromSeconds(2));
-			var result2 = engine.TestAlgorithm(algorithm2, TimeSpan.FromSeconds(2));
+			var result1 = engine.TestAlgorithm(algorithm1, TimeSpan.FromSeconds(5));
+			var result2 = engine.TestAlgorithm(algorithm2, TimeSpan.FromSeconds(5));
 			Console.Out.WriteLine(result1.TotalWorkDone);
 			Console.Out.WriteLine(result2.TotalWorkDone);
 			Console.Out.WriteLine(result2.IntermediateResults.Count);

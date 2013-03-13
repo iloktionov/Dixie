@@ -36,10 +36,10 @@ namespace Dixie.Core
 			WaitForMasterStateWarmup();
 			Thread mutatorThread = StartTopologyMutations();
 			Thread tasksThread = StartTaskGeneration();
-			Thread algorithmThread = StartSchedulerAlgorithm();
-
+			
 			var testResult = new AlgorithmTestResult();
 			var watch = Stopwatch.StartNew();
+			Thread algorithmThread = StartSchedulerAlgorithm();
 			while (watch.Elapsed < testDuration)
 			{
 				Thread.Sleep(TimeSpan.FromMilliseconds(100));
@@ -47,10 +47,7 @@ namespace Dixie.Core
 			}
 
 			Thread.Sleep(testDuration);
-			algorithmThread.AbortAndWaitCompleted();
-			tasksThread.AbortAndWaitCompleted();
-			mutatorThread.AbortAndWaitCompleted();
-			hbThread.AbortAndWaitCompleted();
+			ThreadRunner.StopThreads(hbThread, algorithmThread, tasksThread, mutatorThread);
 			return testResult;
 		}
 

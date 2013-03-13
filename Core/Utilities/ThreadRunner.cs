@@ -40,5 +40,13 @@ namespace Dixie.Core
 			t.Start(threadRoutineParameter);
 			return t;
 		}
+
+		public static void StopThreads(params Thread[] threads)
+		{
+			foreach (Thread thread in threads)
+				thread.Abort();
+			foreach (Thread thread in threads)
+				thread.Join();
+		}
 	}
 }
