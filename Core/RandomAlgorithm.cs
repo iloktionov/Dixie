@@ -15,6 +15,8 @@ namespace Dixie.Core
 
 		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
 		{
+			if (aliveNodes.Count <= 0)
+				return;
 			foreach (Task pendingTask in taskManager.GetPendingTasks())
 				taskManager.AssignNodeToTask(pendingTask, aliveNodes[random.Next(aliveNodes.Count)].Id);
 		}
