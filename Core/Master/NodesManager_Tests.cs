@@ -24,17 +24,17 @@ namespace Dixie.Core
 			}
 
 			[Test]
-			public void Test_UpdateState()
+			public void Test_RemoveDeads()
 			{
 				var manager = new NodesManager(TimeSpan.FromMilliseconds(50));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				Assert.AreEqual(3, manager.aliveNodeInfos.Count);
-				manager.UpdateState();
+				Assert.Null(manager.RemoveDeadsOrNull());
 				Assert.AreEqual(3, manager.aliveNodeInfos.Count);
 				Thread.Sleep(55);
-				manager.UpdateState();
+				Assert.AreEqual(3, manager.RemoveDeadsOrNull().Count);
 				Assert.AreEqual(0, manager.aliveNodeInfos.Count);
 				Assert.AreEqual(3, manager.hbmTimestamps.Count);
 			}

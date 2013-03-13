@@ -33,12 +33,19 @@ namespace Dixie.Core
 			}
 		}
 
-		public void UpdateState()
+		public List<Guid> RemoveDeadsOrNull()
 		{
 			TimeSpan timeElapsed = watch.Elapsed;
+			List<Guid> result = null;
 			foreach (KeyValuePair<Guid, TimeSpan> pair in hbmTimestamps)
 				if (timeElapsed - pair.Value > deadabilityThreshold)
+				{
 					aliveNodeInfos.Remove(pair.Key);
+					if (result == null)
+						result = new List<Guid>();
+					result.Add(pair.Key);
+				}
+			return result;
 		}
 
 		public IEnumerable<NodeInfo> GetAliveNodeInfos()
