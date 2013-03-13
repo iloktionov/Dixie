@@ -71,6 +71,7 @@
     <Compile Include="Mutation\ReturnNodesMutator_Tests.cs" />
     <Compile Include="Config\ITopologyConfigurator.cs" />
     <Compile Include="Master\Tasks\TaskStatus.cs" />
+    <Compile Include="RandomAlgorithm.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
     <Compile Include="Utilities\Preconditions.cs" />
