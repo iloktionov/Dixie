@@ -1,35 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Dixie.Core
 {
-	internal class WorkBuffer
+	internal partial class WorkBuffer
 	{
 		public WorkBuffer()
 		{
 			watch = Stopwatch.StartNew();
-			records = new Dictionary<Guid, TimeSpan>();
+			records = new Queue<KeyValuePair<Guid, TimeSpan>>();
 		}
 
 		public void PutTask(Guid taskId, TimeSpan calculationTime)
 		{
-			records.Add(taskId, watch.Elapsed + calculationTime);
+			TimeSpan previousTaskTS = records.Count > 0 ? records.Last().Value : watch.Elapsed;
+			records.Enqueue(new KeyValuePair<Guid, TimeSpan>(taskId, previousTaskTS + calculationTime));
 		}
 
 		public List<Guid> PopCompletedOrNull()
 		{
 			List<Guid> result = null;
 			TimeSpan timeElapsed = watch.Elapsed;
-			foreach (KeyValuePair<Guid, TimeSpan> pair in records)
-				if (timeElapsed >= pair.Value)
+			while (records.Count > 0)
+			{
+				if (timeElapsed >= records.Peek().Value)
 				{
 					if (result == null)
 						result = new List<Guid>();
-					result.Add(pair.Key);
+					result.Add(records.Dequeue().Key);
 				}
-			if (result != null)
-				result.ForEach(taskId => records.Remove(taskId));
+				else break;
+			}
 			return result;
 		}
 
@@ -53,6 +56,6 @@ namespace Dixie.Core
 		public int Size { get { return records.Count; } }
 
 		private readonly Stopwatch watch;
-		private readonly Dictionary<Guid, TimeSpan> records; 
+		private readonly Queue<KeyValuePair<Guid, TimeSpan>> records;
 	}
 }
