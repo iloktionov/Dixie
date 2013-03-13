@@ -4,6 +4,8 @@ using System.Diagnostics;
 
 namespace Dixie.Core
 {
+	// TODO(iloktionov): Gather failure histories
+	// TODO(iloktionov): GC for nodes that failed permanently
 	internal partial class NodesManager
 	{
 		public NodesManager(TimeSpan deadabilityThreshold)
