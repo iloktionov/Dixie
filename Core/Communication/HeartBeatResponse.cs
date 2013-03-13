@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Dixie.Core
 {
 	public class HeartBeatResponse
 	{
-		public HeartBeatResponse(List<ComputationalTask> tasks = null)
+		public HeartBeatResponse(Guid nodeId, List<ComputationalTask> tasks = null)
 		{
+			NodeId = nodeId;
 			Tasks = tasks;
 		}
 
+		public Guid NodeId { get; private set; }
 		public List<ComputationalTask> Tasks { get; private set; }
 	}
 }

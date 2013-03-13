@@ -23,7 +23,7 @@ namespace Dixie.Core
 				node.workBuffer.PutTask(task2, TimeSpan.FromMilliseconds(25));
 
 				HeartBeatMessage hbm1 = node.GetHeartBeatMessage();
-				Thread.Sleep(TimeSpan.FromMilliseconds(30));
+				Thread.Sleep(TimeSpan.FromMilliseconds(50));
 				HeartBeatMessage hbm2 = node.GetHeartBeatMessage();
 				HeartBeatMessage hbm3 = node.GetHeartBeatMessage();
 
@@ -44,11 +44,11 @@ namespace Dixie.Core
 			public void Test_HandleHeartBeatResponse()
 			{
 				var node = new Node(0.1, 0.1);
-				node.HandleHeartBeatResponse(new HeartBeatResponse());
+				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id));
 				Assert.AreEqual(0, node.workBuffer.Size);
-				node.HandleHeartBeatResponse(new HeartBeatResponse(new List<ComputationalTask>()));
+				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id, new List<ComputationalTask>()));
 				Assert.AreEqual(0, node.workBuffer.Size);
-				node.HandleHeartBeatResponse(new HeartBeatResponse(new List<ComputationalTask>{new ComputationalTask(34534)}));
+				node.HandleHeartBeatResponse(new HeartBeatResponse(node.Id, new List<ComputationalTask>{new ComputationalTask(34534)}));
 				Assert.AreEqual(1, node.workBuffer.Size);
 			}
 

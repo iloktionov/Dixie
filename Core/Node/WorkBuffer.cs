@@ -20,8 +20,9 @@ namespace Dixie.Core
 		public List<Guid> PopCompletedOrNull()
 		{
 			List<Guid> result = null;
+			TimeSpan timeElapsed = watch.Elapsed;
 			foreach (KeyValuePair<Guid, TimeSpan> pair in records)
-				if (watch.Elapsed >= pair.Value)
+				if (timeElapsed >= pair.Value)
 				{
 					if (result == null)
 						result = new List<Guid>();
