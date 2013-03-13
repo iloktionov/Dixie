@@ -15,7 +15,8 @@ namespace Dixie.Core
 		public IEnumerable<Task> GenerateTasks()
 		{
 			return Enumerable.Range(1, random.Next(initialState.Topology.WorkerNodesCount, initialState.Topology.WorkerNodesCount * 2))
-				.Select(i => new Task(random.NextDouble(initialState.EngineSettings.MinTaskVolume, initialState.EngineSettings.MaxTaskVolume)));
+				.Select(i => new Task(random.NextDouble(initialState.EngineSettings.MinTaskVolume, initialState.EngineSettings.MaxTaskVolume)))
+				.ToList();
 		}
 
 		private readonly InitialGridState initialState;

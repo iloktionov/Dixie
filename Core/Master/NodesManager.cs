@@ -53,7 +53,6 @@ namespace Dixie.Core
 			return new List<NodeInfo>(aliveNodeInfos.Values);
 		}
 
-		
 		internal int AliveNodesCount
 		{
 			get { return aliveNodeInfos.Count; }
