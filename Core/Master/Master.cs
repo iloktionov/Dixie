@@ -12,7 +12,8 @@ namespace Dixie.Core
 
 		public HeartBeatResponse HandleHeartBeatMessage(HeartBeatMessage message)
 		{
-			return null;
+			nodesManager.HandleHeartBeatMessage(message);
+			return new HeartBeatResponse(message.NodeId, null);
 		}
 
 		private readonly NodesManager nodesManager;
