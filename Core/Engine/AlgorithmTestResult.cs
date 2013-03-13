@@ -12,7 +12,7 @@ namespace Dixie.Core
 			TotalWorkDone = 0;
 		}
 
-		public void AddIntermediateResult(Double workDone, TimeSpan timeElapsed)
+		internal void AddIntermediateResult(Double workDone, TimeSpan timeElapsed)
 		{
 			IntermediateResults.Add(new IntermediateTestResult(workDone, timeElapsed));
 			TotalWorkDone = workDone; 

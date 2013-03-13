@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -9,6 +10,14 @@ namespace Dixie.Core
 		public Engine(InitialGridState initialState )
 		{
 			this.initialState = initialState;
+		}
+
+		public ComparisonTestResult TestAlgorithms(IEnumerable<ISchedulerAlgorithm> algorithms, TimeSpan testDuration)
+		{
+			var result = new ComparisonTestResult();
+			foreach (ISchedulerAlgorithm algorithm in algorithms)
+				result.AddAlgorithmResult(algorithm, TestAlgorithm(algorithm, testDuration));
+			return result;
 		}
 
 		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration)

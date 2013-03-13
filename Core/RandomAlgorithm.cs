@@ -8,6 +8,7 @@ namespace Dixie.Core
 		public RandomAlgorithm(Random random)
 		{
 			this.random = random;
+			Name = String.Format("Random-{0}", random.Next());
 		}
 
 		public RandomAlgorithm()
@@ -20,6 +21,8 @@ namespace Dixie.Core
 			foreach (Task pendingTask in taskManager.GetPendingTasks())
 				taskManager.AssignNodeToTask(pendingTask, aliveNodes[random.Next(aliveNodes.Count)].Id);
 		}
+
+		public string Name { get; private set; }
 
 		private readonly Random random;
 	}
