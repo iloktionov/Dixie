@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace Dixie.Core
@@ -10,7 +11,7 @@ namespace Dixie.Core
 			this.initialState = initialState;
 		}
 
-		private void TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration)
+		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration)
 		{
 			topology = initialState.Topology.Clone();
 			master = new Master();
@@ -28,11 +29,20 @@ namespace Dixie.Core
 			Thread tasksThread = StartTaskGeneration();
 			Thread algorithmThread = StartSchedulerAlgorithm();
 
+			var testResult = new AlgorithmTestResult();
+			var watch = Stopwatch.StartNew();
+			while (watch.Elapsed < testDuration)
+			{
+				Thread.Sleep(ExtendedMath.Min(TimeSpan.FromMilliseconds(100), testDuration - watch.Elapsed));
+				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
+			}
+
 			Thread.Sleep(testDuration);
 			algorithmThread.AbortAndWaitCompleted();
 			tasksThread.AbortAndWaitCompleted();
 			mutatorThread.AbortAndWaitCompleted();
 			hbThread.AbortAndWaitCompleted();
+			return testResult;
 		}
 
 		private Thread StartHeartBeatsMechanism()

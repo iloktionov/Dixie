@@ -41,6 +41,12 @@ namespace Dixie.Core
 			}
 		}
 
+		public Double GetTotalWorkDone()
+		{
+			lock (syncObject)
+				return taskManager.TotalWorkDone;
+		}
+
 		internal int AliveNodesCount
 		{
 			get { return nodesManager.AliveNodesCount; }
