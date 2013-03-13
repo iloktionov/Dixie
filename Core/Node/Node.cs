@@ -20,7 +20,7 @@ namespace Dixie.Core
 		public HeartBeatMessage GetHeartBeatMessage()
 		{
 			List<Guid> completedTasks = workBuffer.PopCompletedOrNull(); 
-			return new HeartBeatMessage(Id, workBuffer.Size, completedTasks);
+			return new HeartBeatMessage(Id, Performance, workBuffer.Size, completedTasks);
 		}
 
 		public void HandleHeartBeatResponse(HeartBeatResponse response)
