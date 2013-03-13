@@ -63,6 +63,11 @@ namespace Dixie.Core
 			get { return taskManager; }
 		}
 
+		internal NodesManager NodesManager
+		{
+			get { return nodesManager; }
+		}
+
 		private readonly NodesManager nodesManager;
 		private readonly TaskManager taskManager;
 		private readonly object syncObject;

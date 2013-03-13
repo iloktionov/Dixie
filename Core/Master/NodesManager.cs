@@ -44,6 +44,7 @@ namespace Dixie.Core
 					if (result == null)
 						result = new List<Guid>();
 					result.Add(pair.Key);
+					FailuresCount++;
 				}
 			return result;
 		}
@@ -57,6 +58,8 @@ namespace Dixie.Core
 		{
 			get { return aliveNodeInfos.Count; }
 		}
+
+		internal int FailuresCount { get; private set; }
 
 		private readonly Dictionary<Guid, TimeSpan> hbmTimestamps;
 		private readonly Dictionary<Guid, NodeInfo> aliveNodeInfos;

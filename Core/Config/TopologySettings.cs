@@ -19,10 +19,10 @@ namespace Dixie.Core
 		public double MaxPerformance = 40;
 
 		public double MinFailureProbability = 0;
-		public double MaxFailureProbability = 0.25;
+		public double MaxFailureProbability = 0.075;
 
 		public TimeSpan MinLinkLatency = TimeSpan.FromMilliseconds(0.1);
-		public TimeSpan MaxLinkLatency = TimeSpan.FromMilliseconds(10);
+		public TimeSpan MaxLinkLatency = TimeSpan.FromMilliseconds(5);
 
 		public TimeSpan MinShortTermOffline = TimeSpan.FromSeconds(2);
 		public TimeSpan MaxShortTermOffline = TimeSpan.FromSeconds(5);
