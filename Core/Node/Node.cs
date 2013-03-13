@@ -16,34 +16,44 @@ namespace Dixie.Core
 			Id = Guid.NewGuid();
 			workBuffer = new WorkBuffer();
 			LastHBTimestamp = TimeSpan.MinValue;
+			syncObject = new object();
 		}
 
 		public HeartBeatMessage GetHeartBeatMessage()
 		{
-			List<Guid> completedTasks = workBuffer.PopCompletedOrNull(); 
-			return new HeartBeatMessage(Id, Performance, workBuffer.Size, completedTasks);
+			lock (syncObject)
+			{
+				List<Guid> completedTasks = workBuffer.PopCompletedOrNull();
+				return new HeartBeatMessage(Id, Performance, workBuffer.Size, completedTasks);
+			}
 		}
 
 		public void HandleHeartBeatResponse(HeartBeatResponse response)
 		{
-			if (response.Tasks != null)
-				foreach (Task task in response.Tasks)
-					workBuffer.PutTask(task.Id, GetCalculationTime(task));
+			lock (syncObject)
+			{
+				if (response.Tasks != null)
+					foreach (Task task in response.Tasks)
+						workBuffer.PutTask(task.Id, GetCalculationTime(task));
+			}
 		}
 
 		public bool IsComputing()
 		{
-			return workBuffer.IsComputing();
+			lock (syncObject)
+				return workBuffer.IsComputing();
 		}
 
 		public void StopComputing()
 		{
-			workBuffer.StopComputing();
+			lock (syncObject)
+				workBuffer.StopComputing();
 		}
 
 		public void ResumeComputing()
 		{
-			workBuffer.ResumeComputing();
+			lock (syncObject)
+				workBuffer.ResumeComputing();
 		}
 
 		public Guid Id { get; private set; }
@@ -86,6 +96,7 @@ namespace Dixie.Core
 		{
 			workBuffer = new WorkBuffer();
 			LastHBTimestamp = TimeSpan.MinValue;
+			syncObject = new object();
 		} 
 		#endregion
 
@@ -96,5 +107,7 @@ namespace Dixie.Core
 
 		[NonSerialized]
 		private WorkBuffer workBuffer;
+		[NonSerialized]
+		private object syncObject;
 	}
 }
