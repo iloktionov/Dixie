@@ -32,6 +32,11 @@ namespace Dixie.Core
 			}
 		}
 
+		internal int AliveNodesCount
+		{
+			get { return nodesManager.AliveNodesCount; }
+		}
+
 		internal TaskManager TaskManager
 		{
 			get { return taskManager; }

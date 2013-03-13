@@ -53,6 +53,12 @@ namespace Dixie.Core
 			return new List<NodeInfo>(aliveNodeInfos.Values);
 		}
 
+		
+		internal int AliveNodesCount
+		{
+			get { return aliveNodeInfos.Count; }
+		}
+
 		private readonly Dictionary<Guid, TimeSpan> hbmTimestamps;
 		private readonly Dictionary<Guid, NodeInfo> aliveNodeInfos;
 		private readonly Stopwatch watch;

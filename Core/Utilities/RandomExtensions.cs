@@ -13,6 +13,5 @@ namespace Dixie.Core
 		{
 			return random.NextDouble() <= probability;
 		}
-
 	}
 }
