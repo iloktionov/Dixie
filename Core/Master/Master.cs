@@ -1,10 +1,12 @@
-﻿namespace Dixie.Core
+﻿using System;
+
+namespace Dixie.Core
 {
 	internal class Master
 	{
 		public Master()
 		{
-			nodesManager = new NodesManager();
+			nodesManager = new NodesManager(TimeSpan.Zero);
 			syncObject = new object();
 		}
 
