@@ -78,17 +78,17 @@ namespace Dixie.Core
 
 		private Thread StartTopologyMutations(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), TimeSpan.FromMilliseconds(10), syncEvent);
+			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), initialState.EngineSettings.TopologyMutatorRunPeriod, syncEvent);
 		}
 
 		private Thread StartTaskGeneration(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), TimeSpan.FromMilliseconds(10), syncEvent);
+			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), initialState.EngineSettings.TasksGeneratorRunPeriod, syncEvent);
 		}
 
 		private Thread StartSchedulerAlgorithm(ManualResetEvent syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), TimeSpan.FromMilliseconds(10), syncEvent);
+			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), initialState.EngineSettings.SchedulingAlgorithmRunPeriod, syncEvent);
 		}
 
 		private readonly InitialGridState initialState;
