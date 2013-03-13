@@ -17,9 +17,9 @@ namespace Dixie.Core
 
 		public void Mutate(Topology topology)
 		{
-			int nodesToAdd = random.Next(0, maxRemainingNodes - topology.WorkerNodesCount + 1);
-			if (nodesToAdd == 0)
+			if (topology.WorkerNodesCount >= maxRemainingNodes)
 				return;
+			int nodesToAdd = random.Next(0, maxRemainingNodes - topology.WorkerNodesCount + 1);
 			INode[] parents = SelectRandomParents(topology, nodesToAdd);
 			for (int i = 0; i < nodesToAdd; i++)
 			{
