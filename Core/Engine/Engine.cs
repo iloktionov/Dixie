@@ -12,15 +12,15 @@ namespace Dixie.Core
 			this.initialState = initialState;
 		}
 
-		public ComparisonTestResult TestAlgorithms(IEnumerable<ISchedulerAlgorithm> algorithms, TimeSpan testDuration)
+		public ComparisonTestResult TestAlgorithms(IEnumerable<ISchedulerAlgorithm> algorithms, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
 		{
 			var result = new ComparisonTestResult();
 			foreach (ISchedulerAlgorithm algorithm in algorithms)
-				result.AddAlgorithmResult(algorithm, TestAlgorithm(algorithm, testDuration));
+				result.AddAlgorithmResult(algorithm, TestAlgorithm(algorithm, testDuration, intermediateCheckPeriod));
 			return result;
 		}
 
-		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration)
+		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
 		{
 			topology = initialState.Topology.Clone();
 			master = new Master(initialState.EngineSettings.DeadabilityThreshold);
@@ -42,12 +42,13 @@ namespace Dixie.Core
 			Thread algorithmThread = StartSchedulerAlgorithm();
 			while (watch.Elapsed < testDuration)
 			{
-				Thread.Sleep(TimeSpan.FromMilliseconds(100));
+				Thread.Sleep(intermediateCheckPeriod);
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			}
 
 			Thread.Sleep(testDuration);
 			ThreadRunner.StopThreads(hbThread, algorithmThread, tasksThread, mutatorThread);
+			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			return testResult;
 		}
 

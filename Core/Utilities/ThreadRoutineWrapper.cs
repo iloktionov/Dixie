@@ -18,6 +18,11 @@ namespace Dixie.Core
 						Console.Out.WriteLine("Thread was aborted. ThreadRoutine: {0}", TryGetActionDescription(threadRoutine));
 						Thread.ResetAbort();
 					}
+					catch (Exception error)
+					{
+						Console.Out.WriteLine("Unhandled error. ThreadRoutine: {0}. Exception: {1}", TryGetActionDescription(threadRoutine), error);
+						throw;
+					}
 				};
 		}
 
@@ -33,6 +38,11 @@ namespace Dixie.Core
 					{
 						Console.Out.WriteLine("Thread was aborted. ThreadRoutine: {0}", TryGetActionDescription(threadRoutine));
 						Thread.ResetAbort();
+					}
+					catch (Exception error)
+					{
+						Console.Out.WriteLine("Unhandled error. ThreadRoutine: {0}. Exception: {1}", TryGetActionDescription(threadRoutine), error);
+						throw;
 					}
 				};
 		}
