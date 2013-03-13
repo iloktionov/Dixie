@@ -47,7 +47,7 @@ namespace Dixie.Core
 			}
 		}
 
-		public Double TotalWorkDone { get; private set; }
+		internal Double TotalWorkDone { get; private set; }
 
 		internal void ReportDeadNodes(List<Guid> deads)
 		{

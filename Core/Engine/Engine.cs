@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Dixie.Core
 {
-	internal class Engine
+	public class Engine
 	{
 		public Engine(InitialGridState initialState )
 		{

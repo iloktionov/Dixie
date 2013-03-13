@@ -3,7 +3,7 @@
 namespace Dixie.Core
 {
 	[Serializable]
-	internal struct IntermediateTestResult
+	public struct IntermediateTestResult
 	{
 		public IntermediateTestResult(Double workDone, TimeSpan timeElapsed)
 		{

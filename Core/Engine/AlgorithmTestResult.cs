@@ -5,7 +5,7 @@ using System.Text;
 namespace Dixie.Core
 {
 	[Serializable]
-	internal class AlgorithmTestResult
+	public class AlgorithmTestResult
 	{
 		public AlgorithmTestResult()
 		{

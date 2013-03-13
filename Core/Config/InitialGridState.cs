@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	internal class InitialGridState
+	public class InitialGridState
 	{
 		public InitialGridState(Topology topology, int randomSeed, TopologySettings topologySettings, EngineSettings engineSettings)
 		{

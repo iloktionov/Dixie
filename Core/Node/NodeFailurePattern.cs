@@ -3,7 +3,7 @@
 namespace Dixie.Core
 {
 	[Serializable]
-	public struct NodeFailurePattern
+	internal struct NodeFailurePattern
 	{
 		public NodeFailurePattern(double shortTermFailProbability, double longTermFailProbability, double permanentFailProbability)
 		{

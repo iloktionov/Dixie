@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public static class RandomExtensions
+	internal static class RandomExtensions
 	{
 		public static bool FlipCoin(this Random random)
 		{

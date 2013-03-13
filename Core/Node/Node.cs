@@ -7,7 +7,7 @@ namespace Dixie.Core
 	[Serializable]
 	public partial class Node : INode, IDeserializationCallback
 	{
-		public Node(double performance, double failureProbability, NodeFailurePattern failurePattern)
+		internal Node(double performance, double failureProbability, NodeFailurePattern failurePattern)
 		{
 			Preconditions.CheckArgument(performance > 0, "performance", "Must be positive.");
 			Preconditions.CheckArgument(failureProbability >= 0 && failureProbability <= 1, "failureProbability", "Must be in [0; 1].");
@@ -23,7 +23,7 @@ namespace Dixie.Core
 		public Node(double performance, double failureProbability)
 			: this (performance, failureProbability, NodeFailurePattern.CreateDefaults()) { }
 
-		public HeartBeatMessage GetHeartBeatMessage()
+		internal HeartBeatMessage GetHeartBeatMessage()
 		{
 			lock (syncObject)
 			{
@@ -32,7 +32,7 @@ namespace Dixie.Core
 			}
 		}
 
-		public void HandleHeartBeatResponse(HeartBeatResponse response)
+		internal void HandleHeartBeatResponse(HeartBeatResponse response)
 		{
 			lock (syncObject)
 			{
@@ -42,7 +42,7 @@ namespace Dixie.Core
 			}
 		}
 
-		public NodeFailureType GetFailureType(Random random)
+		internal NodeFailureType GetFailureType(Random random)
 		{
 			return failurePattern.DetermineFailureType(random);
 		}

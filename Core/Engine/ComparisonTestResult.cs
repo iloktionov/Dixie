@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Dixie.Core
 {
 	[Serializable]
-	internal class ComparisonTestResult
+	public class ComparisonTestResult
 	{
 		public ComparisonTestResult()
 		{

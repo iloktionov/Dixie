@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	public enum TaskStatus
+	internal enum TaskStatus
 	{
 		Pending = 1,
 		Assigned = 2,

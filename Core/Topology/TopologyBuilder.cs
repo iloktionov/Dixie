@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Dixie.Core
 {
-	internal class TopologyBuilder
+	public class TopologyBuilder
 	{
-		public TopologyBuilder(ITopologyConfigurator configurator, Random random)
+		internal TopologyBuilder(ITopologyConfigurator configurator, Random random)
 		{
 			this.configurator = configurator;
 			this.random = random;

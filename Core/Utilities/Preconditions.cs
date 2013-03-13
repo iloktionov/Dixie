@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public static class Preconditions
+	internal static class Preconditions
 	{
 		public static void CheckNotNull<T>(T argument) where T : class
 		{

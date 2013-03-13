@@ -5,14 +5,14 @@ namespace Dixie.Core
 {
 	internal class TaskState
 	{
-		public TaskState(Task task)
+		internal TaskState(Task task)
 		{
 			Task = task;
 			Status = TaskStatus.Pending;
 			AssignedNodes = new List<Guid>();
 		}
 
-		public void AssignNode(Guid nodeId)
+		internal void AssignNode(Guid nodeId)
 		{
 			if (Status == TaskStatus.Completed)
 				throw new InvalidOperationException("Can't assign node to a completed task..");
@@ -22,7 +22,7 @@ namespace Dixie.Core
 			Status = TaskStatus.Assigned;
 		}
 
-		public void ReportNodeFailure(Guid nodeId)
+		internal void ReportNodeFailure(Guid nodeId)
 		{
 			if (Status != TaskStatus.Assigned)
 				return;
@@ -31,13 +31,13 @@ namespace Dixie.Core
 				Status = TaskStatus.Pending;
 		}
 
-		public void ReportCompletion(Guid nodeId)
+		internal void ReportCompletion(Guid nodeId)
 		{
 			Status = TaskStatus.Completed;
 		}
 
 		public Task Task { get; private set; }
 		public TaskStatus Status { get; private set; }
-		public List<Guid> AssignedNodes { get; private set; }
+		internal List<Guid> AssignedNodes { get; private set; }
 	}
 }

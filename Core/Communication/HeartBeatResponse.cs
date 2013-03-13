@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Dixie.Core
 {
-	public class HeartBeatResponse
+	internal class HeartBeatResponse
 	{
 		public HeartBeatResponse(Guid nodeId, List<Task> tasks = null)
 		{
