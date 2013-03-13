@@ -23,7 +23,7 @@ namespace Dixie.Core
 			INode[] parents = SelectRandomParents(topology, nodesToAdd);
 			for (int i = 0; i < nodesToAdd; i++)
 			{
-				var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability());
+				var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability(), NodeFailurePattern.Generate(random));
 				topology.AddNode(newNode, parents[i], configurator.GenerateLinkLatency());
 			}
 		}

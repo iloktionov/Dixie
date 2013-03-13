@@ -4,32 +4,32 @@ using NUnit.Framework;
 namespace Dixie.Core
 {
 	[TestFixture]
-	internal class NodeFailureProbabilities_Tests
+	internal class NodeFailurePattern_Tests
 	{
 		[Test]
 		public void Test_Generate()
 		{
 			var random = new Random();
 			for (int i = 0; i < 10; i++)
-				Console.Out.WriteLine(NodeFailureProbabilities.Generate(random));
+				Console.Out.WriteLine(NodeFailurePattern.Generate(random));
 		}
 
 		[Test]
 		public void Test_DetermineFailureType_1()
 		{
-			var prob = new NodeFailureProbabilities(0, 0, 1);
+			var pattern = new NodeFailurePattern(0, 0, 1);
 			var random = new Random();
 			for (int i = 0; i < 1000; i++)
-				Assert.AreEqual(NodeFailureType.Permanent, prob.DetermineFailureType(random));
+				Assert.AreEqual(NodeFailureType.Permanent, pattern.DetermineFailureType(random));
 		}
 
 		[Test]
 		public void Test_DetermineFailureType_2()
 		{
-			var prob = new NodeFailureProbabilities(0, 1, 0);
+			var pattern = new NodeFailurePattern(0, 1, 0);
 			var random = new Random();
 			for (int i = 0; i < 1000; i++)
-				Assert.AreEqual(NodeFailureType.LongTerm, prob.DetermineFailureType(random));
+				Assert.AreEqual(NodeFailureType.LongTerm, pattern.DetermineFailureType(random));
 		}
 	}
 }

@@ -76,6 +76,7 @@ namespace Dixie.Core
 				
 				Assert.NotNull(deserializedNode.workBuffer);
 				Assert.AreEqual(0, deserializedNode.workBuffer.Size);
+				Assert.AreEqual(node.failurePattern, deserializedNode.failurePattern);
 			}
 		}
 	}

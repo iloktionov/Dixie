@@ -1,15 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Dixie.Core
 {
 	internal class TopologyBuilder
 	{
-		public TopologyBuilder(ITopologyConfigurator configurator)
+		public TopologyBuilder(ITopologyConfigurator configurator, Random random)
 		{
 			this.configurator = configurator;
+			this.random = random;
 		}
 
-		public TopologyBuilder() : this (new TopologyConfigurator()) { }
+		public TopologyBuilder(Random random) 
+			: this (new TopologyConfigurator(), random) { }
+
+		public TopologyBuilder() 
+			: this (new Random()) { }
 
 		public Topology Build(int nodesCount)
 		{
@@ -29,7 +35,7 @@ namespace Dixie.Core
 				int childrenCount = configurator.GenerateChildrenCount();
 				for (int i = 0; i < childrenCount; i++)
 				{
-					var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability());
+					var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability(), NodeFailurePattern.Generate(random));
 					topology.AddNode(newNode, parentNode, configurator.GenerateLinkLatency());
 					newLayer.Add(newNode);
 					nodesGenerated++;
@@ -41,5 +47,6 @@ namespace Dixie.Core
 		}
 
 		private readonly ITopologyConfigurator configurator;
+		private readonly Random random;
 	}
 }

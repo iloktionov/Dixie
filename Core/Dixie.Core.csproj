@@ -81,8 +81,8 @@
     <Compile Include="Mutation\ReturnNodesMutator_Tests.cs" />
     <Compile Include="Config\ITopologyConfigurator.cs" />
     <Compile Include="Master\Tasks\TaskStatus.cs" />
-    <Compile Include="Node\NodeFailureProbabilities.cs" />
-    <Compile Include="Node\NodeFailureProbabilities_Tests.cs" />
+    <Compile Include="Node\NodeFailurePattern.cs" />
+    <Compile Include="Node\NodeFailurePattern_Tests.cs" />
     <Compile Include="RandomAlgorithm.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />

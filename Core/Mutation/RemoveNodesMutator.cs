@@ -38,17 +38,12 @@ namespace Dixie.Core
 			{
 				INode parent;
 				topology.RemoveNode(nodeToRemove, out parent);
-				NodeFailureType failureType = DetermineFailureType();
+				NodeFailureType failureType = nodeToRemove.GetFailureType(random);
 				if (failureType == NodeFailureType.LongTerm)
 					nodeToRemove.StopComputing();
 				if (failureType != NodeFailureType.Permanent)
 					offlineNodesPool.Put(nodeToRemove, parent, failureType, configurator.GenerateOfflineTime(failureType));
 			}
-		}
-
-		private NodeFailureType DetermineFailureType()
-		{
-			return (NodeFailureType) random.Next(1, 4);
 		}
 
 		private readonly OfflineNodesPool offlineNodesPool;

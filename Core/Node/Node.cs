@@ -7,17 +7,21 @@ namespace Dixie.Core
 	[Serializable]
 	public partial class Node : INode, IDeserializationCallback
 	{
-		public Node(double performance, double failureProbability)
+		public Node(double performance, double failureProbability, NodeFailurePattern failurePattern)
 		{
 			Preconditions.CheckArgument(performance > 0, "performance", "Must be positive.");
 			Preconditions.CheckArgument(failureProbability >= 0 && failureProbability <= 1, "failureProbability", "Must be in [0; 1].");
 			Performance = performance;
 			FailureProbability = failureProbability;
+			this.failurePattern = failurePattern;
 			Id = Guid.NewGuid();
 			workBuffer = new WorkBuffer();
 			LastHBTimestamp = TimeSpan.MinValue;
 			syncObject = new object();
 		}
+
+		public Node(double performance, double failureProbability)
+			: this (performance, failureProbability, NodeFailurePattern.CreateDefaults()) { }
 
 		public HeartBeatMessage GetHeartBeatMessage()
 		{
@@ -36,6 +40,11 @@ namespace Dixie.Core
 					foreach (Task task in response.Tasks)
 						workBuffer.PutTask(task.Id, GetCalculationTime(task));
 			}
+		}
+
+		public NodeFailureType GetFailureType(Random random)
+		{
+			return failurePattern.DetermineFailureType(random);
 		}
 
 		public bool IsComputing()
@@ -109,5 +118,6 @@ namespace Dixie.Core
 		private WorkBuffer workBuffer;
 		[NonSerialized]
 		private object syncObject;
+		private readonly NodeFailurePattern failurePattern;
 	}
 }
