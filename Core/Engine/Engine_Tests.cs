@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using NUnit.Framework;
 
 namespace Dixie.Core
@@ -23,11 +22,10 @@ namespace Dixie.Core
 			Console.Out.WriteLine(result2.IntermediateResults.Count);
 			Console.Out.WriteLine(result2.IntermediateResults.Count);
 
-			File.WriteAllText("result1.txt", result1.ToString());
-			File.WriteAllText("result2.txt", result2.ToString());
-
 			// (iloktionov): Т.к. у обоих алгоритмов одинаковый seed, они должны показать очень близкие результаты.
-			Assert.Less(Math.Abs(1 - result1.TotalWorkDone / result2.TotalWorkDone), 0.05);
+			double differenceInPct = Math.Abs(1 - result1.TotalWorkDone/result2.TotalWorkDone) * 100d;
+			Console.Out.WriteLine("Difference pct = {0:0.000}%", differenceInPct);
+			Assert.Less(differenceInPct, 5);
 		}
 	}
 }
