@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Dixie.Core
@@ -26,10 +27,10 @@ namespace Dixie.Core
 
 		public override string ToString()
 		{
+			if (AlgorithmResults.Count <= 0)
+				return "No results.";
 			var builder = new StringBuilder();
-			string winner = GetWinnerOrNull();
-			builder.AppendFormat("Winner: {0}", winner ?? "null");
-			foreach (KeyValuePair<string, AlgorithmTestResult> pair in AlgorithmResults)
+			foreach (KeyValuePair<string, AlgorithmTestResult> pair in AlgorithmResults.OrderByDescending(pair => pair.Value.TotalWorkDone))
 			{
 				builder.AppendLine();
 				builder.AppendFormat("{0}: {1}", pair.Key, pair.Value.ToString(true));
