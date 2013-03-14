@@ -7,9 +7,10 @@ namespace Dixie.Core
 {
 	public class Engine
 	{
-		public Engine(InitialGridState initialState )
+		public Engine(InitialGridState initialState, ILog log)
 		{
 			this.initialState = initialState;
+			this.log = log;
 		}
 
 		public ComparisonTestResult TestAlgorithms(IEnumerable<ISchedulerAlgorithm> algorithms, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
@@ -31,7 +32,7 @@ namespace Dixie.Core
 				initialState.TopologySettings
 			);
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
-			tasksGenerator = new TasksGenerator(initialState);
+			tasksGenerator = new TasksGenerator(initialState, log);
 
 			var engineThreads = new Thread[4];
 			var hbSyncEvent = new ManualResetEvent(false);
@@ -92,6 +93,8 @@ namespace Dixie.Core
 		}
 
 		private readonly InitialGridState initialState;
+		private readonly ILog log;
+
 		private Topology topology;
 		private Master master;
 		private CompositeMutator topologyMutator;
