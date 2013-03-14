@@ -58,6 +58,11 @@
     <Compile Include="Engine\TasksGenerator.cs" />
     <Compile Include="FirstNodeAlgorithm.cs" />
     <Compile Include="ISchedulerAlgorithm.cs" />
+    <Compile Include="Logging\ColorConsoleLog.cs" />
+    <Compile Include="Logging\ConsoleColorChanger.cs" />
+    <Compile Include="Logging\FileBasedLog.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\PrefixedILogWrapper.cs" />
     <Compile Include="Master\Master.cs" />
     <Compile Include="Master\NodeFailureHistory.cs" />
     <Compile Include="Master\NodeInfo.cs" />
