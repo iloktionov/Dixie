@@ -21,10 +21,16 @@ namespace Dixie.Core
 
 		public override string ToString()
 		{
+			return ToString(false);
+		}
+
+		public string ToString(bool shortFormat)
+		{
 			var builder = new StringBuilder();
 			builder.AppendFormat("Total: {0:0.000}{1}", TotalWorkDone, Environment.NewLine);
-			foreach (IntermediateTestResult result in IntermediateResults)
-				builder.AppendLine(result.ToString());
+			if (!shortFormat)
+				foreach (IntermediateTestResult result in IntermediateResults)
+					builder.AppendLine(result.ToString());
 			return builder.ToString();
 		}
 
