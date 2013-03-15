@@ -16,6 +16,7 @@
 			{
 				if (info.FailureType == NodeFailureType.LongTerm)
 					info.OfflineNode.ResumeComputing();
+				// (iloktionov): Добавление может и не произойти, если parent уже не в топологии, но ничего страшного в этом нет. 
 				topology.AddNode(info.OfflineNode, info.ParentNode, configurator.GenerateLinkLatency());
 			}
 		}

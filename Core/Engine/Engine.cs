@@ -39,6 +39,7 @@ namespace Dixie.Core
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
 			tasksGenerator = new TasksGenerator(initialState, testLog);
 			errorsCount = 0;
+			LogTopologyBoundaries(topology.WorkerNodesCount);
 
 			var engineThreads = new Thread[5];
 			var hbSyncEvent = new ManualResetEvent(false);
@@ -119,7 +120,7 @@ namespace Dixie.Core
 
 		private void OnUnexpectedError(Exception error)
 		{
-			testLog.Error("An unexpected error occured during test: {0}", error);
+			LogUnexpectedError(error);
 			Interlocked.Increment(ref errorsCount);
 		}
 
@@ -133,6 +134,13 @@ namespace Dixie.Core
 		private void LogTestAlgorithm(TimeSpan duration)
 		{
 			testLog.Info("Started testing. Duration = {0}.", duration);
+		}
+
+		private void LogTopologyBoundaries(int initialCount)
+		{
+			testLog.Info("Initial topology size: {0}", initialCount);
+			testLog.Info("Min topology size: {0}", (int)(initialCount * CompositeMutator.MinNodesCountMultiplier));
+			testLog.Info("Max topology size: {0}", (int)(initialCount * CompositeMutator.MaxNodesCountMultiplier));
 		}
 
 		private void LogEnabledHBM()
@@ -158,6 +166,11 @@ namespace Dixie.Core
 		private void LogResult(AlgorithmTestResult result)
 		{
 			testLog.Info(result.ToString(true));
+		}
+
+		private void LogUnexpectedError(Exception error)
+		{
+			testLog.Error("An unexpected error occured during test: {0}", error);
 		}
 		#endregion
 

@@ -3,7 +3,6 @@
 namespace Dixie.Core
 {
 	// TODO(iloktionov): reweight topology edges
-	// TODO(iloktionov): optimize speed
 	internal class CompositeMutator : ITopologyMutator
 	{
 		public CompositeMutator(int seed, int initialNodesCount, double removeNodesProbability, double addNodesProbability, TopologySettings topologySettings, GarbageCollector garbageCollector)
@@ -35,7 +34,7 @@ namespace Dixie.Core
 		private readonly double removeNodesProbability;
 		private readonly double addNodesProbability;
 
-		private const double MinNodesCountMultiplier = 0.7d;
-		private const double MaxNodesCountMultiplier = 1.15d;
+		public const double MinNodesCountMultiplier = 0.7d;
+		public const double MaxNodesCountMultiplier = 1.15d;
 	}
 }
