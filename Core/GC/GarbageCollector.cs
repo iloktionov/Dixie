@@ -4,6 +4,8 @@ using System.Collections.Generic;
 namespace Dixie.Core
 {
 	// (iloktionov): Нужен для того, чтобы информация о навсегда удалённых из топологии нодах не копилась снежным комом во время долгих тестов.
+	// TODO(iloktionov): delay > deadability threshold
+	// TODO(iloktionov): clear tasks manager
 	internal class GarbageCollector
 	{
 		public GarbageCollector()

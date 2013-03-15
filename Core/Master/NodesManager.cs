@@ -4,34 +4,46 @@ using System.Diagnostics;
 
 namespace Dixie.Core
 {
-	// TODO(iloktionov): Gather failure histories
-	// TODO(iloktionov): GC for nodes that failed permanently
 	internal partial class NodesManager
 	{
 		public NodesManager(TimeSpan deadabilityThreshold)
 		{
 			this.deadabilityThreshold = deadabilityThreshold;
-			hbmTimestamps = new Dictionary<Guid, TimeSpan>();
 			aliveNodeInfos = new Dictionary<Guid, NodeInfo>();
+			offlineNodeInfos = new Dictionary<Guid, NodeInfo>();
 			watch = Stopwatch.StartNew();
 		}
 
 		public void HandleHeartBeatMessage(HeartBeatMessage message)
 		{
-			hbmTimestamps[message.NodeId] = watch.Elapsed;
-			NodeInfo info;
-			if (aliveNodeInfos.TryGetValue(message.NodeId, out info))
+			NodeInfo nodeInfo;
+			if (aliveNodeInfos.TryGetValue(message.NodeId, out nodeInfo))
 			{
-				// Нода живая, это обычный пинг.
-				info.Performance = message.Performance;
-				info.WorkBufferSize = message.WorkBufferSize;
-				info.CommunicationLatency = message.CommunicationLatency;
+				// (iloktionov): "Живая" нода посылает очередной пинг.
+				nodeInfo.Performance = message.Performance;
+				nodeInfo.WorkBufferSize = message.WorkBufferSize;
+				nodeInfo.CommunicationLatency = message.CommunicationLatency;
+				nodeInfo.LastPingTimestamp = watch.Elapsed;
+			}
+			else if (offlineNodeInfos.TryGetValue(message.NodeId, out nodeInfo))
+			{
+				// (iloktionov): Нода возвращается из оффлайна.
+				nodeInfo.Performance = message.Performance;
+				nodeInfo.WorkBufferSize = message.WorkBufferSize;
+				nodeInfo.CommunicationLatency = message.CommunicationLatency;
+
+				TimeSpan pingTSBeforeFailure = nodeInfo.LastPingTimestamp;
+				nodeInfo.LastPingTimestamp = watch.Elapsed;
+				nodeInfo.FailureHistory.AddFailure(pingTSBeforeFailure, nodeInfo.LastPingTimestamp - pingTSBeforeFailure);
+
+				offlineNodeInfos.Remove(message.NodeId);
+				aliveNodeInfos.Add(message.NodeId, nodeInfo);
 			}
 			else
 			{
-				// Появилась новая нода, или вернулась из оффлайна старая.
-				info = new NodeInfo(message.NodeId, message.Performance, message.CommunicationLatency, message.WorkBufferSize);
-				aliveNodeInfos.Add(message.NodeId, info);
+				// (iloktionov): Пришёл первый пинг от абсолютно новой ноды.
+				nodeInfo = new NodeInfo(message.NodeId, message.Performance, message.CommunicationLatency, message.WorkBufferSize, watch.Elapsed);
+				aliveNodeInfos.Add(message.NodeId, nodeInfo);
 			}
 		}
 
@@ -39,16 +51,30 @@ namespace Dixie.Core
 		{
 			TimeSpan timeElapsed = watch.Elapsed;
 			List<Guid> result = null;
-			foreach (KeyValuePair<Guid, TimeSpan> pair in hbmTimestamps)
-				if (timeElapsed - pair.Value > deadabilityThreshold)
+			foreach (KeyValuePair<Guid, NodeInfo> pair in aliveNodeInfos)
+				if (timeElapsed - pair.Value.LastPingTimestamp > deadabilityThreshold)
 				{
-					aliveNodeInfos.Remove(pair.Key);
 					if (result == null)
 						result = new List<Guid>();
 					result.Add(pair.Key);
 					FailuresCount++;
 				}
+			if (result != null)
+				foreach (Guid nodeId in result)
+				{
+					NodeInfo info = aliveNodeInfos[nodeId];
+					aliveNodeInfos.Remove(nodeId);
+					offlineNodeInfos.Add(nodeId, info);
+				}
 			return result;
+		}
+
+		// (iloktionov): GarbageCollector гарантирует, что со времени пропажи ноды прошло гораздо больше, чем deadabilityThreshold.
+		// Поэтому удалять из alives не требуется.
+		public void CollectGarbage(IEnumerable<Guid> permanentlyDeletedNodes)
+		{
+			foreach (Guid nodeId in permanentlyDeletedNodes)
+				offlineNodeInfos.Remove(nodeId);
 		}
 
 		public List<NodeInfo> GetAliveNodeInfos()
@@ -56,20 +82,20 @@ namespace Dixie.Core
 			return new List<NodeInfo>(aliveNodeInfos.Values);
 		}
 
-		public void CollectGarbage(IEnumerable<Guid> permanentlyDeletedNodes)
-		{
-			// TODO(iloktionov): implement
-		}
-
 		internal int AliveNodesCount
 		{
 			get { return aliveNodeInfos.Count; }
 		}
 
+		internal int OfflineNodesCount
+		{
+			get { return offlineNodeInfos.Count; }
+		}
+
 		internal int FailuresCount { get; private set; }
 
-		private readonly Dictionary<Guid, TimeSpan> hbmTimestamps;
 		private readonly Dictionary<Guid, NodeInfo> aliveNodeInfos;
+		private readonly Dictionary<Guid, NodeInfo> offlineNodeInfos;
 		private readonly Stopwatch watch;
 		private readonly TimeSpan deadabilityThreshold;
 	}
