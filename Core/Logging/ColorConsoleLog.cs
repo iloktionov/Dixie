@@ -4,7 +4,7 @@ namespace Dixie.Core
 {
 	public class ColorConsoleLog : ILog
 	{
-		public ColorConsoleLog(bool isDebugEnabled = true)
+		public ColorConsoleLog(bool isDebugEnabled = false)
 		{
 			IsDebugEnabled = isDebugEnabled;
 		}

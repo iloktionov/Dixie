@@ -6,7 +6,7 @@ namespace Dixie.Core
 {
 	public class FileBasedLog : ILog
 	{
-		public FileBasedLog(string fileName, FileMode fileMode = FileMode.Create, bool isDebugEnabled = true)
+		public FileBasedLog(string fileName, FileMode fileMode = FileMode.Create, bool isDebugEnabled = false)
 		{
 			IsDebugEnabled = isDebugEnabled;
 			var stream = new FileStream(fileName, fileMode, FileAccess.Write, FileShare.ReadWrite);
