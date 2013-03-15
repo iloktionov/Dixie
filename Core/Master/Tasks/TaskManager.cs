@@ -19,8 +19,6 @@ namespace Dixie.Core
 		internal void PutTasks(IEnumerable<Task> tasks)
 		{
 			taskStates = tasks.ToDictionary(task => task.Id, task => new TaskState(task));
-			if (assignationsMap.Count > 0)
-				LogAssignationsNotEmpty();
 			assignationsMap.Clear();
 			completedTasksCount = 0;
 		}
@@ -102,11 +100,6 @@ namespace Dixie.Core
 		}
 
 		#region Logging
-		private void LogAssignationsNotEmpty()
-		{
-			log.Info("Strange situation: assignations map not empty on new tasks batch.");
-		} 
-
 		private void LogCompletionProgress()
 		{
 			log.Debug("Completed tasks: {0}/{1}.", completedTasksCount, taskStates.Count);
