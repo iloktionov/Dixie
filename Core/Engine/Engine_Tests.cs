@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Dixie.Core
@@ -26,6 +27,40 @@ namespace Dixie.Core
 			double differenceInPct = Math.Abs(1 - result1.TotalWorkDone/result2.TotalWorkDone) * 100d;
 			Console.Out.WriteLine("Difference pct = {0:0.000}%", differenceInPct);
 			Assert.Less(differenceInPct, 5);
+		}
+
+		[Test]
+		public void Test_CatchExceptionsInTestThreads()
+		{
+			var topology = new TopologyBuilder().Build(500);
+			var state = new InitialGridState(topology, 3456546, TopologySettings.GetInstance(), EngineSettings.GetInstance());
+			var engine = new Engine(state, new ColorConsoleLog());
+			ISchedulerAlgorithm algorithm = new ErrorAlgorithm();
+
+			try
+			{
+				engine.TestAlgorithm(algorithm, TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(10));
+				Assert.Fail("Engine must throw EngineException.");
+			}
+			catch (EngineException error)
+			{
+				Console.Out.WriteLine(error);
+			}
+			catch (Exception error)
+			{
+				Console.Out.WriteLine(error);
+				Assert.Fail("Engine must throw EngineException.");
+			}
+		}
+
+		private class ErrorAlgorithm : ISchedulerAlgorithm
+		{
+			public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
+			{
+				throw new Exception("Test exception from ErrorAlgorithm!");
+			}
+
+			public string Name { get { return "Error"; } }
 		}
 	}
 }

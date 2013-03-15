@@ -38,6 +38,7 @@ namespace Dixie.Core
 			);
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
 			tasksGenerator = new TasksGenerator(initialState, testLog);
+			errorsCount = 0;
 
 			var engineThreads = new Thread[5];
 			var hbSyncEvent = new ManualResetEvent(false);
@@ -65,6 +66,7 @@ namespace Dixie.Core
 					break;
 				Thread.Sleep(ExtendedMath.Min(intermediateCheckPeriod, timeBeforeEnd + TimeSpan.FromMilliseconds(1)));
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
+				CheckErrors();
 			}
 
 			// (iloktionov): Теперь остановим подсчет результатов и возьмем финальное значение перед завершением потоков.
@@ -72,12 +74,33 @@ namespace Dixie.Core
 			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			StopThreads(engineThreads);
 			LogResult(testResult);
+			CheckErrors();
 			return testResult;
 		}
 
 		private Thread StartHeartBeatsMechanism(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1), syncEvent);
+			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1), syncEvent, OnUnexpectedError);
+		}
+
+		private Thread StartTopologyMutations(WaitHandle syncEvent)
+		{
+			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), initialState.EngineSettings.TopologyMutatorRunPeriod, syncEvent, OnUnexpectedError);
+		}
+
+		private Thread StartTaskGeneration(WaitHandle syncEvent)
+		{
+			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), initialState.EngineSettings.TasksGeneratorRunPeriod, syncEvent, OnUnexpectedError);
+		}
+
+		private Thread StartSchedulerAlgorithm(WaitHandle syncEvent)
+		{
+			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), initialState.EngineSettings.SchedulingAlgorithmRunPeriod, syncEvent, OnUnexpectedError);
+		}
+
+		private Thread StartGarbageCollection(WaitHandle syncEvent)
+		{
+			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent, OnUnexpectedError);
 		}
 
 		private void WaitForMasterStateWarmup()
@@ -94,24 +117,16 @@ namespace Dixie.Core
 			LogStoppedThreads();
 		}
 
-		private Thread StartTopologyMutations(WaitHandle syncEvent)
+		private void OnUnexpectedError(Exception error)
 		{
-			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), initialState.EngineSettings.TopologyMutatorRunPeriod, syncEvent);
+			testLog.Error("An unexpected error occured during test: {0}", error);
+			Interlocked.Increment(ref errorsCount);
 		}
 
-		private Thread StartTaskGeneration(WaitHandle syncEvent)
+		private void CheckErrors()
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), initialState.EngineSettings.TasksGeneratorRunPeriod, syncEvent);
-		}
-
-		private Thread StartSchedulerAlgorithm(WaitHandle syncEvent)
-		{
-			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), initialState.EngineSettings.SchedulingAlgorithmRunPeriod, syncEvent);
-		}
-
-		private Thread StartGarbageCollection(WaitHandle syncEvent)
-		{
-			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent);
+			if (errorsCount > 0)
+				throw new EngineException("There were some errors in test threads. Can't continue.");
 		}
 
 		#region Logging
@@ -156,6 +171,7 @@ namespace Dixie.Core
 		private TasksGenerator tasksGenerator;
 		private ISchedulerAlgorithm schedulerAlgorithm;
 		private GarbageCollector garbageCollector;
+		private int errorsCount;
 		private ILog testLog;
 	}
 }

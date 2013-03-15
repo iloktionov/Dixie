@@ -5,19 +5,19 @@ namespace Dixie.Core
 {
 	internal static class ThreadRunner
 	{
-		public static Thread Run(Action threadRoutine, Action<Thread> tuneThreadBeforeStart = null)
+		public static Thread Run(Action threadRoutine, Action<Thread> tuneThreadBeforeStart = null, Action<Exception> onException = null)
 		{
-			var t = new Thread(ThreadRoutineWrapper.Wrap(threadRoutine))
-				{
-					IsBackground = true
-				};
+			var thread = new Thread(ThreadRoutineWrapper.Wrap(threadRoutine, onException))
+			{
+				IsBackground = true
+			};
 			if (tuneThreadBeforeStart != null)
-				tuneThreadBeforeStart(t);
-			t.Start();
-			return t;
+				tuneThreadBeforeStart(thread);
+			thread.Start();
+			return thread;
 		}
 
-		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, WaitHandle waitHandle)
+		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, WaitHandle waitHandle, Action<Exception> onException = null)
 		{
 			return Run(() =>
 			{
@@ -27,15 +27,17 @@ namespace Dixie.Core
 					Thread.Sleep(period);
 					periodicAction();
 				}
-			});
+			}, null, onException);
 		}
 
 		public static void StopThreads(params Thread[] threads)
 		{
 			foreach (Thread thread in threads)
-				thread.Abort();
+				if (thread != null)
+					thread.Abort();
 			foreach (Thread thread in threads)
-				thread.Join();
+				if (thread != null)
+					thread.Join();
 		}
 	}
 }
