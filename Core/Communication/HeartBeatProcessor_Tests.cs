@@ -78,6 +78,80 @@ namespace Dixie.Core
 				Assert.False(processor.NeededToSendMessage(node, processor.watch.Elapsed));
 			}
 
+			[Test]
+			public void Test_SendMessages()
+			{
+				Topology topology = Topology.CreateEmpty();
+				var master = new Master(TimeSpan.MaxValue, new ColorConsoleLog());
+				var node1 = new Node(1, 0.1d);
+				var node2 = new Node(2, 0.2d);
+				var node3 = new Node(3, 0.3d);
+				topology.AddNode(node1, topology.MasterNode, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node2, topology.MasterNode, TimeSpan.FromMilliseconds(2));
+				topology.AddNode(node3, topology.MasterNode, TimeSpan.FromMilliseconds(3));
+				var processor = new HeartBeatProcessor(topology, master, TimeSpan.FromMilliseconds(5));
+
+				processor.SendMessages(new [] {node1, node2, node3, new Node(4, 0.4d) });
+				Assert.AreEqual(3, processor.outgoingMessages.Count);
+				Assert.AreEqual(node1.Id, processor.outgoingMessages[0].Key.NodeId);
+				Assert.AreEqual(node2.Id, processor.outgoingMessages[1].Key.NodeId);
+				Assert.AreEqual(node3.Id, processor.outgoingMessages[2].Key.NodeId);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(1), processor.outgoingMessages[0].Key.CommunicationLatency);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(2), processor.outgoingMessages[1].Key.CommunicationLatency);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(3), processor.outgoingMessages[2].Key.CommunicationLatency);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(1), processor.outgoingMessages[1].Value - processor.outgoingMessages[0].Value);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(1), processor.outgoingMessages[2].Value - processor.outgoingMessages[1].Value);
+			}
+
+			[Test]
+			public void Test_DeliverOutgoingMessages()
+			{
+				Topology topology = Topology.CreateEmpty();
+				var master = new Master(TimeSpan.MaxValue, new ColorConsoleLog());
+				var node1 = new Node(1, 0.1d);
+				var node2 = new Node(2, 0.2d);
+				var node3 = new Node(3, 0.3d);
+				var processor = new HeartBeatProcessor(topology, master, TimeSpan.FromMilliseconds(5));
+
+				var message1 = new HeartBeatMessage(node1.Id, 0) {CommunicationLatency = TimeSpan.FromMilliseconds(1)};
+				var message2 = new HeartBeatMessage(node2.Id, 0) {CommunicationLatency = TimeSpan.FromMilliseconds(2)};
+				var message3 = new HeartBeatMessage(node3.Id, 0) {CommunicationLatency = TimeSpan.FromMilliseconds(3)};
+				processor.outgoingMessages.Add(new KeyValuePair<HeartBeatMessage, TimeSpan>(message1, TimeSpan.MinValue));
+				processor.outgoingMessages.Add(new KeyValuePair<HeartBeatMessage, TimeSpan>(message2, TimeSpan.MinValue));
+				processor.outgoingMessages.Add(new KeyValuePair<HeartBeatMessage, TimeSpan>(message3, TimeSpan.MaxValue));
+
+				processor.DeliverOutgoingMessages();
+				Assert.AreEqual(1, processor.outgoingMessages.Count);
+				Assert.AreEqual(2, processor.incomingResponses.Count);
+				Assert.AreEqual(TimeSpan.FromMilliseconds(1), processor.incomingResponses[1].Value - processor.incomingResponses[0].Value);
+			}
+
+			[Test]
+			public void Test_DeliverIncomingResponse()
+			{
+				Topology topology = Topology.CreateEmpty();
+				var master = new Master(TimeSpan.MaxValue, new ColorConsoleLog());
+				var node1 = new Node(1, 0.1d);
+				var node2 = new Node(2, 0.2d);
+				var node3 = new Node(3, 0.3d);
+				topology.AddNode(node1, topology.MasterNode, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node2, topology.MasterNode, TimeSpan.FromMilliseconds(2));
+				topology.AddNode(node3, topology.MasterNode, TimeSpan.FromMilliseconds(3));
+				var processor = new HeartBeatProcessor(topology, master, TimeSpan.FromMilliseconds(5));
+
+				var task = new Task(1000d);
+				processor.incomingResponses.Add(new KeyValuePair<HeartBeatResponse, TimeSpan>(new HeartBeatResponse(node1.Id), TimeSpan.MaxValue));
+				processor.incomingResponses.Add(new KeyValuePair<HeartBeatResponse, TimeSpan>(new HeartBeatResponse(node2.Id), TimeSpan.MinValue));
+				processor.incomingResponses.Add(new KeyValuePair<HeartBeatResponse, TimeSpan>(new HeartBeatResponse(node3.Id, new List<Task>{task}), TimeSpan.MinValue));
+				processor.incomingResponses.Add(new KeyValuePair<HeartBeatResponse, TimeSpan>(new HeartBeatResponse(Guid.NewGuid()), TimeSpan.MinValue));
+
+				processor.DeliverIncomingResponses();
+				Assert.AreEqual(1, processor.incomingResponses.Count);
+				Assert.AreEqual(node1.Id, processor.incomingResponses[0].Key.NodeId);
+				Assert.AreEqual(1, node3.GetHeartBeatMessage().WorkBufferSize);
+				
+			}
+
 			private static void PrintProcessorState(HeartBeatProcessor processor)
 			{
 				Console.Out.WriteLine("");

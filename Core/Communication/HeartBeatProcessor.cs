@@ -19,14 +19,13 @@ namespace Dixie.Core
 
 		public void DeliverMessagesAndResponses()
 		{
-			SendMessages();
+			SendMessages(topology.GetWorkerNodes());
 			DeliverOutgoingMessages();
 			DeliverIncomingResponses();
 		}
 
-		private void SendMessages()
+		private void SendMessages(IEnumerable<Node> workerNodes)
 		{
-			List<Node> workerNodes = topology.GetWorkerNodes();
 			TimeSpan timeElapsed = watch.Elapsed;
 			foreach (Node workerNode in workerNodes)
 			{
