@@ -3,7 +3,7 @@
 namespace Dixie.Core
 {
 	[Serializable]
-	internal struct NodeFailurePattern
+	internal class NodeFailurePattern
 	{
 		public NodeFailurePattern(double shortTermFailProbability, double longTermFailProbability, double permanentFailProbability)
 		{
@@ -68,8 +68,8 @@ namespace Dixie.Core
 				hashCode = (hashCode * 397) ^ LongTermFailProbability.GetHashCode();
 				hashCode = (hashCode * 397) ^ PermanentFailProbability.GetHashCode();
 				return hashCode;
-			} 
-		#endregion
+			}
 		}
+		#endregion
 	}
 }

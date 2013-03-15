@@ -114,10 +114,8 @@ namespace Dixie.Core
 			return TimeSpan.FromMilliseconds(task.Volume / Performance);
 		}
 
-		[NonSerialized]
-		private WorkBuffer workBuffer;
-		[NonSerialized]
-		private object syncObject;
 		private readonly NodeFailurePattern failurePattern;
+		[NonSerialized] private WorkBuffer workBuffer;
+		[NonSerialized] private object syncObject;
 	}
 }
