@@ -6,9 +6,10 @@ namespace Dixie.Core
 {
 	internal partial class NodesManager
 	{
-		public NodesManager(TimeSpan deadabilityThreshold)
+		public NodesManager(TimeSpan deadabilityThreshold, ILog log)
 		{
 			this.deadabilityThreshold = deadabilityThreshold;
+			this.log = new PrefixedILogWrapper(log, "NodesManager");
 			aliveNodeInfos = new Dictionary<Guid, NodeInfo>();
 			offlineNodeInfos = new Dictionary<Guid, NodeInfo>();
 			watch = Stopwatch.StartNew();
@@ -60,12 +61,15 @@ namespace Dixie.Core
 					FailuresCount++;
 				}
 			if (result != null)
+			{
 				foreach (Guid nodeId in result)
 				{
 					NodeInfo info = aliveNodeInfos[nodeId];
 					aliveNodeInfos.Remove(nodeId);
 					offlineNodeInfos.Add(nodeId, info);
 				}
+				LogDeadsCount(result.Count);
+			}
 			return result;
 		}
 
@@ -94,9 +98,17 @@ namespace Dixie.Core
 
 		internal int FailuresCount { get; private set; }
 
+		#region Logging
+		private void LogDeadsCount(int count)
+		{
+			log.Info("Removed {0} dead node(s).", count);
+		}
+		#endregion
+
 		private readonly Dictionary<Guid, NodeInfo> aliveNodeInfos;
 		private readonly Dictionary<Guid, NodeInfo> offlineNodeInfos;
 		private readonly Stopwatch watch;
 		private readonly TimeSpan deadabilityThreshold;
+		private readonly ILog log;
 	}
 }

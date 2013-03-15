@@ -13,7 +13,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_PutTasks_1()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				manager.PutTasks(GenerateTasks(10));
 				Assert.AreEqual(10, manager.taskStates.Count);
 				Assert.AreEqual(10, manager.GetPendingTasks().Count);
@@ -22,7 +22,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_PutTasks_2()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				List<Task> tasks = GenerateTasks(100);
 				manager.PutTasks(tasks);
 				Assert.AreEqual(100, manager.taskStates.Count);
@@ -38,7 +38,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_GetPendingTasks()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				manager.PutTasks(GenerateTasks(10));
 				for (int i = 0; i < 10; i++)
 				{
@@ -50,7 +50,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_MultipleNodesCompleteEachTask()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				Assert.True(manager.NeedsRefill());
 				List<Task> tasks = GenerateTasks(10, 10);
 				manager.PutTasks(tasks);
@@ -75,7 +75,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_AssignationProcess()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				List<Task> tasks = GenerateTasks(10);
 				Guid node1 = Guid.NewGuid();
 				Guid node2 = Guid.NewGuid();
@@ -104,7 +104,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_ReportTaskCompletion()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				List<Task> tasks = GenerateTasks(10);
 				manager.PutTasks(tasks);
 				manager.ReportTasksCompletion(Guid.NewGuid(), tasks.GetRange(0, 5).Select(task => task.Id).ToList());
@@ -116,7 +116,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_ReportDeadNodes()
 			{
-				var manager = new TaskManager();
+				var manager = new TaskManager(log);
 				List<Task> tasks = GenerateTasks(10);
 				Guid node = Guid.NewGuid();
 				manager.PutTasks(tasks);
@@ -135,6 +135,8 @@ namespace Dixie.Core
 			{
 				return Enumerable.Range(1, count).Select(i => new Task(volume)).ToList();
 			}
+
+			private readonly ILog log = new ColorConsoleLog(true);
 		}
 	}
 }

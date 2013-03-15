@@ -9,8 +9,8 @@ namespace Dixie.Core
 		public Master(TimeSpan deadabilityThreshold, ILog log)
 		{
 			this.log = new PrefixedILogWrapper(log, "Master");
-			nodesManager = new NodesManager(deadabilityThreshold);
-			taskManager = new TaskManager();
+			nodesManager = new NodesManager(deadabilityThreshold, this.log);
+			taskManager = new TaskManager(this.log);
 			watch = Stopwatch.StartNew();
 			syncObject = new object();
 		}

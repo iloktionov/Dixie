@@ -6,8 +6,9 @@ namespace Dixie.Core
 {
 	public partial class TaskManager
 	{
-		internal TaskManager()
+		internal TaskManager(ILog log)
 		{
+			this.log = new PrefixedILogWrapper(log, "TaskManager");
 			taskStates = new Dictionary<Guid, TaskState>();
 			assignationsMap = new Dictionary<Guid, List<Task>>();
 			completedTasksCount = 0;
@@ -18,6 +19,8 @@ namespace Dixie.Core
 		internal void PutTasks(IEnumerable<Task> tasks)
 		{
 			taskStates = tasks.ToDictionary(task => task.Id, task => new TaskState(task));
+			if (assignationsMap.Count > 0)
+				LogAssignationsNotEmpty();
 			assignationsMap.Clear();
 			completedTasksCount = 0;
 		}
@@ -74,6 +77,7 @@ namespace Dixie.Core
 					if (accumulateNewResults)
 						TotalWorkDone += state.Task.Volume;
 				}
+				LogCompletionProgress();
 			}
 		}
 
@@ -97,7 +101,20 @@ namespace Dixie.Core
 				assignationsMap.Remove(nodeId);
 		}
 
+		#region Logging
+		private void LogAssignationsNotEmpty()
+		{
+			log.Info("Strange situation: assignations map not empty on new tasks batch.");
+		} 
+
+		private void LogCompletionProgress()
+		{
+			log.Debug("Completed tasks: {0}/{1}.", completedTasksCount, taskStates.Count);
+		}
+		#endregion
+
 		private readonly Dictionary<Guid, List<Task>> assignationsMap;
+		private readonly ILog log;
 		private Dictionary<Guid, TaskState> taskStates;
 		private int completedTasksCount;
 		private volatile bool accumulateNewResults;

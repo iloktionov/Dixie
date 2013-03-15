@@ -14,7 +14,7 @@ namespace Dixie.Core
 			public void Test_HandleHeartBeatMessage()
 			{
 				Guid node = Guid.NewGuid();
-				var manager = new NodesManager(TimeSpan.Zero);
+				var manager = new NodesManager(TimeSpan.Zero, log);
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(node, 1, 1) { CommunicationLatency = TimeSpan.FromSeconds(1)});
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
@@ -27,7 +27,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_RemoveDeads()
 			{
-				var manager = new NodesManager(TimeSpan.FromMilliseconds(50));
+				var manager = new NodesManager(TimeSpan.FromMilliseconds(50), log);
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
@@ -44,7 +44,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_HBMSavesFromOffline()
 			{
-				var manager = new NodesManager(TimeSpan.FromMilliseconds(5));
+				var manager = new NodesManager(TimeSpan.FromMilliseconds(5), log);
 				Guid nodeId = Guid.NewGuid();
 				for (int i = 0; i < 500; i++)
 				{
@@ -60,7 +60,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_ReturnFromOffline()
 			{
-				var manager = new NodesManager(TimeSpan.FromMilliseconds(10));
+				var manager = new NodesManager(TimeSpan.FromMilliseconds(10), log);
 				Guid node1 = Guid.NewGuid();
 				Guid node2 = Guid.NewGuid();
 				Guid node3 = Guid.NewGuid();
@@ -87,7 +87,7 @@ namespace Dixie.Core
 			[Test]
 			public void Test_FailureHistory()
 			{
-				var manager = new NodesManager(TimeSpan.FromMilliseconds(1));
+				var manager = new NodesManager(TimeSpan.FromMilliseconds(1), log);
 				Guid node = Guid.NewGuid();
 				const int FailuresCount = 100;
 
@@ -109,6 +109,8 @@ namespace Dixie.Core
 					Console.Out.WriteLine(VARIABLE.Duration);
 				}
 			}
+
+			private readonly ILog log = new ColorConsoleLog(true);
 		}
 	}
 }
