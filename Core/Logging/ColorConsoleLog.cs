@@ -4,6 +4,17 @@ namespace Dixie.Core
 {
 	public class ColorConsoleLog : ILog
 	{
+		public ColorConsoleLog(bool isDebugEnabled = true)
+		{
+			IsDebugEnabled = isDebugEnabled;
+		}
+
+		public void Debug(string format, params object[] args)
+		{
+			using (new ConsoleColorChanger(DebugColor))
+				Console.Out.WriteLine(FormatMessage("DEBUG " + format, args));
+		}
+
 		public void Info(string format, params object[] args)
 		{
 			using (new ConsoleColorChanger(InfoColor))
@@ -22,6 +33,8 @@ namespace Dixie.Core
 				Console.Out.WriteLine(FormatMessage("ERROR " + format, args));
 		}
 
+		public bool IsDebugEnabled { get; set; }
+
 		private static string FormatMessage(string format, params object[] args)
 		{
 			try
@@ -34,6 +47,7 @@ namespace Dixie.Core
 			}
 		}
 
+		private const ConsoleColor DebugColor = ConsoleColor.DarkGreen;
 		private const ConsoleColor InfoColor = ConsoleColor.White;
 		private const ConsoleColor WarnColor = ConsoleColor.Yellow;
 		private const ConsoleColor ErrorColor = ConsoleColor.Red;

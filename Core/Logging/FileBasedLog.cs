@@ -6,10 +6,20 @@ namespace Dixie.Core
 {
 	public class FileBasedLog : ILog
 	{
-		public FileBasedLog(string fileName, FileMode fileMode = FileMode.Create)
+		public FileBasedLog(string fileName, FileMode fileMode = FileMode.Create, bool isDebugEnabled = true)
 		{
+			IsDebugEnabled = isDebugEnabled;
 			var stream = new FileStream(fileName, fileMode, FileAccess.Write, FileShare.ReadWrite);
 			writer = new StreamWriter(stream, Encoding.UTF8);
+		}
+
+		public void Debug(string format, params object[] args)
+		{
+			if (!IsDebugEnabled) 
+				return;
+			string message = FormatMessage("DEBUG " + format, args);
+			lock (writer)
+				writer.WriteLine(message);
 		}
 
 		public void Info(string format, params object[] args)
@@ -32,6 +42,8 @@ namespace Dixie.Core
 			lock (writer)
 				writer.WriteLine(message);
 		}
+
+		public bool IsDebugEnabled { get; set; }
 
 		private static string FormatMessage(string format, params object[] args)
 		{
