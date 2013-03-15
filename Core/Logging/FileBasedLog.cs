@@ -14,17 +14,23 @@ namespace Dixie.Core
 
 		public void Info(string format, params object[] args)
 		{
-			writer.WriteLine(FormatMessage("INFO " + format, args));
+			string message = FormatMessage("INFO " + format, args);
+			lock (writer)
+				writer.WriteLine(message);
 		}
 
 		public void Warn(string format, params object[] args)
 		{
-			writer.WriteLine(FormatMessage("WARN " + format, args));
+			string message = FormatMessage("WARN " + format, args);
+			lock (writer)
+				writer.WriteLine(message);
 		}
 
 		public void Error(string format, params object[] args)
 		{
-			writer.WriteLine(FormatMessage("ERROR " + format, args));
+			string message = FormatMessage("ERROR " + format, args);
+			lock (writer)
+				writer.WriteLine(message);
 		}
 
 		private static string FormatMessage(string format, params object[] args)
