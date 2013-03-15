@@ -11,7 +11,7 @@ namespace Dixie.Core
 		public void Test_AlgorithmTesting()
 		{
 			var topology = new TopologyBuilder().Build(500);
-			var state = new InitialGridState(topology, 3456546, TopologySettings.GetInstance(), EngineSettings.GetInstance());
+			var state = new InitialGridState(topology, random.Next(), TopologySettings.GetInstance(), EngineSettings.GetInstance());
 			var engine = new Engine(state, new ColorConsoleLog());
 			ISchedulerAlgorithm algorithm1 = new RandomAlgorithm(new Random(123), "Random1");
 			ISchedulerAlgorithm algorithm2 = new RandomAlgorithm(new Random(123), "Random2");
@@ -33,7 +33,7 @@ namespace Dixie.Core
 		public void Test_CatchExceptionsInTestThreads()
 		{
 			var topology = new TopologyBuilder().Build(500);
-			var state = new InitialGridState(topology, 3456546, TopologySettings.GetInstance(), EngineSettings.GetInstance());
+			var state = new InitialGridState(topology, random.Next(), TopologySettings.GetInstance(), EngineSettings.GetInstance());
 			var engine = new Engine(state, new ColorConsoleLog());
 			ISchedulerAlgorithm algorithm = new ErrorAlgorithm();
 
@@ -62,5 +62,7 @@ namespace Dixie.Core
 
 			public string Name { get { return "Error"; } }
 		}
+
+		private readonly Random random = new Random();
 	}
 }
