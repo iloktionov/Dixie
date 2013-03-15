@@ -12,8 +12,8 @@ namespace Dixie.Core
 			var topology = new TopologyBuilder().Build(500);
 			var state = new InitialGridState(topology, 3456546, TopologySettings.GetInstance(), EngineSettings.GetInstance());
 			var engine = new Engine(state, new ColorConsoleLog());
-			ISchedulerAlgorithm algorithm1 = new RandomAlgorithm(new Random(123));
-			ISchedulerAlgorithm algorithm2 = new RandomAlgorithm(new Random(123));
+			ISchedulerAlgorithm algorithm1 = new RandomAlgorithm(new Random(123), "Random1");
+			ISchedulerAlgorithm algorithm2 = new RandomAlgorithm(new Random(123), "Random2");
 
 			var result1 = engine.TestAlgorithm(algorithm1, TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(50));
 			var result2 = engine.TestAlgorithm(algorithm2, TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(50));

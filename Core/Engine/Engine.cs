@@ -23,7 +23,7 @@ namespace Dixie.Core
 
 		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
 		{
-			testLog = new PrefixedILogWrapper(baseLog, "Test-" + algorithm.Name);
+			testLog = new PrefixedILogWrapper(baseLog, "Engine-" + algorithm.Name);
 			LogTestAlgorithm(testDuration);
 
 			topology = initialState.Topology.Clone();

@@ -5,14 +5,17 @@ namespace Dixie.Core
 {
 	internal class RandomAlgorithm : ISchedulerAlgorithm
 	{
-		public RandomAlgorithm(Random random)
+		public RandomAlgorithm(Random random, string name)
 		{
 			this.random = random;
-			Name = String.Format("Random-{0}", random.Next());
+			Name = name;
 		}
 
-		public RandomAlgorithm()
-			: this (new Random()) { }
+		public RandomAlgorithm(Random random)
+			: this (random, "Random") { }
+
+		public RandomAlgorithm(string name)
+			: this (new Random(), name) { }
 
 		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
 		{

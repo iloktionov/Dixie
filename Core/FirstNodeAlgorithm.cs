@@ -4,9 +4,9 @@ namespace Dixie.Core
 {
 	internal class FirstNodeAlgorithm : ISchedulerAlgorithm
 	{
-		public FirstNodeAlgorithm()
+		public FirstNodeAlgorithm(string name = "FirstNodeAlgorithm")
 		{
-			Name = "FirstNodeAlgorithm";
+			Name = name;
 		}
 
 		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
