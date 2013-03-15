@@ -62,6 +62,7 @@
     <Compile Include="ISchedulerAlgorithm.cs" />
     <Compile Include="Logging\ColorConsoleLog.cs" />
     <Compile Include="Logging\ConsoleColorChanger.cs" />
+    <Compile Include="Logging\FakeLog.cs" />
     <Compile Include="Logging\FileBasedLog.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\PrefixedILogWrapper.cs" />
