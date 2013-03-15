@@ -11,12 +11,40 @@ namespace Dixie.Core
 		internal class TaskManager_Tests
 		{
 			[Test]
-			public void Test_PutTasks()
+			public void Test_PutTasks_1()
 			{
 				var manager = new TaskManager();
 				manager.PutTasks(GenerateTasks(10));
 				Assert.AreEqual(10, manager.taskStates.Count);
 				Assert.AreEqual(10, manager.GetPendingTasks().Count);
+			}
+
+			[Test]
+			public void Test_PutTasks_2()
+			{
+				var manager = new TaskManager();
+				List<Task> tasks = GenerateTasks(100);
+				manager.PutTasks(tasks);
+				Assert.AreEqual(100, manager.taskStates.Count);
+
+				manager.ReportTasksCompletion(Guid.Empty, new List<Guid>{tasks[0].Id});
+				Assert.AreEqual(1, manager.completedTasksCount);
+				
+				manager.PutTasks(GenerateTasks(10));
+				Assert.AreEqual(10, manager.taskStates.Count);
+				Assert.AreEqual(0, manager.completedTasksCount);
+			}
+
+			[Test]
+			public void Test_GetPendingTasks()
+			{
+				var manager = new TaskManager();
+				manager.PutTasks(GenerateTasks(10));
+				for (int i = 0; i < 10; i++)
+				{
+					manager.taskStates.First(pair => pair.Value.Status == TaskStatus.Pending).Value.ReportCompletion(Guid.Empty);
+					Assert.AreEqual(10 - i - 1, manager.GetPendingTasks().Count);
+				}
 			}
 
 			[Test]

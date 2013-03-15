@@ -18,6 +18,7 @@ namespace Dixie.Core
 		internal void PutTasks(IEnumerable<Task> tasks)
 		{
 			taskStates = tasks.ToDictionary(task => task.Id, task => new TaskState(task));
+			assignationsMap.Clear();
 			completedTasksCount = 0;
 		}
 
@@ -63,6 +64,7 @@ namespace Dixie.Core
 			if (completedTasks == null)
 				return;
 			// (iloktionov): Когда приходят результаты, задания вполне уже может и не оказаться здесь. 
+			// А даже если задание присутствует, оно может оказаться уже выполненным другой нодой.
 			foreach (Guid completedTask in completedTasks)
 			{
 				TaskState state;
