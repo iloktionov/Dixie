@@ -24,7 +24,7 @@ namespace Dixie.Core
 		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
 		{
 			topology = initialState.Topology.Clone();
-			master = new Master(initialState.EngineSettings.DeadabilityThreshold);
+			master = new Master(initialState.EngineSettings.DeadabilityThreshold, log);
 			schedulerAlgorithm = algorithm;
 			garbageCollector = new GarbageCollector();
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
