@@ -17,7 +17,8 @@ namespace Dixie.Core
 		public Double Performance { get; set; }
 		public TimeSpan CommunicationLatency { get; set; }
 		public int WorkBufferSize { get; set; }
-		public TimeSpan LastPingTimestamp { get; set; }
+
+		internal TimeSpan LastPingTimestamp { get; set; }
 
 		public NodeFailureHistory FailureHistory
 		{
