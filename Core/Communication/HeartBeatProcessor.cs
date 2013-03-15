@@ -37,7 +37,7 @@ namespace Dixie.Core
 					continue;
 				HeartBeatMessage message = workerNode.GetHeartBeatMessage();
 				message.CommunicationLatency = latency;
-				outgoingMessages.Add(new KeyValuePair<HeartBeatMessage, TimeSpan>(message, watch.Elapsed + latency));
+				outgoingMessages.Add(new KeyValuePair<HeartBeatMessage, TimeSpan>(message, timeElapsed + latency));
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace Dixie.Core
 			{
 				HeartBeatMessage message = pair.Key;
 				HeartBeatResponse response = master.HandleHeartBeatMessage(message);
-				incomingResponses.Add(new KeyValuePair<HeartBeatResponse, TimeSpan>(response, watch.Elapsed + message.CommunicationLatency));
+				incomingResponses.Add(new KeyValuePair<HeartBeatResponse, TimeSpan>(response, timeElapsed + message.CommunicationLatency));
 			}
 		}
 
