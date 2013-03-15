@@ -24,5 +24,6 @@ namespace Dixie.Core
 		public TimeSpan TopologyMutatorRunPeriod = TimeSpan.FromMilliseconds(50);
 		public TimeSpan SchedulingAlgorithmRunPeriod = TimeSpan.FromMilliseconds(15);
 		public TimeSpan TasksGeneratorRunPeriod = TimeSpan.FromMilliseconds(1);
+		public TimeSpan GarbageCollectorRunPeriod = TimeSpan.FromSeconds(30);
 	}
 }

@@ -26,6 +26,7 @@ namespace Dixie.Core
 			topology = initialState.Topology.Clone();
 			master = new Master(initialState.EngineSettings.DeadabilityThreshold);
 			schedulerAlgorithm = algorithm;
+			garbageCollector = new GarbageCollector();
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
 				initialState.EngineSettings.RemoveNodesProbability, 
 				initialState.EngineSettings.AddNodesProbability, 
@@ -34,13 +35,14 @@ namespace Dixie.Core
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
 			tasksGenerator = new TasksGenerator(initialState, log);
 
-			var engineThreads = new Thread[4];
+			var engineThreads = new Thread[5];
 			var hbSyncEvent = new ManualResetEvent(false);
 			var commonSyncEvent = new ManualResetEvent(false);
 			engineThreads[0] = StartHeartBeatsMechanism(hbSyncEvent);
 			engineThreads[1] = StartTopologyMutations(commonSyncEvent);
 			engineThreads[2] = StartTaskGeneration(commonSyncEvent);
 			engineThreads[3] = StartSchedulerAlgorithm(commonSyncEvent);
+			engineThreads[4] = StartGarbageCollection(commonSyncEvent);
 			var watch = new Stopwatch();
 			var testResult = new AlgorithmTestResult();
 
@@ -66,7 +68,7 @@ namespace Dixie.Core
 			return testResult;
 		}
 
-		private Thread StartHeartBeatsMechanism(ManualResetEvent syncEvent)
+		private Thread StartHeartBeatsMechanism(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1), syncEvent);
 		}
@@ -77,19 +79,24 @@ namespace Dixie.Core
 				Thread.Sleep(10);
 		}
 
-		private Thread StartTopologyMutations(ManualResetEvent syncEvent)
+		private Thread StartTopologyMutations(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), initialState.EngineSettings.TopologyMutatorRunPeriod, syncEvent);
 		}
 
-		private Thread StartTaskGeneration(ManualResetEvent syncEvent)
+		private Thread StartTaskGeneration(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), initialState.EngineSettings.TasksGeneratorRunPeriod, syncEvent);
 		}
 
-		private Thread StartSchedulerAlgorithm(ManualResetEvent syncEvent)
+		private Thread StartSchedulerAlgorithm(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), initialState.EngineSettings.SchedulingAlgorithmRunPeriod, syncEvent);
+		}
+
+		private Thread StartGarbageCollection(WaitHandle syncEvent)
+		{
+			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master, heartBeatProcessor), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent);
 		}
 
 		private readonly InitialGridState initialState;
@@ -101,5 +108,6 @@ namespace Dixie.Core
 		private HeartBeatProcessor heartBeatProcessor;
 		private TasksGenerator tasksGenerator;
 		private ISchedulerAlgorithm schedulerAlgorithm;
+		private GarbageCollector garbageCollector;
 	}
 }
