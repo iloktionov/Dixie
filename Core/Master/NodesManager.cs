@@ -56,6 +56,11 @@ namespace Dixie.Core
 			return new List<NodeInfo>(aliveNodeInfos.Values);
 		}
 
+		public void CollectGarbage(IEnumerable<Guid> permanentlyDeletedNodes)
+		{
+			// TODO(iloktionov): implement
+		}
+
 		internal int AliveNodesCount
 		{
 			get { return aliveNodeInfos.Count; }

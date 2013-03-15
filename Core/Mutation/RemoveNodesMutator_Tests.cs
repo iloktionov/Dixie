@@ -13,7 +13,8 @@ namespace Dixie.Core
 			var offlinePool = new OfflineNodesPool();
 			var random = new Random();
 			const int minRemainingCount = 998;
-			var mutator = new RemoveNodesMutator(offlinePool, random, new TopologyConfigurator(), minRemainingCount);
+			var garbageCollector = new GarbageCollector();
+			var mutator = new RemoveNodesMutator(offlinePool, random, new TopologyConfigurator(), minRemainingCount, garbageCollector);
 			mutator.Mutate(topology);
 			Assert.AreEqual(minRemainingCount, topology.WorkerNodesCount);
 			for (int i = 0; i < 10; i++)
@@ -27,7 +28,8 @@ namespace Dixie.Core
 			Topology topology = GenerateTopology(1000);
 			var offlinePool = new OfflineNodesPool();
 			var random = new Random();
-			var mutator = new RemoveNodesMutator(offlinePool, random, new TopologyConfigurator(),  1);
+			var garbageCollector = new GarbageCollector();
+			var mutator = new RemoveNodesMutator(offlinePool, random, new TopologyConfigurator(),  1, garbageCollector);
 			mutator.Mutate(topology);
 
 			Assert.AreEqual(1, topology.WorkerNodesCount);
@@ -42,6 +44,10 @@ namespace Dixie.Core
 					default: Assert.Fail("Unknown node failure type"); break;
 				}
 			}
+
+			Console.Out.WriteLine("{0} nodes in GC", garbageCollector.Count);
+			if (offlinePool.OfflineNodes.Count < 999)
+				Assert.Greater(garbageCollector.Count, 0);
 		}
 
 		private Topology GenerateTopology(int nodesCount)

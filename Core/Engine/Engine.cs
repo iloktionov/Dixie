@@ -30,7 +30,8 @@ namespace Dixie.Core
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
 				initialState.EngineSettings.RemoveNodesProbability, 
 				initialState.EngineSettings.AddNodesProbability, 
-				initialState.TopologySettings
+				initialState.TopologySettings,
+				garbageCollector
 			);
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
 			tasksGenerator = new TasksGenerator(initialState, log);
@@ -96,7 +97,7 @@ namespace Dixie.Core
 
 		private Thread StartGarbageCollection(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master, heartBeatProcessor), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent);
+			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent);
 		}
 
 		private readonly InitialGridState initialState;

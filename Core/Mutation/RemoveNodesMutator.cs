@@ -5,15 +5,18 @@ namespace Dixie.Core
 {
 	internal class RemoveNodesMutator : ITopologyMutator
 	{
-		public RemoveNodesMutator(OfflineNodesPool offlineNodesPool, Random random, ITopologyConfigurator configurator, int minRemainingNodes)
+		public RemoveNodesMutator(OfflineNodesPool offlineNodesPool, Random random, ITopologyConfigurator configurator, int minRemainingNodes, GarbageCollector garbageCollector)
 		{
 			Preconditions.CheckNotNull(offlineNodesPool, "offlineNodesPool");
 			Preconditions.CheckNotNull(random, "random");
+			Preconditions.CheckNotNull(garbageCollector, "garbageCollector");
+			Preconditions.CheckNotNull(configurator, "configurator");
 			Preconditions.CheckArgument(minRemainingNodes > 0, "minRemainingNodes", "Must be > 0.");
 			this.offlineNodesPool = offlineNodesPool;
 			this.random = random;
-			this.minRemainingNodes = minRemainingNodes;
 			this.configurator = configurator;
+			this.minRemainingNodes = minRemainingNodes;
+			this.garbageCollector = garbageCollector;
 		}
 
 		public void Mutate(Topology topology)
@@ -43,6 +46,7 @@ namespace Dixie.Core
 					nodeToRemove.StopComputing();
 				if (failureType != NodeFailureType.Permanent)
 					offlineNodesPool.Put(nodeToRemove, parent, failureType, configurator.GenerateOfflineTime(failureType));
+				else garbageCollector.AddStaleNode(nodeToRemove.Id);
 			}
 		}
 
@@ -50,5 +54,6 @@ namespace Dixie.Core
 		private readonly Random random;
 		private readonly ITopologyConfigurator configurator;
 		private readonly int minRemainingNodes;
+		private readonly GarbageCollector garbageCollector;
 	}
 }

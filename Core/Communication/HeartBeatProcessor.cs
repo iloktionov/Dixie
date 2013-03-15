@@ -24,6 +24,10 @@ namespace Dixie.Core
 			DeliverIncomingResponses();
 		}
 
+		public void CollectGarbage(IEnumerable<Guid> permanentlyDeletedNodes)
+		{
+		}
+
 		private void SendMessages()
 		{
 			List<Node> workerNodes = topology.GetWorkerNodes();

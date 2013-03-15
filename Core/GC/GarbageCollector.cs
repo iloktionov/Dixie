@@ -18,14 +18,16 @@ namespace Dixie.Core
 				permanentlyDeletedNodes.Add(nodeId);
 		}
 
-		public void CollectGarbage(Master master, HeartBeatProcessor hbProcessor)
+		public void CollectGarbage(Master master)
 		{
 			lock (syncObject)
 			{
-				// TODO(iloktionov): implement
+				master.CollectGarbage(permanentlyDeletedNodes);
 				permanentlyDeletedNodes.Clear();
 			}
 		}
+
+		public int Count { get { return permanentlyDeletedNodes.Count; } }
 
 		private readonly List<Guid> permanentlyDeletedNodes;
 		private readonly object syncObject;
