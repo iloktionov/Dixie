@@ -58,6 +58,7 @@
     <Compile Include="Engine\IntermediateTestResult.cs" />
     <Compile Include="Engine\TasksGenerator.cs" />
     <Compile Include="FirstNodeAlgorithm.cs" />
+    <Compile Include="GC\GarbageCollector_Tests.cs" />
     <Compile Include="ISchedulerAlgorithm.cs" />
     <Compile Include="Logging\ColorConsoleLog.cs" />
     <Compile Include="Logging\ConsoleColorChanger.cs" />

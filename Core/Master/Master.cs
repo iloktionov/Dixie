@@ -49,7 +49,7 @@ namespace Dixie.Core
 				}
 		}
 
-		public void CollectGarbage(List<Guid> permanentlyDeletedNodes)
+		public void CollectGarbage(HashSet<Guid> permanentlyDeletedNodes)
 		{
 			lock (syncObject)
 			{

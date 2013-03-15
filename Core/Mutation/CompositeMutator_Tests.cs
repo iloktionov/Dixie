@@ -14,7 +14,7 @@ namespace Dixie.Core
 		public void Test_CorrectWork()
 		{
 			Topology topology = GenerateInitialTopology(1000);
-			var mutator = new CompositeMutator(24234, 1000, 0.1, 0.1, TopologySettings.GetInstance(), new GarbageCollector());
+			var mutator = new CompositeMutator(24234, 1000, 0.1, 0.1, TopologySettings.GetInstance(), new GarbageCollector(TimeSpan.Zero));
 			const int MutationsCount = 10 * 1000;
 			var watch = Stopwatch.StartNew();
 			for (int i = 0; i < MutationsCount; i++)
@@ -51,7 +51,7 @@ namespace Dixie.Core
 
 		private static void MutateTopology(Topology topology, int mutationsCount, int seed)
 		{
-			var mutator = new CompositeMutator(24234, 1000, 0.1, 0.1, TopologySettings.GetInstance(), new GarbageCollector());
+			var mutator = new CompositeMutator(24234, 1000, 0.1, 0.1, TopologySettings.GetInstance(), new GarbageCollector(TimeSpan.Zero));
 			for (int i = 0; i < mutationsCount; i++)
 				mutator.Mutate(topology);
 		}
