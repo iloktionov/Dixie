@@ -44,7 +44,10 @@ namespace Dixie.Core
 		public void CollectGarbage(IEnumerable<Guid> permanentlyDeletedNodes)
 		{
 			lock (syncObject)
+			{
 				nodesManager.CollectGarbage(permanentlyDeletedNodes);
+				taskManager.CollectGarbage(permanentlyDeletedNodes);
+			}
 		}
 
 		public Double GetTotalWorkDone()

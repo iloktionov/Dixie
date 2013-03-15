@@ -90,6 +90,12 @@ namespace Dixie.Core
 			accumulateNewResults = false;
 		}
 
+		internal void CollectGarbage(IEnumerable<Guid> permanentlyDeletedNodes)
+		{
+			foreach (Guid nodeId in permanentlyDeletedNodes)
+				assignationsMap.Remove(nodeId);
+		}
+
 		private readonly Dictionary<Guid, List<Task>> assignationsMap;
 		private Dictionary<Guid, TaskState> taskStates;
 		private int completedTasksCount;
