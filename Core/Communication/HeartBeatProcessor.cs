@@ -33,6 +33,7 @@ namespace Dixie.Core
 				if (!NeededToSendMessage(workerNode, timeElapsed))
 					continue;
 				TimeSpan latency;
+				// (iloktionov): Пока мы делали доп. проверки, ноду уже могли удалить из топологии.
 				if (!topology.TryGetNodeLatency(workerNode.Id, out latency))
 					continue;
 				HeartBeatMessage message = workerNode.GetHeartBeatMessage();
@@ -44,7 +45,7 @@ namespace Dixie.Core
 		private void DeliverOutgoingMessages()
 		{
 			TimeSpan timeElapsed = watch.Elapsed;
-			var toRemove = new HashSet<KeyValuePair<HeartBeatMessage, TimeSpan>>(outgoingMessages.Where(pair => timeElapsed >= pair.Value));
+			var toRemove = new HashSet<KeyValuePair<HeartBeatMessage, TimeSpan>>(outgoingMessages.Where(pair => timeElapsed >= pair.Value), equalityComparer);
 			if (toRemove.Count <= 0)
 				return;
 			outgoingMessages.RemoveAll(toRemove.Contains);
@@ -59,7 +60,7 @@ namespace Dixie.Core
 		private void DeliverIncomingResponses()
 		{
 			TimeSpan timeElapsed = watch.Elapsed;
-			var toRemove = new HashSet<KeyValuePair<HeartBeatResponse, TimeSpan>>(incomingResponses.Where(pair => timeElapsed >= pair.Value));
+			var toRemove = new HashSet<KeyValuePair<HeartBeatResponse, TimeSpan>>(incomingResponses.Where(pair => timeElapsed >= pair.Value), equalityComparer);
 			if (toRemove.Count <= 0)
 				return;
 			incomingResponses.RemoveAll(toRemove.Contains);
@@ -67,6 +68,7 @@ namespace Dixie.Core
 			{
 				HeartBeatResponse response = pair.Key;
 				Node node;
+				// (iloktionov): Пока от Мастера шел ответ на HBM, ноду уже могли удалить из топологии.
 				if (topology.TryGetNode(response.NodeId, out node))
 					node.HandleHeartBeatResponse(response);
 			}
@@ -86,7 +88,34 @@ namespace Dixie.Core
 		private readonly Master master;
 		private readonly TimeSpan heartBeatPeriod;
 		private readonly Stopwatch watch;
+		// (iloktionov): Value в каждой паре - ожидаемый момент доставки сообщения по внутренней шкале времени.
 		private readonly List<KeyValuePair<HeartBeatMessage, TimeSpan>> outgoingMessages;
 		private readonly List<KeyValuePair<HeartBeatResponse, TimeSpan>> incomingResponses;
+		private static readonly PairEqualityComparer equalityComparer = new PairEqualityComparer();
+
+		#region Equality comparer
+		private class PairEqualityComparer : IEqualityComparer<KeyValuePair<HeartBeatMessage, TimeSpan>>, IEqualityComparer<KeyValuePair<HeartBeatResponse, TimeSpan>>
+		{
+			public bool Equals(KeyValuePair<HeartBeatMessage, TimeSpan> x, KeyValuePair<HeartBeatMessage, TimeSpan> y)
+			{
+				return ReferenceEquals(x.Key, y.Key);
+			}
+
+			public bool Equals(KeyValuePair<HeartBeatResponse, TimeSpan> x, KeyValuePair<HeartBeatResponse, TimeSpan> y)
+			{
+				return ReferenceEquals(x.Key, y.Key);
+			}
+
+			public int GetHashCode(KeyValuePair<HeartBeatMessage, TimeSpan> obj)
+			{
+				return obj.GetHashCode();
+			}
+
+			public int GetHashCode(KeyValuePair<HeartBeatResponse, TimeSpan> obj)
+			{
+				return obj.GetHashCode();
+			}
+		}
+		#endregion
 	}
 }
