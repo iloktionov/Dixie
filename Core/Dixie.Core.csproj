@@ -64,6 +64,7 @@
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\PrefixedILogWrapper.cs" />
     <Compile Include="Master\Master.cs" />
+    <Compile Include="Master\NodeFailure.cs" />
     <Compile Include="Master\NodeFailureHistory.cs" />
     <Compile Include="Master\NodeInfo.cs" />
     <Compile Include="Master\NodesManager.cs" />

@@ -8,29 +8,29 @@ namespace Dixie.Core
 	{
 		public NodeFailureHistory()
 		{
-			FailureDurations = new List<TimeSpan>();
+			Failures = new List<NodeFailure>();
 		}
 
 		public bool HasFailures()
 		{
-			return FailureDurations.Any();
+			return Failures.Any();
 		}
 
 		public TimeSpan MaxFailureTime()
 		{
-			return FailureDurations.Max();
+			return Failures.Max(failure => failure.Duration);
 		}
 
 		public TimeSpan MinFailureTime()
 		{
-			return FailureDurations.Min();
+			return Failures.Min(failure => failure.Duration);
 		}
 
-		internal void AddFailure(TimeSpan failureDuration)
+		internal void AddFailure(TimeSpan detectionTime, TimeSpan duration)
 		{
-			FailureDurations.Add(failureDuration);
+			Failures.Add(new NodeFailure(detectionTime, duration));
 		}
 
-		public List<TimeSpan> FailureDurations { get; private set; }
+		public List<NodeFailure> Failures{ get; private set; }
 	}
 }
