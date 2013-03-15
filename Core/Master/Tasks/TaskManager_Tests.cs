@@ -20,16 +20,27 @@ namespace Dixie.Core
 			}
 
 			[Test]
-			public void Test_NeedsRefill()
+			public void Test_MultipleNodesCompleteEachTask()
 			{
 				var manager = new TaskManager();
 				Assert.True(manager.NeedsRefill());
-				List<Task> tasks = GenerateTasks(10);
+				List<Task> tasks = GenerateTasks(10, 10);
 				manager.PutTasks(tasks);
 				Assert.False(manager.NeedsRefill());
-				manager.ReportTasksCompletion(Guid.NewGuid(), tasks.GetRange(0, 9).Select(task => task.Id).ToList());
-				Assert.False(manager.NeedsRefill());
-				manager.ReportTasksCompletion(Guid.NewGuid(), tasks.GetRange(9, 1).Select(task => task.Id).ToList());
+
+				for (int i = 0; i < tasks.Count; i++)
+				{
+					Task task = tasks[i];
+					manager.ReportTasksCompletion(Guid.NewGuid(), new List<Guid>{ task.Id });
+					manager.ReportTasksCompletion(Guid.NewGuid(), new List<Guid>{ task.Id });
+					manager.ReportTasksCompletion(Guid.NewGuid(), new List<Guid>{ task.Id });
+					manager.ReportTasksCompletion(Guid.NewGuid(), new List<Guid>{ task.Id });
+					manager.ReportTasksCompletion(Guid.NewGuid(), new List<Guid>{ task.Id });
+					Assert.AreEqual(i + 1, manager.completedTasksCount);
+					Assert.AreEqual((i + 1) * 10, manager.TotalWorkDone);
+					if (i < tasks.Count - 1)
+						Assert.False(manager.NeedsRefill());
+				}
 				Assert.True(manager.NeedsRefill());
 			}
 
@@ -92,9 +103,9 @@ namespace Dixie.Core
 				Assert.AreEqual(10, manager.GetPendingTasks().Count);
 			}
 
-			private List<Task> GenerateTasks(int count)
+			private List<Task> GenerateTasks(int count, int volume = 100)
 			{
-				return Enumerable.Range(1, count).Select(i => new Task(i)).ToList();
+				return Enumerable.Range(1, count).Select(i => new Task(volume)).ToList();
 			}
 		}
 	}

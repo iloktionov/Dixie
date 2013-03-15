@@ -66,9 +66,8 @@ namespace Dixie.Core
 			foreach (Guid completedTask in completedTasks)
 			{
 				TaskState state;
-				if (taskStates.TryGetValue(completedTask, out state))
+				if (taskStates.TryGetValue(completedTask, out state) && state.ReportCompletion(nodeId))
 				{
-					state.ReportCompletion(nodeId);
 					completedTasksCount++;
 					if (accumulateNewResults)
 						TotalWorkDone += state.Task.Volume;
