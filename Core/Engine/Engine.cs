@@ -7,10 +7,10 @@ namespace Dixie.Core
 {
 	public class Engine
 	{
-		public Engine(InitialGridState initialState, ILog log)
+		public Engine(InitialGridState initialState, ILog baseLog)
 		{
 			this.initialState = initialState;
-			this.log = log;
+			this.baseLog = baseLog;
 		}
 
 		public ComparisonTestResult TestAlgorithms(IEnumerable<ISchedulerAlgorithm> algorithms, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
@@ -23,8 +23,11 @@ namespace Dixie.Core
 
 		public AlgorithmTestResult TestAlgorithm(ISchedulerAlgorithm algorithm, TimeSpan testDuration, TimeSpan intermediateCheckPeriod)
 		{
+			testLog = new PrefixedILogWrapper(baseLog, "Test-" + algorithm.Name);
+			LogTestAlgorithm(testDuration);
+
 			topology = initialState.Topology.Clone();
-			master = new Master(initialState.EngineSettings.DeadabilityThreshold, log);
+			master = new Master(initialState.EngineSettings.DeadabilityThreshold, testLog);
 			schedulerAlgorithm = algorithm;
 			garbageCollector = new GarbageCollector();
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
@@ -34,7 +37,7 @@ namespace Dixie.Core
 				garbageCollector
 			);
 			heartBeatProcessor = new HeartBeatProcessor(topology, master, initialState.EngineSettings.HeartBeatPeriod);
-			tasksGenerator = new TasksGenerator(initialState, log);
+			tasksGenerator = new TasksGenerator(initialState, testLog);
 
 			var engineThreads = new Thread[5];
 			var hbSyncEvent = new ManualResetEvent(false);
@@ -49,6 +52,7 @@ namespace Dixie.Core
 
 			// (iloktionov): Включим механизм HBM и дождемся, пока все ноды пропингуют Мастера. 
 			hbSyncEvent.Set();
+			LogEnabledHBM();
 			WaitForMasterStateWarmup();
 			// (iloktionov): Теперь запустим остальные потоки и таймер теста.
 			commonSyncEvent.Set();
@@ -62,10 +66,12 @@ namespace Dixie.Core
 				Thread.Sleep(ExtendedMath.Min(intermediateCheckPeriod, timeBeforeEnd + TimeSpan.FromMilliseconds(1)));
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			}
+
 			// (iloktionov): Теперь остановим подсчет результатов и возьмем финальное значение перед завершением потоков.
 			master.DisableAccumulatingResults();
 			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
-			ThreadRunner.StopThreads(engineThreads);
+			StopThreads(engineThreads);
+			LogResult(testResult);
 			return testResult;
 		}
 
@@ -78,6 +84,14 @@ namespace Dixie.Core
 		{
 			while (master.AliveNodesCount < topology.WorkerNodesCount)
 				Thread.Sleep(10);
+			LogMasterWarmedUp();
+		}
+
+		private void StopThreads(Thread[] engineThreads)
+		{
+			LogStoppingThreads();
+			ThreadRunner.StopThreads(engineThreads);
+			LogStoppedThreads();
 		}
 
 		private Thread StartTopologyMutations(WaitHandle syncEvent)
@@ -100,8 +114,40 @@ namespace Dixie.Core
 			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent);
 		}
 
+		#region Logging
+		private void LogTestAlgorithm(TimeSpan duration)
+		{
+			testLog.Info("Started testing. Duration = {0}.", duration);
+		}
+
+		private void LogEnabledHBM()
+		{
+			testLog.Info("Enabled HBM. Waiting for full warmup..");
+		}
+
+		private void LogMasterWarmedUp()
+		{
+			testLog.Info("All nodes have sent HBM to Master.");
+		}
+
+		private void LogStoppingThreads()
+		{
+			testLog.Info("Stopping engine threads..");
+		}
+
+		private void LogStoppedThreads()
+		{
+			testLog.Info("Stopped all engine threads.");
+		}
+
+		private void LogResult(AlgorithmTestResult result)
+		{
+			testLog.Info(result.ToString(true));
+		}
+		#endregion
+
 		private readonly InitialGridState initialState;
-		private readonly ILog log;
+		private readonly ILog baseLog;
 
 		private Topology topology;
 		private Master master;
@@ -110,5 +156,6 @@ namespace Dixie.Core
 		private TasksGenerator tasksGenerator;
 		private ISchedulerAlgorithm schedulerAlgorithm;
 		private GarbageCollector garbageCollector;
+		private ILog testLog;
 	}
 }
