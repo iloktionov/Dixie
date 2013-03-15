@@ -80,6 +80,7 @@
     <Compile Include="Mutation\AddNodesMutator_Tests.cs" />
     <Compile Include="Mutation\CompositeMutator.cs" />
     <Compile Include="Mutation\CompositeMutator_Tests.cs" />
+    <Compile Include="Mutation\OfflineNodesPool_Tests.cs" />
     <Compile Include="Mutation\ReturnNodesMutator.cs" />
     <Compile Include="Mutation\ITopologyMutator.cs" />
     <Compile Include="Mutation\NodeFailureType.cs" />

@@ -20,19 +20,21 @@ namespace Dixie.Core
 
 		public IEnumerable<OfflineNodeInfo> PopNodesReadyForReturn()
 		{
-			List<OfflineNodeInfo> result = null;
+			HashSet<OfflineNodeInfo> result = null;
 			TimeSpan timeElapsed = watch.Elapsed;
-			foreach (OfflineNodeInfo info in offlineNodes)
+			for (int index = 0; index < offlineNodes.Count; index++)
+			{
+				OfflineNodeInfo info = offlineNodes[index];
 				if (timeElapsed >= info.ReturnTimestamp)
 				{
 					if (result == null)
-						result = new List<OfflineNodeInfo>();
+						result = new HashSet<OfflineNodeInfo>(equalityComparer);
 					result.Add(info);
 				}
+			}
 			if (result == null)
 				return Enumerable.Empty<OfflineNodeInfo>();
-			foreach (OfflineNodeInfo info in result)
-				offlineNodes.Remove(info);
+			offlineNodes.RemoveAll(result.Contains);
 			return result;
 		}
 
@@ -43,5 +45,21 @@ namespace Dixie.Core
 
 		private readonly Stopwatch watch;
 		private readonly List<OfflineNodeInfo> offlineNodes;
+		private static readonly IEqualityComparer<OfflineNodeInfo> equalityComparer = new OfflineInfoEqualityComparer();
+
+		#region Equality comparer
+		private class OfflineInfoEqualityComparer : IEqualityComparer<OfflineNodeInfo>
+		{
+			public bool Equals(OfflineNodeInfo x, OfflineNodeInfo y)
+			{
+				return ReferenceEquals(x, y);
+			}
+
+			public int GetHashCode(OfflineNodeInfo obj)
+			{
+				return obj.GetHashCode();
+			}
+		} 
+		#endregion
 	}
 }
