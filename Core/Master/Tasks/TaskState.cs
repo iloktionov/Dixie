@@ -31,9 +31,11 @@ namespace Dixie.Core
 				Status = TaskStatus.Pending;
 		}
 
-		internal void ReportCompletion(Guid nodeId)
+		internal bool ReportCompletion(Guid nodeId)
 		{
+			TaskStatus statusBefore = Status;
 			Status = TaskStatus.Completed;
+			return statusBefore != TaskStatus.Completed;
 		}
 
 		public Task Task { get; private set; }

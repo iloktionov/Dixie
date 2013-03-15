@@ -48,7 +48,10 @@ namespace Dixie.Core
 			Guid node1 = Guid.NewGuid();
 			state.AssignNode(node1);
 			Assert.AreEqual(TaskStatus.Assigned, state.Status);
-			state.ReportCompletion(Guid.Empty);
+			Assert.True(state.ReportCompletion(Guid.Empty));
+			Assert.AreEqual(TaskStatus.Completed, state.Status);
+			Assert.False(state.ReportCompletion(Guid.Empty));
+			Assert.False(state.ReportCompletion(Guid.Empty));
 			Assert.AreEqual(TaskStatus.Completed, state.Status);
 			Assert.Throws<InvalidOperationException>(() => state.AssignNode(Guid.NewGuid()));
 		}
