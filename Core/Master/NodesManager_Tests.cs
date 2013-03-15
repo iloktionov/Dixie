@@ -83,6 +83,32 @@ namespace Dixie.Core
 				Assert.AreEqual(100, manager.aliveNodeInfos[node2].Performance);
 				Assert.AreEqual(200, manager.aliveNodeInfos[node2].WorkBufferSize);
 			}
+
+			[Test]
+			public void Test_FailureHistory()
+			{
+				var manager = new NodesManager(TimeSpan.FromMilliseconds(1));
+				Guid node = Guid.NewGuid();
+				const int FailuresCount = 100;
+
+				for (int i = 0; i < FailuresCount; i++)
+				{
+					manager.HandleHeartBeatMessage(new HeartBeatMessage(node, i, i));
+					Thread.Sleep(2);
+					Assert.AreEqual(1, manager.RemoveDeadsOrNull().Count);
+				}
+
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node, 1, 1));
+				NodeFailureHistory failureHistory = manager.aliveNodeInfos[node].FailureHistory;
+				Assert.True(failureHistory.HasFailures());
+				Assert.AreEqual(FailuresCount, failureHistory.Failures.Count);
+				Assert.Greater(failureHistory.MinFailureTime(), TimeSpan.FromMilliseconds(1));
+
+				foreach (var VARIABLE in failureHistory.Failures)
+				{
+					Console.Out.WriteLine(VARIABLE.Duration);
+				}
+			}
 		}
 	}
 }
