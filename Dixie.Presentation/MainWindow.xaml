@@ -5,6 +5,8 @@
         xmlns:Dixie="clr-namespace:Dixie.Presentation"
         xmlns:oxy="http://oxyplot.codeplex.com"
         Title="Dixie" 
+        MinHeight="400"
+        MinWidth="600"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
     
