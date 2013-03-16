@@ -96,6 +96,7 @@
     <Compile Include="Node\NodeFailurePattern.cs" />
     <Compile Include="Node\NodeFailurePattern_Tests.cs" />
     <Compile Include="Algorithms\RandomAlgorithm.cs" />
+    <Compile Include="Node\NodeState.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
     <Compile Include="Utilities\EnumerableExtensions.cs" />

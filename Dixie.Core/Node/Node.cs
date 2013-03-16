@@ -23,6 +23,12 @@ namespace Dixie.Core
 		public Node(double performance, double failureProbability)
 			: this (performance, failureProbability, NodeFailurePattern.CreateDefaults()) { }
 
+		public NodeState GetState()
+		{
+			lock (syncObject)
+				return new NodeState(Id, Performance, FailureProbability, workBuffer.Size);
+		}
+
 		internal HeartBeatMessage GetHeartBeatMessage()
 		{
 			lock (syncObject)
