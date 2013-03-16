@@ -6,3 +6,4 @@ obj/
 *.suo
 .gitk*
 Properties/AssemblyTitle.cs
+Deploy/
