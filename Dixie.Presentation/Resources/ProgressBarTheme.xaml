@@ -119,8 +119,9 @@
 
     <Style x:Key="{x:Type ProgressBar}"
        TargetType="{x:Type ProgressBar}">
+        
         <Setter Property="Foreground"
-            Value="#01D328"/>
+            Value="Red"/>
         <Setter Property="Background"
             Value="{StaticResource ProgressBarBackground}"/>
         <Setter Property="BorderBrush"
@@ -246,6 +247,15 @@
                             <Setter TargetName="Animation"
                                 Property="Background"
                                 Value="#80B5FFA9"/>
+                        </Trigger>
+                        <Trigger Property="Value" Value="1">
+                            <Setter Property="Foreground" Value="#47E314"/>
+                        </Trigger>
+                        <Trigger Property="Value" Value="2">
+                            <Setter Property="Foreground" Value="#FFF100"/>
+                        </Trigger>
+                        <Trigger Property="Value" Value="3">
+                            <Setter Property="Foreground" Value="Red"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
