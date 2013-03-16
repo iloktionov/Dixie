@@ -5,7 +5,7 @@ using System.ComponentModel.Composition;
 namespace Dixie.Core
 {
 	[Export(typeof(ISchedulerAlgorithm))]
-	internal class RandomAlgorithm : ISchedulerAlgorithm
+	public class RandomAlgorithm : ISchedulerAlgorithm
 	{
 		public RandomAlgorithm(Random random, string name)
 		{

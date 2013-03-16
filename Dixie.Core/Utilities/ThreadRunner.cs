@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Dixie.Core
 {
-	internal static class ThreadRunner
+	public static class ThreadRunner
 	{
 		public static Thread Run(Action threadRoutine, Action<Thread> tuneThreadBeforeStart = null, Action<Exception> onException = null)
 		{
@@ -17,11 +17,12 @@ namespace Dixie.Core
 			return thread;
 		}
 
-		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, WaitHandle waitHandle, Action<Exception> onException = null)
+		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, WaitHandle waitHandle = null, Action<Exception> onException = null)
 		{
 			return Run(() =>
 			{
-				waitHandle.WaitOne();
+				if (waitHandle != null)
+					waitHandle.WaitOne();
 				while (true)
 				{
 					Thread.Sleep(period);
