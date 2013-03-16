@@ -7,18 +7,21 @@ namespace Dixie.Core
 	[Serializable]
 	public partial class Node : INode, IDeserializationCallback
 	{
-		internal Node(double performance, double failureProbability, NodeFailurePattern failurePattern)
+		private Node(Guid id, double performance, double failureProbability, NodeFailurePattern failurePattern)
 		{
 			Preconditions.CheckArgument(performance > 0, "performance", "Must be positive.");
 			Preconditions.CheckArgument(failureProbability >= 0 && failureProbability <= 1, "failureProbability", "Must be in [0; 1].");
+			Id = id;
 			Performance = performance;
 			FailureProbability = failureProbability;
 			this.failurePattern = failurePattern;
-			Id = Guid.NewGuid();
 			workBuffer = new WorkBuffer();
 			LastHBTimestamp = TimeSpan.MinValue;
 			syncObject = new object();
 		}
+
+		internal Node(double performance, double failureProbability, NodeFailurePattern failurePattern)
+			: this (Guid.NewGuid(), performance, failureProbability, failurePattern) { }
 
 		public Node(double performance, double failureProbability)
 			: this (performance, failureProbability, NodeFailurePattern.CreateDefaults()) { }
@@ -53,22 +56,27 @@ namespace Dixie.Core
 			return failurePattern.DetermineFailureType(random);
 		}
 
-		public bool IsComputing()
+		internal bool IsComputing()
 		{
 			lock (syncObject)
 				return workBuffer.IsComputing();
 		}
 
-		public void StopComputing()
+		internal void StopComputing()
 		{
 			lock (syncObject)
 				workBuffer.StopComputing();
 		}
 
-		public void ResumeComputing()
+		internal void ResumeComputing()
 		{
 			lock (syncObject)
 				workBuffer.ResumeComputing();
+		}
+
+		internal Node Clone()
+		{
+			return new Node(Id, Performance, FailureProbability, failurePattern);
 		}
 
 		public Guid Id { get; private set; }

@@ -110,10 +110,21 @@ namespace Dixie.Core
 
 		public Topology Clone()
 		{
-			var stream = new MemoryStream();
-			Serialize(stream);
-			stream.Seek(0, SeekOrigin.Begin);
-			return Deserialize(stream);
+			var newLatencies = new Dictionary<Guid, TimeSpan>(workerLatencies);
+			var newWorkerNodes = workerNodes.ToDictionary(pair => pair.Key, pair => pair.Value.Clone());
+			var newMasterNode = new MasterFakeNode();
+			var newGraph = new BidirectionalGraph<INode, NetworkLink>();
+			newGraph.AddVertex(newMasterNode);
+
+			foreach (INode vertex in graph.Vertices.Where(vertex => !(vertex is MasterFakeNode)))
+				newGraph.AddVertex(newWorkerNodes[vertex.Id]);
+			foreach (NetworkLink edge in graph.Edges)
+			{
+				INode source = newWorkerNodes[edge.Source.Id];
+				INode target = edge.Target is MasterFakeNode ? (INode) newMasterNode : newWorkerNodes[edge.Target.Id];
+				newGraph.AddEdge(new NetworkLink(source, target, edge.Latency));
+			}
+			return new Topology(newGraph, newWorkerNodes, newLatencies, newMasterNode);
 		}
 
 		public static Topology CreateEmpty()

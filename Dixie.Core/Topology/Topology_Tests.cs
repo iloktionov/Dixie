@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -139,6 +140,41 @@ namespace Dixie.Core
 				Assert.AreEqual(topology.graph.VertexCount, deserializedTopology.graph.VertexCount);
 				Assert.AreEqual(topology.graph.EdgeCount, deserializedTopology.graph.EdgeCount);
 				Assert.True(deserializedTopology.workerLatencies.SequenceEqual(topology.workerLatencies));
+			}
+
+			[Test]
+			public void Test_Clone_1()
+			{
+				Topology topology = CreateEmpty();
+				var node = new Node(3, 0.3);
+				topology.AddNode(node, topology.masterNode, TimeSpan.FromMilliseconds(1));
+				Topology clonedTopology = topology.Clone();
+				Node nodeFromDictionary = clonedTopology.workerNodes[node.Id];
+				var nodeFromGraph = (Node)clonedTopology.graph.Vertices.Single(vertex => vertex is Node);
+				Assert.True(ReferenceEquals(nodeFromDictionary, nodeFromGraph));
+			}
+
+			[Test]
+			public void Test_Clone_2()
+			{
+				Topology topology = new TopologyBuilder().Build(500);
+				Topology cloneTopology = topology.Clone();
+
+				Assert.True(cloneTopology.GetWorkerNodes().SequenceEqual(topology.GetWorkerNodes()));
+				Assert.AreEqual(topology.graph.VertexCount, cloneTopology.graph.VertexCount);
+				Assert.AreEqual(topology.graph.EdgeCount, cloneTopology.graph.EdgeCount);
+				Assert.True(cloneTopology.workerLatencies.SequenceEqual(topology.workerLatencies));
+
+				foreach (KeyValuePair<Guid, Node> pair in topology.workerNodes)
+					Assert.AreEqual(pair.Key, cloneTopology.workerNodes[pair.Key].Id);
+
+				Guid nodeId = topology.workerNodes.First().Value.Id;
+				cloneTopology.workerNodes[nodeId].LastHBTimestamp = TimeSpan.FromMilliseconds(343);
+				Assert.AreNotEqual(cloneTopology.workerNodes[nodeId].LastHBTimestamp, topology.workerNodes[nodeId].LastHBTimestamp);
+
+				cloneTopology.RemoveNode(cloneTopology.workerNodes.First().Value, out parent);
+				Assert.AreNotEqual(cloneTopology.WorkerNodesCount, topology.WorkerNodesCount);
+				Assert.AreNotEqual(cloneTopology.graph.VertexCount, topology.graph.VertexCount);
 			}
 
 			private static void PrintTopology(Topology topology)
