@@ -36,8 +36,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleUtilityBase.cs" />
     <Compile Include="EntryPoint.cs" />
+    <Compile Include="ConsoleParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dixie.Core\Dixie.Core.csproj">
+      <Project>{8be8e9dc-1418-4c7d-83f7-d7a48c24b351}</Project>
+      <Name>Dixie.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

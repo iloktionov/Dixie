@@ -2,8 +2,9 @@
 {
 	internal class EntryPoint
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
+			var parameters = new ConsoleParameters(args);
 		}
 	}
 }
