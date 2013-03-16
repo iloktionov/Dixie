@@ -1,8 +1,29 @@
 ﻿<Window x:Class="Dixie.Presentation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:Zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
+        xmlns:Dixie="clr-namespace:Dixie.Presentation"
+        Title="Dixie" 
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+    
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Zoom:ZoomControl>
+            <Dixie:DixieGraphLayout
+                x:Name = "topologyGraphLayout"
+                Graph="{Binding Path=TopologyGraph}"
+                LayoutAlgorithmType="Tree"
+                AllowDrop="False"
+                AsyncCompute="True"
+            >
+            </Dixie:DixieGraphLayout>
+        </Zoom:ZoomControl>
     </Grid>
 </Window>
