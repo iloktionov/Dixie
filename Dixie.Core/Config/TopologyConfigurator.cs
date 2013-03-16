@@ -16,11 +16,6 @@ namespace Dixie.Core
 		public TopologyConfigurator()
 			: this (new Random()) { }
 
-		public int GenerateChildrenCount()
-		{
-			return random.Next(topologySettings.MinChildrenCount, topologySettings.MaxChildrenCount + 1);
-		}
-
 		public double GeneratePerformance()
 		{
 			return random.NextDouble(topologySettings.MinPerformance, topologySettings.MaxPerformance);

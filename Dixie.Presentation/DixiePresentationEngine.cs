@@ -18,7 +18,7 @@ namespace Dixie.Presentation
 
 		public void Start()
 		{
-			gridEngine = new Engine(InitialGridState.GenerateNew(35), new FakeLog());
+			gridEngine = new Engine(InitialGridState.GenerateNew(20), new FakeLog());
 			gridEngineThread = ThreadRunner.Run(() => gridEngine.TestAlgorithm(new RandomAlgorithm(), TimeSpan.FromHours(1), TimeSpan.FromSeconds(1)));
 			modelUpdateThread = ThreadRunner.RunPeriodicAction(() => graphObserver.TryUpdateModelGraph(gridEngine), ModelUpdatePeriod);
 		}

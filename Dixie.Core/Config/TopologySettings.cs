@@ -12,9 +12,6 @@ namespace Dixie.Core
 			return Configuration<TopologySettings>.Get();
 		}
 
-		public int MinChildrenCount = 3;
-		public int MaxChildrenCount = 5;
-
 		public double MinPerformance = 5;
 		public double MaxPerformance = 40;
 

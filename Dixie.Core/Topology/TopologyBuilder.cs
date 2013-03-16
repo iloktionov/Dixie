@@ -19,20 +19,20 @@ namespace Dixie.Core
 
 		public Topology Build(int nodesCount)
 		{
+			int childrenCount = Math.Max(1, (int) Math.Log(nodesCount, Math.Sqrt(nodesCount) / 2));
 			Topology topology = Topology.CreateEmpty();
 			int nodesGenerated = 0;
 			IEnumerable<INode> previousLayer = new[] { topology.MasterNode };
 			while (nodesGenerated < nodesCount)
-				previousLayer = GenerateLayer(topology, previousLayer, nodesCount, ref nodesGenerated);
+				previousLayer = GenerateLayer(topology, previousLayer, nodesCount, childrenCount, ref nodesGenerated);
 			return topology;
 		}
 
-		private IEnumerable<Node> GenerateLayer(Topology topology, IEnumerable<INode> previousLayer, int nodesCount, ref int nodesGenerated)
+		private IEnumerable<Node> GenerateLayer(Topology topology, IEnumerable<INode> previousLayer, int nodesCount, int childrenCount, ref int nodesGenerated)
 		{
 			var newLayer = new List<Node>();
 			foreach (INode parentNode in previousLayer)
 			{
-				int childrenCount = configurator.GenerateChildrenCount();
 				for (int i = 0; i < childrenCount; i++)
 				{
 					var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability(), NodeFailurePattern.Generate(random));
