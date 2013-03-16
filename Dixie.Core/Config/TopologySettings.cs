@@ -13,7 +13,7 @@ namespace Dixie.Core
 		}
 
 		public int MinChildrenCount = 3;
-		public int MaxChildrenCount = 10;
+		public int MaxChildrenCount = 5;
 
 		public double MinPerformance = 5;
 		public double MaxPerformance = 40;

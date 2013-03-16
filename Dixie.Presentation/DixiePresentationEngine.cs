@@ -8,7 +8,6 @@ namespace Dixie.Presentation
 	{
 		public DixiePresentationEngine(DixieModel model)
 		{
-			this.model = model;
 			graphObserver = new DixieGraphObserver(model);
 		}
 
@@ -43,12 +42,11 @@ namespace Dixie.Presentation
 			
 		}
 
-		private readonly DixieModel model;
 		private readonly DixieGraphObserver graphObserver;
 		private Engine gridEngine;
 		private Thread gridEngineThread;
 		private Thread modelUpdateThread;
 
-		private static readonly TimeSpan ModelUpdatePeriod = TimeSpan.FromMilliseconds(100);
+		private static readonly TimeSpan ModelUpdatePeriod = TimeSpan.FromMilliseconds(500);
 	}
 }

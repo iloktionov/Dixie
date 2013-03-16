@@ -5,10 +5,9 @@
 		public MainWindow()
 		{
 			model = new DixieModel();
-			presentationEngine = new DixiePresentationEngine(model);
 			InitializeComponent();
 			DataContext = model;
-
+			presentationEngine = new DixiePresentationEngine(model);
 			presentationEngine.Start();
 		}
 
