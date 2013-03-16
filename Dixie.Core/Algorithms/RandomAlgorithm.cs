@@ -14,7 +14,7 @@ namespace Dixie.Core
 		}
 
 		public RandomAlgorithm(Random random)
-			: this (random, "Random") { }
+			: this (random, "RandomAlgorithm") { }
 
 		public RandomAlgorithm(string name)
 			: this (new Random(), name) { }

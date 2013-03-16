@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Dixie.Core;
 
 namespace Dixie.Console
@@ -19,6 +21,7 @@ namespace Dixie.Console
 		{
 			MapActionToNamedParameter("--generateState", GenerateInitialState, 2);
 			MapActionToNamedParameter("--updateStateSettings", UpdateStateSettings, 1);
+			MapActionToNamedParameter("--listAlgorithms", ListAlgorithms, 0);
 		}
 
 		private static void GenerateInitialState(string consoleParameter, ConsoleParameters parameters)
@@ -39,6 +42,15 @@ namespace Dixie.Console
 				EngineSettings.GetInstance()
 			);
 			newState.SaveToFile(fileName);
+		}
+
+		private static void ListAlgorithms(string consoleParameter, ConsoleParameters parameters)
+		{
+			List<ISchedulerAlgorithm> algorithms = AlgorihtmsContainer.GetAvailableAlgorithms();
+			if (!algorithms.Any())
+				System.Console.Out.WriteLine("There are no available algorithms.");
+			else foreach (ISchedulerAlgorithm algorithm in algorithms)
+				System.Console.Out.WriteLine(algorithm.Name);
 		}
 	}
 }

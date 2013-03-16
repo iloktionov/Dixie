@@ -8,3 +8,6 @@ Commands:
 
 	--updateStateSettings <savedStateFile>
 		Deserialized initial state from file <savedStateFile>, updates its settings and writes back.
+
+	--listAlgorithms
+		Lists all available scheduler algorithms.
