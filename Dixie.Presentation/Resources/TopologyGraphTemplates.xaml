@@ -6,46 +6,20 @@
     <BitmapImage x:Key="MasterImage" UriSource="MasterAvatar.jpg" />
 
     <DataTemplate DataType="{x:Type DixieCore:NodeState}">
-        <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5" Background="White">
-            <Border.Style>
-                <Style>
-                    <Style.Triggers>
-                        <Trigger Property="Border.IsMouseOver" Value="True">
-                            <Setter Property="Border.Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect BlurRadius="2" Color="#BBBBBB" 
-		                                                    Opacity="0.3" Direction="315"/>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" Margin="0">
-                    <TextBlock Text="{Binding Performance, StringFormat=Perf: {0}}" />
+        <Border BorderBrush="Black" BorderThickness="1" Padding="0" Margin="0" CornerRadius="5" Background="White">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock HorizontalAlignment="Center" Padding="0" Margin="0" Text="{Binding Performance, StringFormat={}{0:0.0}, Mode=OneWay}" />
+                    <Image Source="{StaticResource NodeImage}" Width="36" Height="36" Margin="1" HorizontalAlignment="Left"/>
                 </StackPanel>
-                <Image Source="{StaticResource NodeImage}" Width="36" Height="36" Margin="1" HorizontalAlignment="Center"/>
+                    <ProgressBar Width="20" Height="52" Minimum="0" Maximum="3" Orientation="Vertical" Padding="0" Margin="0"
+                                 Value="{Binding WorkBufferSize, Mode=OneWay}" />
             </StackPanel>
         </Border>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type DixieCore:MasterFakeNode}">
         <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5" Background="White">
-            <Border.Style>
-                <Style>
-                    <Style.Triggers>
-                        <Trigger Property="Border.IsMouseOver" Value="True">
-                            <Setter Property="Border.Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect BlurRadius="2" Color="#BBBBBB" 
-		                                                    Opacity="0.3" Direction="315"/>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
             <StackPanel Orientation="Vertical">
                 <Image Source="{StaticResource MasterImage}" Width="36" Height="36" Margin="1" HorizontalAlignment="Center"/>
             </StackPanel>

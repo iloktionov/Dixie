@@ -7,6 +7,7 @@
 			model = new DixieModel();
 			InitializeComponent();
 			DataContext = model;
+			topologyGraphLayout.SetupLayoutParameters();
 			presentationEngine = new DixiePresentationEngine(model);
 			presentationEngine.Start();
 		}

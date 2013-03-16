@@ -11,6 +11,7 @@
         <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="Resources/TopologyGraphTemplates.xaml" />
+            <ResourceDictionary Source="Resources/ProgressBarTheme.xaml" />
         </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -28,9 +29,8 @@
                 x:Name = "topologyGraphLayout"
                 Graph="{Binding Path=TopologyGraph}"
                 LayoutAlgorithmType="EfficientSugiyama"
+                OverlapRemovalAlgorithmType="FSA"
                 AllowDrop="False"
-                IsAnimationEnabled="False"
-                AnimationLength="0"
             >
             </Dixie:DixieGraphLayout>
         </Zoom:ZoomControl>
