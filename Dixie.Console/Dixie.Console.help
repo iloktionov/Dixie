@@ -7,12 +7,12 @@ Commands:
 		Settings are taken from config files.
 
 	--updateStateSettings <savedStateFile>
-		Deserialized initial state from file <savedStateFile>, updates its settings and writes back.
+		Deserializes initial state from file <savedStateFile>, updates its settings and writes back.
 
 	--listAlgorithms
 		Lists all available scheduler algorithms.
 
-	--test <initialStateFile> <testDuration> <resultsPeriod> <outputFile> [<algorithmName> <algorithmName> <algorithmName> ...]
+	--test <initialStateFile> <testDuration> <resultsPeriod> <outputFile> [<algorithmName> <algorithmName> ...]
 		Performs a test with specified algorithms. Each algorithm is tested for <testDuration> time.
 		Initial grid state is initialized from file with name <initialStateFile>.
 		Intermediate results will be gathered with period <resultsPeriod>. 
