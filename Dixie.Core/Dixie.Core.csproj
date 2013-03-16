@@ -118,6 +118,8 @@
     <Compile Include="Utilities\ThreadRoutineWrapper.cs" />
     <Compile Include="Utilities\ThreadRunner.cs" />
     <Compile Include="Utilities\Thread_Extensions.cs" />
+    <Compile Include="Utilities\TimeSpanParser.cs" />
+    <Compile Include="Utilities\TimeSpanParser_Tests.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
