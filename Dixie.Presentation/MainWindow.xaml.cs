@@ -1,4 +1,6 @@
-﻿namespace Dixie.Presentation
+﻿using Dixie.Core;
+
+namespace Dixie.Presentation
 {
 	public partial class MainWindow
 	{
