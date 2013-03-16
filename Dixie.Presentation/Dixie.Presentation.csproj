@@ -37,11 +37,11 @@
     <Reference Include="Configuration">
       <HintPath>..\ExternalAssemblies\Configuration.exe</HintPath>
     </Reference>
-    <Reference Include="Graphviz4Net">
-      <HintPath>..\ExternalAssemblies\Graphviz4Net.dll</HintPath>
+    <Reference Include="GraphSharp">
+      <HintPath>..\..\GraphSharpTest\External\GraphSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Graphviz4Net.WPF">
-      <HintPath>..\ExternalAssemblies\Graphviz4Net.WPF.dll</HintPath>
+    <Reference Include="GraphSharp.Controls">
+      <HintPath>..\..\GraphSharpTest\External\GraphSharp.Controls.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot">
       <HintPath>..\ExternalAssemblies\OxyPlot.dll</HintPath>
