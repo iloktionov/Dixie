@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace Dixie.Core
@@ -36,6 +38,28 @@ namespace Dixie.Core
 				builder.AppendFormat("{0}: {1}", pair.Key, pair.Value.ToString(true));
 			}
 			return builder.ToString();
+		}
+
+		public void Serialize(Stream stream)
+		{
+			new BinaryFormatter().Serialize(stream, this);
+		}
+
+		public static ComparisonTestResult Deserialize(Stream stream)
+		{
+			return (ComparisonTestResult) new BinaryFormatter().Deserialize(stream);
+		}
+
+		public void SaveToFile(string file)
+		{
+			using (var stream = new FileStream(file, FileMode.Create, FileAccess.Write))
+				Serialize(stream);
+		}
+
+		public static ComparisonTestResult ReadFromFile(string file)
+		{
+			using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
+				return Deserialize(stream);
 		}
 
 		public Dictionary<string, AlgorithmTestResult> AlgorithmResults { get; private set; } 

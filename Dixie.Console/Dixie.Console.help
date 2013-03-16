@@ -11,3 +11,10 @@ Commands:
 
 	--listAlgorithms
 		Lists all available scheduler algorithms.
+
+	--test <testDuration> <resultsPeriod> <outputFile> [<algorithmName> <algorithmName> <algorithmName> ...]
+		Performs a test of duration <testDuration> with specified algorithms.
+		Intermediate results will be gathered with period <resultsPeriod>. 
+		Final result will be saved to file with name <outputFile>.
+		Example 1: Dixie.Console.exe --test 2m 100ms test1.result RandomAlgorithm FirstNodeAlgorithm
+		Example 2: Dixie.Console.exe --test 1h 500ms test2.result RandomAlgorithm RandomAlgorithm 
