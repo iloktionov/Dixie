@@ -83,6 +83,11 @@ namespace Dixie.Core
 			return testResult;
 		}
 
+		public Topology Topology
+		{
+			get { return topology; }
+		}
+
 		private Thread StartHeartBeatsMechanism(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1), syncEvent, OnUnexpectedError);
