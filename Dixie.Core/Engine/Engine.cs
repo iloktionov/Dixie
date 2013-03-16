@@ -29,6 +29,7 @@ namespace Dixie.Core
 			topology = initialState.Topology.Clone();
 			master = new Master(initialState.EngineSettings.DeadabilityThreshold, testLog);
 			schedulerAlgorithm = algorithm;
+			schedulerAlgorithm.Reset();
 			garbageCollector = new GarbageCollector(initialState.EngineSettings.DeadabilityThreshold);
 			topologyMutator = new CompositeMutator(initialState.RandomSeed, topology.WorkerNodesCount, 
 				initialState.EngineSettings.RemoveNodesProbability, 

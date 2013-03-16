@@ -30,6 +30,8 @@ namespace Dixie.Core
 				taskManager.AssignNodeToTask(pendingTask, aliveNodes[random.Next(aliveNodes.Count)].Id);
 		}
 
+		public void Reset() { }
+
 		public string Name { get; private set; }
 
 		private readonly Random random;

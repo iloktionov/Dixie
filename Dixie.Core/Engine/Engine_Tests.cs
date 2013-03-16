@@ -60,6 +60,8 @@ namespace Dixie.Core
 				throw new Exception("Test exception from ErrorAlgorithm!");
 			}
 
+			public void Reset() { }
+
 			public string Name { get { return "Error"; } }
 		}
 
