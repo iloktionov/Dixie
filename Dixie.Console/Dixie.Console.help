@@ -1,1 +1,10 @@
 ﻿
+Usage: Dixie.Console.exe <command> <commandParameters>
+
+Commands:
+	--generateState <nodesCount> <outputFile>
+		Generates initial grid state with <nodesCount> nodes topology and writes it to <outputFile>. 
+		Settings are taken from config files.
+
+	--updateStateSettings <savedStateFile>
+		Deserialized initial state from file <savedStateFile>, updates its settings and writes back.

@@ -17,7 +17,11 @@ namespace Dixie.Core
 
 		public void Serialize(Stream stream)
 		{
-			new BinaryFormatter().Serialize(stream, this);
+			Topology.Serialize(stream);
+			var formatter = new BinaryFormatter();
+			formatter.Serialize(stream, RandomSeed);
+			formatter.Serialize(stream, TopologySettings);
+			formatter.Serialize(stream, EngineSettings);
 		}
 
 		public void SaveToFile(string file)
@@ -28,7 +32,12 @@ namespace Dixie.Core
 
 		public static InitialGridState Deserialize(Stream stream)
 		{
-			return (InitialGridState) new BinaryFormatter().Deserialize(stream);
+			Topology topology = Topology.Deserialize(stream);
+			var formatter = new BinaryFormatter();
+			var randomSeed = (int) formatter.Deserialize(stream);
+			var topologySettings = (TopologySettings) formatter.Deserialize(stream);
+			var engineSettings = (EngineSettings) formatter.Deserialize(stream);
+			return new InitialGridState(topology, randomSeed, topologySettings, engineSettings);
 		}
 
 		public static InitialGridState ReadFromFile(string file)
