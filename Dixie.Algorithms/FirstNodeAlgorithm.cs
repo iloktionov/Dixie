@@ -1,13 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace Dixie.Core
 {
+	[Export(typeof(ISchedulerAlgorithm))]
 	internal class FirstNodeAlgorithm : ISchedulerAlgorithm
 	{
-		public FirstNodeAlgorithm(string name = "FirstNodeAlgorithm")
+		public FirstNodeAlgorithm(string name)
 		{
 			Name = name;
 		}
+
+		public FirstNodeAlgorithm()
+			: this("FirstNodeAlgorithm") { }
 
 		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
 		{

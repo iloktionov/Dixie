@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dixie.Core", "Dixie.Core\Di
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dixie.Console", "Dixie.Console\Dixie.Console.csproj", "{240916CD-497F-406A-AF82-85477683B2A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dixie.Algorithms", "Dixie.Algorithms\Dixie.Algorithms.csproj", "{D9D694FD-64ED-4967-857F-C560DFD9E86A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{240916CD-497F-406A-AF82-85477683B2A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{240916CD-497F-406A-AF82-85477683B2A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{240916CD-497F-406A-AF82-85477683B2A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9D694FD-64ED-4967-857F-C560DFD9E86A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9D694FD-64ED-4967-857F-C560DFD9E86A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9D694FD-64ED-4967-857F-C560DFD9E86A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9D694FD-64ED-4967-857F-C560DFD9E86A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
