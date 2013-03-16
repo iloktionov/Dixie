@@ -91,6 +91,7 @@
     <Compile Include="GraphLayout\DixieGraphLayout.cs" />
     <Compile Include="DixieModel.cs" />
     <Compile Include="GraphLayout\DixieGraphObserver.cs" />
+    <Compile Include="Plotting\PlotManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -105,6 +106,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Plotting\PlotModelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -141,6 +143,7 @@
   <ItemGroup>
     <Resource Include="Resources\NodeAvatar.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

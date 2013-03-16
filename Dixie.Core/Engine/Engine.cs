@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace Dixie.Core
@@ -71,6 +72,8 @@ namespace Dixie.Core
 					break;
 				Thread.Sleep(ExtendedMath.Min(intermediateCheckPeriod, timeBeforeEnd + TimeSpan.FromMilliseconds(1)));
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
+				if (onIntermediateResult != null)
+					onIntermediateResult(testResult.IntermediateResults.Last(), algorithm.Name);
 				CheckErrors();
 			}
 
@@ -81,6 +84,11 @@ namespace Dixie.Core
 			LogResult(testResult);
 			CheckErrors();
 			return testResult;
+		}
+
+		public void SetOnIntermediateResultCallback(Action<IntermediateTestResult, string> callback)
+		{
+			onIntermediateResult = callback;
 		}
 
 		public Topology Topology
@@ -195,5 +203,7 @@ namespace Dixie.Core
 		private GarbageCollector garbageCollector;
 		private int errorsCount;
 		private ILog testLog;
+
+		private Action<IntermediateTestResult, string> onIntermediateResult;
 	}
 }

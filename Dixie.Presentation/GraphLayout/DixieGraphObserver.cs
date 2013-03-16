@@ -9,6 +9,7 @@ namespace Dixie.Presentation
 		public DixieGraphObserver(DixieModel model)
 		{
 			this.model = model;
+			version = -1;
 		}
 
 		public void TryUpdateModelGraph(Engine engine)

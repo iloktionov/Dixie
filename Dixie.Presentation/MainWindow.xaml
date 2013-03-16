@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
         xmlns:Dixie="clr-namespace:Dixie.Presentation"
+        xmlns:oxy="http://oxyplot.codeplex.com"
         Title="Dixie" 
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
@@ -18,13 +19,15 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <Zoom:ZoomControl>
+        <Zoom:ZoomControl Grid.Row="0" Grid.Column="0" BorderThickness="1" BorderBrush="Black">
             <Dixie:DixieGraphLayout
                 x:Name = "topologyGraphLayout"
                 Graph="{Binding Path=TopologyGraph}"
@@ -34,5 +37,6 @@
             >
             </Dixie:DixieGraphLayout>
         </Zoom:ZoomControl>
+        <oxy:Plot Grid.Row="1" Grid.Column="0" Model="{Binding PlotModel}" Name="resultsPlot" AutoAdjustPlotMargins="true" BorderThickness="1" BorderBrush="Black"/>
     </Grid>
 </Window>

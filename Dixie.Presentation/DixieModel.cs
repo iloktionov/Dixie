@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using OxyPlot;
 
 namespace Dixie.Presentation
 {
@@ -14,6 +15,16 @@ namespace Dixie.Presentation
 			}
 		}
 
+		public PlotModel PlotModel
+		{
+			get { return plotModel; }
+			set
+			{
+				plotModel = value;
+				RaisePropertyChanged("PlotModel");
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void RaisePropertyChanged(string property)
@@ -23,5 +34,6 @@ namespace Dixie.Presentation
 		}
 
 		private DixieGraph topologyGraph;
+		private PlotModel plotModel;
 	}
 }

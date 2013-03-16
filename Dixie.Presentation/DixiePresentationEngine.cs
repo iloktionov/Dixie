@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Dixie.Core;
 
@@ -9,6 +10,7 @@ namespace Dixie.Presentation
 		public DixiePresentationEngine(DixieModel model)
 		{
 			graphObserver = new DixieGraphObserver(model);
+			plotManager = new PlotManager(model);
 		}
 
 		public void InitializeFromFile(string filename)
@@ -18,8 +20,11 @@ namespace Dixie.Presentation
 
 		public void Start()
 		{
+			ISchedulerAlgorithm algorithm = new RandomAlgorithm();
 			gridEngine = new Engine(InitialGridState.GenerateNew(20), new FileBasedLog("test.log"));
-			gridEngineThread = ThreadRunner.Run(() => gridEngine.TestAlgorithm(new RandomAlgorithm(), TimeSpan.FromHours(1), TimeSpan.FromSeconds(1)));
+			gridEngine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
+			gridEngineThread = ThreadRunner.Run(() => gridEngine.TestAlgorithms(new List<ISchedulerAlgorithm>{algorithm, algorithm, algorithm, algorithm, algorithm},
+				TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(100)));
 			modelUpdateThread = ThreadRunner.RunPeriodicAction(() => graphObserver.TryUpdateModelGraph(gridEngine), ModelUpdatePeriod);
 		}
 
@@ -42,7 +47,13 @@ namespace Dixie.Presentation
 			
 		}
 
+		private void OnIntermediateTestResult(IntermediateTestResult result, string algorithmName)
+		{
+			plotManager.AddPointToSeries(algorithmName, result.TimeElapsed.TotalSeconds, result.WorkDone);
+		}
+
 		private readonly DixieGraphObserver graphObserver;
+		private PlotManager plotManager;
 		private Engine gridEngine;
 		private Thread gridEngineThread;
 		private Thread modelUpdateThread;
