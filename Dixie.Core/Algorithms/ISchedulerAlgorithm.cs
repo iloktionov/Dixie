@@ -6,6 +6,6 @@ namespace Dixie.Core
 	{
 		void Work(List<NodeInfo> aliveNodes, TaskManager taskManager);
 		void Reset();
-		string Name { get; }
+		string Name { get; set; }
 	}
 }

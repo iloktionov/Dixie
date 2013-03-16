@@ -32,7 +32,7 @@ namespace Dixie.Core
 
 		public void Reset() { }
 
-		public string Name { get; private set; }
+		public string Name { get; set; }
 
 		private readonly Random random;
 	}

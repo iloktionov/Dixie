@@ -22,11 +22,8 @@ namespace Dixie.Core
 				taskManager.AssignNodeToTask(pendingTask, aliveNodes[0].Id);
 		}
 
-		public void Reset()
-		{
-			
-		}
+		public void Reset() { }
 
-		public string Name { get; private set; }
+		public string Name { get; set; }
 	}
 }

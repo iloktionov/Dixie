@@ -62,7 +62,7 @@ namespace Dixie.Core
 
 			public void Reset() { }
 
-			public string Name { get { return "Error"; } }
+			public string Name { get { return "Error"; } set {} }
 		}
 
 		private readonly Random random = new Random();
