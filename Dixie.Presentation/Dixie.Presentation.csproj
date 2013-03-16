@@ -83,8 +83,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DixieGraph.cs" />
-    <Compile Include="DixieGraphLayout.cs" />
+    <Compile Include="GraphLayout\DixieGraph.cs" />
+    <Compile Include="GraphLayout\DixieGraphLayout.cs" />
     <Compile Include="DixieModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
