@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Reflection;
 
 namespace Dixie.Core
@@ -12,15 +14,23 @@ namespace Dixie.Core
 			instance = new AlgorihtmsContainer();
 		}
 
+		public static void Initialize()
+		{
+			
+		}
+
 		public static List<ISchedulerAlgorithm> GetAvailableAlgorithms()
 		{
 			return instance.GetAlgorithms();
 		}
 
+		public const string ExtensionsDirectory = "Algorithms\\";
+
 		private AlgorihtmsContainer()
 		{
 			var catalog = new AggregateCatalog();
 			catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+			catalog.Catalogs.Add(new DirectoryCatalog(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ExtensionsDirectory)));
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
