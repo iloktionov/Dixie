@@ -33,6 +33,11 @@ namespace Dixie.Core
 				taskManager.ReportDeadNodes(deads);
 
 				List<NodeInfo> aliveNodeInfos = nodesManager.GetAliveNodeInfos();
+				if (aliveNodeInfos.Count <= 0)
+				{
+					LogNoAliveNodes();
+					return;
+				}
 				watch.Restart();
 				algorithm.Work(aliveNodeInfos, taskManager);
 				LogAlgorithmWorkTime(watch.Elapsed, algorithm);
@@ -101,6 +106,11 @@ namespace Dixie.Core
 		private void LogAlgorithmWorkTime(TimeSpan elapsed, ISchedulerAlgorithm algorithm)
 		{
 			log.Debug("Executed algorithm {0} in {1}", algorithm.Name, elapsed);
+		}
+
+		private void LogNoAliveNodes()
+		{
+			log.Error("There are no alive nodes for algorithm to operate on.");
 		}
 		#endregion
 
