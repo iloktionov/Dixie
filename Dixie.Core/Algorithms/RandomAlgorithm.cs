@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace Dixie.Core
 {
+	[Export(typeof(ISchedulerAlgorithm))]
 	internal class RandomAlgorithm : ISchedulerAlgorithm
 	{
 		public RandomAlgorithm(Random random, string name)
@@ -16,6 +18,9 @@ namespace Dixie.Core
 
 		public RandomAlgorithm(string name)
 			: this (new Random(), name) { }
+
+		public RandomAlgorithm() 
+			: this (new Random()) { }
 
 		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
 		{

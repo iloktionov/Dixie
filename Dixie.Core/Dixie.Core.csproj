@@ -40,9 +40,11 @@
       <HintPath>..\ExternalAssemblies\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\AlgorihtmsContainer.cs" />
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatProcessor.cs" />
     <Compile Include="Communication\HeartBeatProcessor_Tests.cs" />
@@ -59,7 +61,7 @@
     <Compile Include="Engine\TasksGenerator.cs" />
     <Compile Include="FirstNodeAlgorithm.cs" />
     <Compile Include="GC\GarbageCollector_Tests.cs" />
-    <Compile Include="ISchedulerAlgorithm.cs" />
+    <Compile Include="Algorithms\ISchedulerAlgorithm.cs" />
     <Compile Include="Logging\ColorConsoleLog.cs" />
     <Compile Include="Logging\ConsoleColorChanger.cs" />
     <Compile Include="Logging\FakeLog.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="Master\Tasks\TaskStatus.cs" />
     <Compile Include="Node\NodeFailurePattern.cs" />
     <Compile Include="Node\NodeFailurePattern_Tests.cs" />
-    <Compile Include="RandomAlgorithm.cs" />
+    <Compile Include="Algorithms\RandomAlgorithm.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
     <Compile Include="Utilities\EnumerableExtensions.cs" />
