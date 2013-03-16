@@ -161,6 +161,26 @@ namespace Dixie.Core
 			}
 		}
 
+		public int GetNodeTreeHeight(INode node)
+		{
+			int height = 0;
+			IEnumerable<NetworkLink> outEdges;
+			while (graph.TryGetOutEdges(node, out outEdges))
+			{
+				NetworkLink edge = outEdges.FirstOrDefault();
+				if (edge == null)
+					return height;
+				height++;
+				node = edge.Target;
+			}
+			return height;
+		}
+
+		public int GetTreeHeight()
+		{
+			return workerNodes.Values.Max(node => GetNodeTreeHeight(node));
+		}
+
 		internal MasterFakeNode MasterNode
 		{
 			get { return masterNode; }

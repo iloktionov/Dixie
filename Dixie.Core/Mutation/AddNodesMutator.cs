@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Dixie.Core
@@ -21,7 +20,7 @@ namespace Dixie.Core
 			if (topology.WorkerNodesCount >= maxRemainingNodes)
 				return;
 			int nodesToAdd = random.Next(0, maxRemainingNodes - topology.WorkerNodesCount + 1);
-			INode[] parents = SelectParents(topology, nodesToAdd);
+			INode[] parents = SelectRandomParents(topology, nodesToAdd);
 			for (int i = 0; i < nodesToAdd; i++)
 			{
 				var newNode = new Node(configurator.GeneratePerformance(), configurator.GenerateFailureProbability(), NodeFailurePattern.Generate(random));
@@ -29,29 +28,21 @@ namespace Dixie.Core
 			}
 		}
 
-		private static INode[] SelectParents(Topology topology, int count)
+		private INode[] SelectRandomParents(Topology topology, int count)
 		{
-			var potentialParents = topology.Graph.Vertices
-				.Select(vertex => new KeyValuePair<INode, int>(vertex, GetTreeChildrenCount(topology, vertex)))
-				.OrderBy(pair => pair.Value)
-				.ToList();
+			INode[] potentialParents = topology.Graph.Vertices
+				.Except(new [] {topology.MasterNode})
+				.ToArray();
 			var result = new INode[count];
-			int parentIndex = 0;
-			for (int i = 0; i < count; i++)
+			int parentsDone = 0;
+			while (parentsDone < count)
 			{
-				result[i] = potentialParents[parentIndex].Key;
-				parentIndex++;
-				parentIndex = parentIndex % potentialParents.Count;
+				INode parent = potentialParents[random.Next(potentialParents.Length)];
+				int parentOrder = random.Next(count - parentsDone + 1);
+				for (int i = 0; i < parentOrder; i++)
+					result[parentsDone++] = parent;
 			}
 			return result;
-		}
-
-		private static int GetTreeChildrenCount(Topology topology, INode vertex)
-		{
-			IEnumerable<NetworkLink> inEdges;
-			if (!topology.Graph.TryGetInEdges(vertex, out inEdges))
-				return 0;
-			return inEdges.Count();
 		}
 
 		private readonly Random random;

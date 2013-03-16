@@ -17,7 +17,7 @@ namespace Dixie.Presentation
 
 		private static readonly ILayoutParameters SugiyamaParameters = new SugiyamaLayoutParameters
 		{
-			HorizontalGap = 3,
+			HorizontalGap = 10,
 			VerticalGap = 30,
 			DirtyRound = true,
 			MinimizeHierarchicalEdgeLong = true,

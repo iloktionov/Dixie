@@ -177,6 +177,25 @@ namespace Dixie.Core
 				Assert.AreNotEqual(cloneTopology.graph.VertexCount, topology.graph.VertexCount);
 			}
 
+			[Test]
+			public void Test_GetNodeTreeHeight()
+			{
+				Topology topology = CreateEmpty();
+				var node1 = new Node(1, 0.1);
+				var node2 = new Node(2, 0.1);
+				var node3 = new Node(3, 0.1);
+				var node4 = new Node(4, 0.1);
+				topology.AddNode(node1, topology.masterNode, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node2, node1, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node3, node2, TimeSpan.FromMilliseconds(1));
+				topology.AddNode(node4, node3, TimeSpan.FromMilliseconds(1));
+				Assert.AreEqual(0, topology.GetNodeTreeHeight(topology.masterNode));
+				Assert.AreEqual(1, topology.GetNodeTreeHeight(node1));
+				Assert.AreEqual(2, topology.GetNodeTreeHeight(node2));
+				Assert.AreEqual(3, topology.GetNodeTreeHeight(node3));
+				Assert.AreEqual(4, topology.GetNodeTreeHeight(node4));
+			}
+
 			private static void PrintTopology(Topology topology)
 			{
 				Console.Out.WriteLine();

@@ -99,6 +99,7 @@
     <Compile Include="Node\NodeState.cs" />
     <Compile Include="Topology\NetworkLink.cs" />
     <Compile Include="Node\Node_Tests.cs" />
+    <Compile Include="Utilities\CommutationAnySize.cs" />
     <Compile Include="Utilities\EnumerableExtensions.cs" />
     <Compile Include="Utilities\ExtendedMath.cs" />
     <Compile Include="GC\GarbageCollector.cs" />

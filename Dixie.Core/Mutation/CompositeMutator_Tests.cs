@@ -10,6 +10,29 @@ namespace Dixie.Core
 	internal class CompositeMutator_Tests
 	{
 		[Test]
+		[Ignore]
+		public void Test_TopologyTreeHeight()
+		{
+			Topology topology = GenerateInitialTopology(100);
+			Console.Out.WriteLine(topology.GetTreeHeight());
+
+			for (int i = 1; i <= 10; i++)
+			{
+				long avgTreeHeight = 0;
+				int mutationsCount = i*1000;
+				var t = topology.Clone();
+				var mutator = new CompositeMutator(24234, t.WorkerNodesCount, 0.1, 0.1, TopologySettings.GetInstance(), new GarbageCollector(TimeSpan.Zero));
+				for (int j = 0; j < mutationsCount; j++)
+				{
+					mutator.Mutate(topology);
+					avgTreeHeight += topology.GetTreeHeight();
+				}
+				avgTreeHeight /= mutationsCount;
+				Console.Out.WriteLine(avgTreeHeight);
+			}
+		}
+
+		[Test]
 		// (iloktionov): Проверяем, что мутатор ни от чего не падает при долгой работе. 
 		public void Test_CorrectWork()
 		{
