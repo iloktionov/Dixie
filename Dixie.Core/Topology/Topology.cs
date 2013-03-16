@@ -60,6 +60,7 @@ namespace Dixie.Core
 				graph.AddEdge(new NetworkLink(newNode, parentNode, linkLatency));
 				workerNodes.Add(newNode.Id, newNode);
 				workerLatencies.Add(newNode.Id, linkLatency + workerLatencies[parentNode.Id]);
+				version++;
 				return true;
 			}
 		}
@@ -84,6 +85,7 @@ namespace Dixie.Core
 					graph.AddEdge(newLink);
 					AdjustWorkerLatencies(newLink, parentLink.Latency.Negate());
 				}
+				version++;
 			}
 		}
 
@@ -134,6 +136,18 @@ namespace Dixie.Core
 			builder.AppendLine("Edges:");
 			builder.Append(String.Join(Environment.NewLine, graph.Edges));
 			return builder.ToString();
+		}
+
+		public bool ObserveGraph(long providedVersion, Action<BidirectionalGraph<INode, NetworkLink>> graphAction, out long actualVersion)
+		{
+			lock (syncObject)
+			{
+				actualVersion = version;
+				if (providedVersion == actualVersion)
+					return false;
+				graphAction(graph);
+				return true;
+			}
 		}
 
 		internal MasterFakeNode MasterNode
@@ -199,5 +213,6 @@ namespace Dixie.Core
 		private readonly Dictionary<Guid, TimeSpan> workerLatencies;
 		private readonly MasterFakeNode masterNode;
 		private readonly object syncObject;
+		private long version;
 	}
 }

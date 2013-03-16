@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public class NodeState
+	public class NodeState : INode
 	{
 		public NodeState(Guid id, double performance, double failureProbability, int workBufferSize)
 		{

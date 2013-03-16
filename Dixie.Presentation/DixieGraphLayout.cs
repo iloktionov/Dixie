@@ -3,7 +3,7 @@ using GraphSharp.Controls;
 
 namespace Dixie.Presentation
 {
-	internal class DixieGraphLayout : GraphLayout<NodeState, DixieEdge, DixieGraph>
+	internal class DixieGraphLayout : GraphLayout<INode, NetworkLink, DixieGraph>
 	{
 	}
 }
