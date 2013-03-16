@@ -17,7 +17,10 @@ namespace Dixie.Core
 		{
 			var result = new ComparisonTestResult();
 			foreach (ISchedulerAlgorithm algorithm in algorithms)
+			{
+				AlgorithmNamesHelper.PrepareAlgorithmName(algorithm);
 				result.AddAlgorithmResult(algorithm, TestAlgorithm(algorithm, testDuration, intermediateCheckPeriod));
+			}
 			return result;
 		}
 

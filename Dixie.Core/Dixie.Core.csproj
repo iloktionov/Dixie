@@ -51,6 +51,7 @@
     <Compile Include="Communication\HeartBeatResponse.cs" />
     <Compile Include="Config\InitialGridState.cs" />
     <Compile Include="Config\TopologySettings.cs" />
+    <Compile Include="Engine\AlgorithmNamesHelper.cs" />
     <Compile Include="Engine\AlgorithmTestResult.cs" />
     <Compile Include="Engine\ComparisonTestResult.cs" />
     <Compile Include="Engine\Engine.cs" />
