@@ -90,27 +90,27 @@ namespace Dixie.Core
 
 		private Thread StartHeartBeatsMechanism(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.FromMilliseconds(1), syncEvent, OnUnexpectedError);
+			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.Zero, thread => thread.Priority = ThreadPriority.Highest, syncEvent, OnUnexpectedError);
 		}
 
 		private Thread StartTopologyMutations(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), initialState.EngineSettings.TopologyMutatorRunPeriod, syncEvent, OnUnexpectedError);
+			return ThreadRunner.RunPeriodicAction(() => topologyMutator.Mutate(topology), initialState.EngineSettings.TopologyMutatorRunPeriod, null, syncEvent, OnUnexpectedError);
 		}
 
 		private Thread StartTaskGeneration(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), initialState.EngineSettings.TasksGeneratorRunPeriod, syncEvent, OnUnexpectedError);
+			return ThreadRunner.RunPeriodicAction(() => master.RefillTasksIfNeeded(tasksGenerator), initialState.EngineSettings.TasksGeneratorRunPeriod, null, syncEvent, OnUnexpectedError);
 		}
 
 		private Thread StartSchedulerAlgorithm(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), initialState.EngineSettings.SchedulingAlgorithmRunPeriod, syncEvent, OnUnexpectedError);
+			return ThreadRunner.RunPeriodicAction(() => master.ExecuteSchedulerAlgorithm(schedulerAlgorithm), initialState.EngineSettings.SchedulingAlgorithmRunPeriod, null, syncEvent, OnUnexpectedError);
 		}
 
 		private Thread StartGarbageCollection(WaitHandle syncEvent)
 		{
-			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master), initialState.EngineSettings.GarbageCollectorRunPeriod, syncEvent, OnUnexpectedError);
+			return ThreadRunner.RunPeriodicAction(() => garbageCollector.CollectGarbage(master), initialState.EngineSettings.GarbageCollectorRunPeriod, null, syncEvent, OnUnexpectedError);
 		}
 
 		private void WaitForMasterStateWarmup()

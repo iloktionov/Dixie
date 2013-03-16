@@ -17,7 +17,7 @@ namespace Dixie.Core
 			return thread;
 		}
 
-		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, WaitHandle waitHandle = null, Action<Exception> onException = null)
+		public static Thread RunPeriodicAction(Action periodicAction, TimeSpan period, Action<Thread> tuneThreadBeforeStart = null, WaitHandle waitHandle = null, Action<Exception> onException = null)
 		{
 			return Run(() =>
 			{
@@ -28,7 +28,7 @@ namespace Dixie.Core
 					Thread.Sleep(period);
 					periodicAction();
 				}
-			}, null, onException);
+			}, tuneThreadBeforeStart, onException);
 		}
 
 		public static void StopThreads(params Thread[] threads)
