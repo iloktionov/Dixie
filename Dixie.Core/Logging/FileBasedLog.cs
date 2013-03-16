@@ -19,28 +19,40 @@ namespace Dixie.Core
 				return;
 			string message = FormatMessage("DEBUG " + format, args);
 			lock (writer)
+			{
 				writer.WriteLine(message);
+				writer.Flush();
+			}
 		}
 
 		public void Info(string format, params object[] args)
 		{
 			string message = FormatMessage("INFO " + format, args);
 			lock (writer)
+			{
 				writer.WriteLine(message);
+				writer.Flush();
+			}
 		}
 
 		public void Warn(string format, params object[] args)
 		{
 			string message = FormatMessage("WARN " + format, args);
 			lock (writer)
+			{
 				writer.WriteLine(message);
+				writer.Flush();
+			}
 		}
 
 		public void Error(string format, params object[] args)
 		{
 			string message = FormatMessage("ERROR " + format, args);
 			lock (writer)
+			{
 				writer.WriteLine(message);
+				writer.Flush();
+			}
 		}
 
 		public bool IsDebugEnabled { get; set; }
