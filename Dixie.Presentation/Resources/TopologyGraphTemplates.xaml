@@ -3,6 +3,7 @@
                     xmlns:DixieCore="clr-namespace:Dixie.Core;assembly=Dixie.Core">
 
     <BitmapImage x:Key="NodeImage" UriSource="NodeAvatar.jpg" />
+    <BitmapImage x:Key="MasterImage" UriSource="MasterAvatar.jpg" />
 
     <DataTemplate DataType="{x:Type DixieCore:NodeState}">
         <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5" Background="White">
@@ -25,6 +26,28 @@
                     <TextBlock Text="{Binding Performance, StringFormat=Perf: {0}}" />
                 </StackPanel>
                 <Image Source="{StaticResource NodeImage}" Width="36" Height="36" Margin="1" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type DixieCore:MasterFakeNode}">
+        <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5" Background="White">
+            <Border.Style>
+                <Style>
+                    <Style.Triggers>
+                        <Trigger Property="Border.IsMouseOver" Value="True">
+                            <Setter Property="Border.Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect BlurRadius="2" Color="#BBBBBB" 
+		                                                    Opacity="0.3" Direction="315"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel Orientation="Vertical">
+                <Image Source="{StaticResource MasterImage}" Width="36" Height="36" Margin="1" HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
     </DataTemplate>
