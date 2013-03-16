@@ -30,7 +30,9 @@ namespace Dixie.Core
 		{
 			var catalog = new AggregateCatalog();
 			catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
-			catalog.Catalogs.Add(new DirectoryCatalog(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ExtensionsDirectory)));
+			string extensionsDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ExtensionsDirectory);
+			if (Directory.Exists(extensionsDirectoryPath))
+				catalog.Catalogs.Add(new DirectoryCatalog(extensionsDirectoryPath));
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
