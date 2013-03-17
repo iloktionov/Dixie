@@ -14,7 +14,10 @@ namespace Dixie.Presentation
 		{
 			if (master == null)
 				Reset();
-			else model.TaskStates = master.GetTaskStates().ToList();
+			else model.TaskStates = master
+				.GetTaskStates()
+				.OrderByDescending(state => state.Task.Volume)
+				.ToList();
 		}
 
 		public void Reset()

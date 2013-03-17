@@ -12,7 +12,7 @@ namespace Dixie.Presentation
 			var state = (TaskState)value;
 			if (state.Status != TaskStatus.Assigned)
 				return state.Status.ToString();
-			return String.Format("Assigned {0}{1} node(s)", Environment.NewLine, state.AssignedNodes.Count);
+			return String.Format("{0:0.0}{1}{1}Assigned {2}{3} node(s)", state.Task.Volume, Environment.NewLine, Environment.NewLine, state.AssignedNodes.Count);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
