@@ -86,6 +86,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\TasksStateDescriptionConverter.cs" />
     <Compile Include="Converters\TaskStateColorConverter.cs" />
     <Compile Include="DixiePresentationEngine.cs" />
     <Compile Include="GraphLayout\DixieGraph.cs" />

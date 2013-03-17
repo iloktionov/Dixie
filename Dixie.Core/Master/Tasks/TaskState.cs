@@ -40,6 +40,6 @@ namespace Dixie.Core
 
 		public Task Task { get; private set; }
 		public TaskStatus Status { get; private set; }
-		internal List<Guid> AssignedNodes { get; private set; }
+		public List<Guid> AssignedNodes { get; private set; }
 	}
 }

@@ -30,7 +30,7 @@ namespace Dixie.Presentation
 		}
 
 		private static readonly SolidColorBrush pendingBrush = new SolidColorBrush(Colors.Gray);
-		private static readonly SolidColorBrush assignedBrush = new SolidColorBrush(Colors.Orange);
+		private static readonly SolidColorBrush assignedBrush = new SolidColorBrush(Colors.Gold);
 		private static readonly SolidColorBrush completedBrush = new SolidColorBrush(Colors.LightGreen);
 	}
 }

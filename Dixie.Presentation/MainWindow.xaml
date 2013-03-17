@@ -18,6 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
             <Dixie:InitialStateDescriptionConverter x:Key="stateLabelConverter" />
             <Dixie:TaskStateColorConverter x:Key="taskColorConverter" />
+            <Dixie:TasksStateDescriptionConverter x:Key="taskDescriptionConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -114,7 +115,11 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Status}" IsEnabled="False" Background="{Binding Status, Converter={StaticResource taskColorConverter}}"/>
+                    <Button 
+                        Content="{Binding Converter={StaticResource taskDescriptionConverter}}" 
+                        Background="{Binding Status, Converter={StaticResource taskColorConverter}}"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
