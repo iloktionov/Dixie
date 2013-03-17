@@ -27,12 +27,21 @@ namespace Dixie.Presentation
 		{
 			foreach (object selectedAlgorithm in availableAlgorithmsBox.SelectedItems)
 				selectedAlgorithmsBox.Items.Add(selectedAlgorithm);
+			OnSelectedAlgorithmsBoxItemsChanged();
 		}
 
 		private void RemoveAlgorithmButtonClick(object sender, RoutedEventArgs e)
 		{
 			if (selectedAlgorithmsBox.SelectedIndex >= 0)
+			{
 				selectedAlgorithmsBox.Items.RemoveAt(selectedAlgorithmsBox.SelectedIndex);
+				OnSelectedAlgorithmsBoxItemsChanged();
+			}
+		}
+
+		private void OnSelectedAlgorithmsBoxItemsChanged()
+		{
+			selectedAlgorithmsBox.Background = selectedAlgorithmsBox.Items.Count > 0 ? okBrush : errorBrush;
 		}
 
 		private void DurationInputTextChanged(object sender, TextChangedEventArgs e)
@@ -50,12 +59,22 @@ namespace Dixie.Presentation
 			try
 			{
 				TimeSpanParser.Parse(control.Text);
-				control.Background = new SolidColorBrush(Colors.LightGreen);
+				control.Background = okBrush;
 			}
 			catch (FormatException)
 			{
-				control.Background = new SolidColorBrush(Colors.LightCoral);
+				control.Background = errorBrush;
 			}
 		}
+
+		private void InitialStateTextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (initialStateLabel.Text == InitialStateDescriptionConverter.Loaded)
+				initialStateLabel.Background = okBrush;
+			else initialStateLabel.Background = errorBrush;
+		}
+
+		private static readonly SolidColorBrush okBrush = new SolidColorBrush(Colors.LightGreen);
+		private static readonly SolidColorBrush errorBrush = new SolidColorBrush(Colors.LightCoral);
 	}
 }
