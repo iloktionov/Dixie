@@ -44,7 +44,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\AlgorihtmsContainer.cs" />
+    <Compile Include="Algorithms\AlgorithmsContainer.cs" />
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatProcessor.cs" />
     <Compile Include="Communication\HeartBeatProcessor_Tests.cs" />

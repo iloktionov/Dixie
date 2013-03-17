@@ -55,6 +55,12 @@
             
             <GroupBox Header="Test settings">
                 <StackPanel Orientation="Horizontal">
+                    <ListBox Name="availableAlgorithmsBox" ItemsSource="{Binding AvailableAlgorithms, Mode=OneWay}" Height="150" Margin="5" SelectionMode="Extended"></ListBox>
+                    <StackPanel Orientation="Vertical" Margin="5">
+                        <Button Name="selectAlgorithmButton" Height="50" Margin="0,10" Click="SelectAlgorithmButtonClick">Add &gt;&gt;</Button>
+                        <Button Name="removeAlgorithmButton" Height="50" Margin="0,10" Click="RemoveAlgorithmButtonClick">&lt;&lt; Remove</Button>
+                    </StackPanel>
+                    <ListBox Name="selectedAlgorithmsBox" Height="150" Margin="5" SelectionMode="Single"></ListBox>
                 </StackPanel>
             </GroupBox>
         </StackPanel>

@@ -7,11 +7,11 @@ using System.Reflection;
 
 namespace Dixie.Core
 {
-	public class AlgorihtmsContainer
+	public class AlgorithmsContainer
 	{
-		static AlgorihtmsContainer()
+		static AlgorithmsContainer()
 		{
-			instance = new AlgorihtmsContainer();
+			instance = new AlgorithmsContainer();
 		}
 
 		public static void Initialize()
@@ -26,7 +26,7 @@ namespace Dixie.Core
 
 		public const string ExtensionsDirectory = "Algorithms\\";
 
-		private AlgorihtmsContainer()
+		private AlgorithmsContainer()
 		{
 			var catalog = new AggregateCatalog();
 			catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
@@ -44,6 +44,6 @@ namespace Dixie.Core
 
 		[ImportMany(typeof(ISchedulerAlgorithm))]
 		private List<ISchedulerAlgorithm> algorithms;
-		private static readonly AlgorihtmsContainer instance;
+		private static readonly AlgorithmsContainer instance;
 	}
 }

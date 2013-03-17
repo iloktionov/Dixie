@@ -47,7 +47,7 @@ namespace Dixie.Console
 
 		private static void ListAlgorithms(string key, ConsoleParameters parameters)
 		{
-			List<ISchedulerAlgorithm> algorithms = AlgorihtmsContainer.GetAvailableAlgorithms();
+			List<ISchedulerAlgorithm> algorithms = AlgorithmsContainer.GetAvailableAlgorithms();
 			if (!algorithms.Any())
 				System.Console.Out.WriteLine("There are no available algorithms.");
 			else foreach (ISchedulerAlgorithm algorithm in algorithms)
@@ -62,7 +62,7 @@ namespace Dixie.Console
 			string outputFileName = parameters.GetValue(key, 3);
 
 			ILog log = new ColorConsoleLog();
-			List<ISchedulerAlgorithm> availableAlgorithms = AlgorihtmsContainer.GetAvailableAlgorithms();
+			List<ISchedulerAlgorithm> availableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
 			var testedAlgorithms = new List<ISchedulerAlgorithm>();
 			for (int i = 4; i < parameters.GetValuesCount(key); i++)
 			{

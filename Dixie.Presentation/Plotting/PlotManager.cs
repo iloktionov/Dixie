@@ -24,7 +24,8 @@ namespace Dixie.Presentation
 			if (seriesDictionary.TryGetValue(seriesName, out series))
 			{
 				series.Points.Add(new DataPoint(x, y));
-				dixieModel.PlotModel.RefreshPlot(true);
+				if (dixieModel.PlotModel.PlotControl != null)
+					dixieModel.PlotModel.RefreshPlot(true);
 			}
 			else
 			{

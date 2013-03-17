@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using Dixie.Core;
 using OxyPlot;
 
 namespace Dixie.Presentation
@@ -35,6 +37,16 @@ namespace Dixie.Presentation
 			}
 		}
 
+		public List<ISchedulerAlgorithm> AvailableAlgorithms
+		{
+			get { return availableAlgorithms; }
+			set
+			{
+				availableAlgorithms = value;
+				RaisePropertyChanged("AvailableAlgorithms");
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void RaisePropertyChanged(string property)
@@ -46,5 +58,6 @@ namespace Dixie.Presentation
 		private DixieGraph topologyGraph;
 		private PlotModel plotModel;
 		private bool hasInitialState;
+		private List<ISchedulerAlgorithm> availableAlgorithms;
 	}
 }
