@@ -15,14 +15,10 @@ namespace Dixie.Presentation
 			InitializeComponent();
 			DataContext = model;
 			topologyGraphLayout.SetupLayoutParameters();
-			model.AvailableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
 			presentationEngine = new DixiePresentationEngine(model);
-			presentationEngine.Start();
 		}
 
-		private readonly DixieModel model;
-		private readonly DixiePresentationEngine presentationEngine;
-
+		#region Event handlers
 		private void SelectAlgorithmButtonClick(object sender, RoutedEventArgs e)
 		{
 			foreach (object selectedAlgorithm in availableAlgorithmsBox.SelectedItems)
@@ -72,8 +68,16 @@ namespace Dixie.Presentation
 			if (initialStateLabel.Text == InitialStateDescriptionConverter.Loaded)
 				initialStateLabel.Background = okBrush;
 			else initialStateLabel.Background = errorBrush;
+		} 
+		#endregion
+
+		private void GenerateState(object sender, RoutedEventArgs e)
+		{
+			presentationEngine.GenerateNewState();
 		}
 
+		private readonly DixieModel model;
+		private readonly DixiePresentationEngine presentationEngine;
 		private static readonly SolidColorBrush okBrush = new SolidColorBrush(Colors.LightGreen);
 		private static readonly SolidColorBrush errorBrush = new SolidColorBrush(Colors.LightCoral);
 	}

@@ -57,7 +57,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Name="generateStateButton" Grid.Column="0" Margin="3, 0">Generate</Button>
+                        <Button Name="generateStateButton" Grid.Column="0" Margin="3, 0" Click="GenerateState">Generate</Button>
                         <Button Name="loadStateButton" Grid.Column="1">Load from file</Button>
                     </Grid>
                 </DockPanel>

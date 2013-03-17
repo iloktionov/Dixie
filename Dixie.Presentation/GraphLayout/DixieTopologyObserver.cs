@@ -4,20 +4,20 @@ using Dixie.Core;
 
 namespace Dixie.Presentation
 {
-	internal class DixieGraphObserver
+	internal class DixieTopologyObserver
 	{
-		public DixieGraphObserver(DixieModel model)
+		public DixieTopologyObserver(DixieModel model)
 		{
 			this.model = model;
 			version = -1;
 		}
 
-		public void TryUpdateModelGraph(Engine engine)
+		public void TryUpdateModelGraph(Topology topology)
 		{
 			DixieGraph displayGraph = null;
 			long actualVersion;
 			// (iloktionov): Построение графа выполняется под локом на уровне Topology.
-			bool result = engine.Topology.ObserveGraph(version, 
+			bool result = topology.ObserveGraph(version, 
 				graph =>
 					{
 						displayGraph = new DixieGraph();
@@ -51,7 +51,8 @@ namespace Dixie.Presentation
 
 		public void Reset()
 		{
-			version = 0;
+			model.TopologyGraph = null;
+			version = -1;
 		}
 
 		private readonly DixieModel model;

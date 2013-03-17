@@ -90,7 +90,7 @@
     <Compile Include="GraphLayout\DixieGraph.cs" />
     <Compile Include="GraphLayout\DixieGraphLayout.cs" />
     <Compile Include="DixieModel.cs" />
-    <Compile Include="GraphLayout\DixieGraphObserver.cs" />
+    <Compile Include="GraphLayout\DixieTopologyObserver.cs" />
     <Compile Include="Converters\InitialStateDescriptionConverter.cs" />
     <Compile Include="Plotting\PlotManager.cs" />
     <Compile Include="MainWindow.xaml.cs">

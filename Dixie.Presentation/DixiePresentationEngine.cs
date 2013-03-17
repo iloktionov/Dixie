@@ -1,50 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.IO;
 using Dixie.Core;
 
 namespace Dixie.Presentation
 {
 	internal class DixiePresentationEngine
 	{
-		public DixiePresentationEngine(DixieModel model)
+		public DixiePresentationEngine(DixieModel dixieModel)
 		{
-			graphObserver = new DixieGraphObserver(model);
-			plotManager = new PlotManager(model);
+			this.dixieModel = dixieModel;
+			dixieModel.AvailableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
+			topologyObserver = new DixieTopologyObserver(dixieModel);
+			plotManager = new PlotManager(dixieModel);
+			random = new Random();
+			log = new FileBasedLog("Dixie.log");
 		}
 
-		public void InitializeFromFile(string filename)
+		public void GenerateNewState()
 		{
-			
+			Reset();
+			InitialGridState initialState = InitialGridState.GenerateNew(random.Next(15, 35), random);
+			engine = new Engine(initialState, log);
+			topologyObserver.TryUpdateModelGraph(initialState.Topology);
+			dixieModel.HasInitialState = true;
+		}
+
+		public void InitializeStateFromFile(Stream fileStream)
+		{
+			Reset();
+			InitialGridState initialState = InitialGridState.Deserialize(fileStream);
+			engine = new Engine(initialState, log);
+			topologyObserver.TryUpdateModelGraph(initialState.Topology);
+			dixieModel.HasInitialState = true;
 		}
 
 		public void Start()
 		{
-			ISchedulerAlgorithm algorithm = new RandomAlgorithm();
-			gridEngine = new Engine(InitialGridState.GenerateNew(20), new FileBasedLog("test.log"));
-			gridEngine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
-			gridEngineThread = ThreadRunner.Run(() => gridEngine.TestAlgorithms(new List<ISchedulerAlgorithm>{algorithm, algorithm, algorithm, algorithm, algorithm},
-				TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(100)));
-			modelUpdateThread = ThreadRunner.RunPeriodicAction(() => graphObserver.TryUpdateModelGraph(gridEngine), ModelUpdatePeriod);
+//			ISchedulerAlgorithm algorithm = new RandomAlgorithm();
+//			gridEngine = new Engine(InitialGridState.GenerateNew(20), new FileBasedLog("test.log"));
+//			gridEngine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
+//			gridEngineThread = ThreadRunner.Run(() => gridEngine.TestAlgorithms(new List<ISchedulerAlgorithm>{algorithm, algorithm, algorithm, algorithm, algorithm},
+//				TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(100)));
+//			modelUpdateThread = ThreadRunner.RunPeriodicAction(() => topologyObserver.TryUpdateModelGraph(gridEngine), ModelUpdatePeriod);
 		}
 
 		public void Stop()
 		{
-			if (gridEngineThread != null)
-			{
-				gridEngineThread.Abort();
-				gridEngineThread.Join();
-			}
-			if (modelUpdateThread != null)
-			{
-				modelUpdateThread.Abort();
-				modelUpdateThread.Join();
-			}
+			
 		}
 
 		public void Reset()
 		{
-			
+			topologyObserver.Reset();
+			plotManager.Reset();
+			engine = null;
 		}
 
 		private void OnIntermediateTestResult(IntermediateTestResult result, string algorithmName)
@@ -52,11 +61,12 @@ namespace Dixie.Presentation
 			plotManager.AddPointToSeries(algorithmName, result.TimeElapsed.TotalSeconds, result.WorkDone);
 		}
 
-		private readonly DixieGraphObserver graphObserver;
-		private PlotManager plotManager;
-		private Engine gridEngine;
-		private Thread gridEngineThread;
-		private Thread modelUpdateThread;
+		private readonly DixieModel dixieModel;
+		private readonly DixieTopologyObserver topologyObserver;
+		private readonly PlotManager plotManager;
+		private readonly Random random;
+		private readonly ILog log;
+		private Engine engine;
 
 		private static readonly TimeSpan ModelUpdatePeriod = TimeSpan.FromMilliseconds(500);
 	}
