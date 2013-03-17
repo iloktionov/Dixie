@@ -40,11 +40,13 @@
     <Reference Include="Configuration">
       <HintPath>..\ExternalAssemblies\Configuration.exe</HintPath>
     </Reference>
-    <Reference Include="GraphSharp">
-      <HintPath>..\..\GraphSharpTest\External\GraphSharp.dll</HintPath>
+    <Reference Include="GraphSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalAssemblies\GraphSharp.dll</HintPath>
     </Reference>
-    <Reference Include="GraphSharp.Controls">
-      <HintPath>..\..\GraphSharpTest\External\GraphSharp.Controls.dll</HintPath>
+    <Reference Include="GraphSharp.Controls, Version=1.0.4823.30462, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalAssemblies\GraphSharp.Controls.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot">
       <HintPath>..\ExternalAssemblies\OxyPlot.dll</HintPath>
