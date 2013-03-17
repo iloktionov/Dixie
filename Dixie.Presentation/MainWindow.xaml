@@ -92,7 +92,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Name="startTestButton"  Grid.Column="0">Start test</Button>
+                        <Button Name="startTestButton"  Grid.Column="0" Click="StartTest">Start test</Button>
                         <Button Name="stopTestButton" Grid.Column="1">Stop test</Button>
                         <Button Name="resetButton" Grid.Column="2">Reset model</Button>
                     </Grid>

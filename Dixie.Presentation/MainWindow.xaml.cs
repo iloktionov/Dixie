@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -85,6 +87,39 @@ namespace Dixie.Presentation
 				return;
 			Stream fileStream = dialog.OpenFile();
 			presentationEngine.InitializeStateFromFile(fileStream);
+		}
+
+		private void StartTest(object sender, RoutedEventArgs e)
+		{
+			if (!model.HasInitialState)
+			{
+				MessageBox.Show("Initial state is not loaded yet.");
+				return;
+			}
+			if (selectedAlgorithmsBox.Items.Count <= 0)
+			{
+				MessageBox.Show("Need to select at least one algorithm.");
+				return;
+			}
+			TimeSpan testDuration;
+			TimeSpan resultCheckPeriod;
+			try
+			{
+				testDuration = TimeSpanParser.Parse(durationInput.Text);
+				resultCheckPeriod = TimeSpanParser.Parse(checkPeriodInput.Text);
+			}
+			catch (FormatException error)
+			{
+				MessageBox.Show(error.ToString());
+				return;
+			}
+			List<ISchedulerAlgorithm> algorithms = selectedAlgorithmsBox.Items.Cast<ISchedulerAlgorithm>().ToList();
+		}
+
+		private static void SetControlsState(bool enabled, params Control[] controls)
+		{
+			foreach (Control control in controls)
+				control.IsEnabled = enabled;
 		}
 
 		private readonly DixieModel model;
