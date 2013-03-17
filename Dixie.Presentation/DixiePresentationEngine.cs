@@ -17,7 +17,7 @@ namespace Dixie.Presentation
 			this.dixieModel = dixieModel;
 			this.testProgressBar = testProgressBar;
 			this.dispatcher = dispatcher;
-			dixieModel.AvailableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
+			LoadAlgorithms();
 			topologyObserver = new DixieTopologyObserver(dixieModel);
 			tasksObserver = new DixieTasksObserver(dixieModel);
 			plotManager = new PlotManager(dixieModel);
@@ -109,6 +109,19 @@ namespace Dixie.Presentation
 		{
 			Stop();
 			onTestError(error);
+		}
+
+		private void LoadAlgorithms()
+		{
+			try
+			{
+				dixieModel.AvailableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
+			}
+			catch (Exception error)
+			{
+				MessageBox.Show(String.Format("Error in loading algorithms: {0}", error));
+				Application.Current.Shutdown(-1);
+			}
 		}
 
 		private readonly DixieModel dixieModel;
