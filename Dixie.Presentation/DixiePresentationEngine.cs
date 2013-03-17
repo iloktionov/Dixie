@@ -94,6 +94,11 @@ namespace Dixie.Presentation
 			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = 0));
 		}
 
+		public Engine Engine
+		{
+			get { return engine; }
+		}
+
 		private void OnIntermediateTestResult(IntermediateTestResult result, string algorithmName)
 		{
 			plotManager.AddPointToSeries(algorithmName, result.TimeElapsed.TotalSeconds, result.WorkDone);

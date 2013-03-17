@@ -79,11 +79,27 @@ namespace Dixie.Presentation
 		private void ReadStateFromFile(object sender, RoutedEventArgs e)
 		{
 			var dialog = new OpenFileDialog {InitialDirectory = AppDomain.CurrentDomain.BaseDirectory};
-			bool? showDialog = dialog.ShowDialog();
-			if (!showDialog.Value)
+			bool? showResult = dialog.ShowDialog();
+			if (!showResult.Value)
 				return;
-			Stream fileStream = dialog.OpenFile();
-			presentationEngine.InitializeStateFromFile(fileStream);
+			using (Stream fileStream = dialog.OpenFile())
+				presentationEngine.InitializeStateFromFile(fileStream);
+		}
+
+		private void SaveStateFromFile(object sender, RoutedEventArgs e)
+		{
+			if (!model.HasInitialState)
+			{
+				MessageBox.Show("Nothing to save.");
+				return;
+			}
+			var dialog = new SaveFileDialog {InitialDirectory = AppDomain.CurrentDomain.BaseDirectory};
+			bool? showResult = dialog.ShowDialog();
+			if (!showResult.Value)
+				return;
+			using (Stream fileStream = dialog.OpenFile())
+				presentationEngine.Engine.InitialState.Serialize(fileStream);
+			MessageBox.Show("Saved successfully.");
 		}
 
 		private void StartTest(object sender, RoutedEventArgs e)
