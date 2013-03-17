@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using ThreadState = System.Threading.ThreadState;
 
 namespace Dixie.Core
 {
@@ -46,7 +47,8 @@ namespace Dixie.Core
 			errorsCount = 0;
 			LogTopologyBoundaries(topology.WorkerNodesCount);
 
-			var engineThreads = new Thread[5];
+			if (engineThreads == null)
+				engineThreads = new Thread[5];
 			var hbSyncEvent = new ManualResetEvent(false);
 			var commonSyncEvent = new ManualResetEvent(false);
 			engineThreads[0] = StartHeartBeatsMechanism(hbSyncEvent);
@@ -74,16 +76,28 @@ namespace Dixie.Core
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 				if (onIntermediateResult != null)
 					onIntermediateResult(testResult.IntermediateResults.Last(), algorithm.Name);
-				CheckErrors(engineThreads);
+				CheckErrors();
 			}
 
 			// (iloktionov): Теперь остановим подсчет результатов и возьмем финальное значение перед завершением потоков.
 			master.DisableAccumulatingResults();
 			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
-			StopThreads(engineThreads);
+			StopThreads();
 			LogResult(testResult);
-			CheckErrors(engineThreads);
+			CheckErrors();
 			return testResult;
+		}
+
+		public void Stop()
+		{
+			StopThreads();
+		}
+
+		public int GetRunningThreadsCount()
+		{
+			if (engineThreads == null)
+				return 0;
+			return engineThreads.Where(engineThread => engineThread != null).Count(engineThread => engineThread.ThreadState == ThreadState.Running);
 		}
 
 		public void SetOnIntermediateResultCallback(Action<IntermediateTestResult, string> callback)
@@ -133,8 +147,10 @@ namespace Dixie.Core
 			LogMasterWarmedUp();
 		}
 
-		private void StopThreads(Thread[] engineThreads)
+		private void StopThreads()
 		{
+			if (engineThreads == null)
+				return;
 			LogStoppingThreads();
 			ThreadRunner.StopThreads(engineThreads);
 			LogStoppedThreads();
@@ -146,11 +162,11 @@ namespace Dixie.Core
 			Interlocked.Increment(ref errorsCount);
 		}
 
-		private void CheckErrors(Thread[] engineThreads)
+		private void CheckErrors()
 		{
 			if (errorsCount > 0)
 			{
-				StopThreads(engineThreads);
+				StopThreads();
 				throw new EngineException("There were some errors in test threads. Can't continue.");
 			}
 		}
@@ -211,6 +227,7 @@ namespace Dixie.Core
 		private GarbageCollector garbageCollector;
 		private int errorsCount;
 		private ILog testLog;
+		private Thread[] engineThreads;
 
 		private Action<IntermediateTestResult, string> onIntermediateResult;
 	}

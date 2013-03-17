@@ -63,7 +63,9 @@ namespace Dixie.Presentation
 		
 		public void Stop()
 		{
+			engine.Stop();
 			ThreadRunner.StopThreads(engineThread, graphUpdateThread);
+			engine.Stop();
 		}
 
 		public void Reset()

@@ -45,12 +45,22 @@ namespace Dixie.Core
 			catch (EngineException error)
 			{
 				Console.Out.WriteLine(error);
+				Assert.AreEqual(0, engine.GetRunningThreadsCount());
 			}
 			catch (Exception error)
 			{
 				Console.Out.WriteLine(error);
 				Assert.Fail("Engine must throw EngineException.");
 			}
+		}
+
+		[Test]
+		public void Test_Stop()
+		{
+			var topology = new TopologyBuilder().Build(500);
+			var state = new InitialGridState(topology, random.Next(), TopologySettings.GetInstance(), EngineSettings.GetInstance());
+			var engine = new Engine(state, new ColorConsoleLog());
+			engine.Stop();
 		}
 
 		private class ErrorAlgorithm : ISchedulerAlgorithm
