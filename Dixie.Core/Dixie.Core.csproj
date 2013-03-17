@@ -120,6 +120,7 @@
     <Compile Include="Node\WorkBuffer_Tests.cs" />
     <Compile Include="Utilities\ThreadRoutineWrapper.cs" />
     <Compile Include="Utilities\ThreadRunner.cs" />
+    <Compile Include="Utilities\ThreadRunner_Tests.cs" />
     <Compile Include="Utilities\Thread_Extensions.cs" />
     <Compile Include="Utilities\TimeSpanParser.cs" />
     <Compile Include="Utilities\TimeSpanParser_Tests.cs" />
