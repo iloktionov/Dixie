@@ -35,6 +35,11 @@ namespace Dixie.Core
 			random = new Random((int) (random.Next() + DateTime.UtcNow.Ticks));
 		}
 
+		public override string ToString()
+		{
+			return Name;
+		}
+
 		public string Name { get; set; }
 
 		private Random random;
