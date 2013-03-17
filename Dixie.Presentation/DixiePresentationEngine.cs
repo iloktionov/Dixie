@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using Dixie.Core;
 
 namespace Dixie.Presentation
@@ -27,11 +28,19 @@ namespace Dixie.Presentation
 
 		public void InitializeStateFromFile(Stream fileStream)
 		{
-			Reset();
-			InitialGridState initialState = InitialGridState.Deserialize(fileStream);
-			engine = new Engine(initialState, log);
-			topologyObserver.TryUpdateModelGraph(initialState.Topology);
-			dixieModel.HasInitialState = true;
+			try
+			{
+				Reset();
+				InitialGridState initialState = InitialGridState.Deserialize(fileStream);
+				engine = new Engine(initialState, log);
+				topologyObserver.TryUpdateModelGraph(initialState.Topology);
+				dixieModel.HasInitialState = true;
+			}
+			catch (Exception error)
+			{
+				MessageBox.Show(String.Format("An error has occured in reading initial state from file: {0}", error));
+				dixieModel.HasInitialState = false;
+			}
 		}
 
 		public void Start()

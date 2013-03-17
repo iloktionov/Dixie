@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Dixie.Core;
+using Microsoft.Win32;
 
 namespace Dixie.Presentation
 {
@@ -74,6 +75,16 @@ namespace Dixie.Presentation
 		private void GenerateState(object sender, RoutedEventArgs e)
 		{
 			presentationEngine.GenerateNewState();
+		}
+
+		private void ReadStateFromFile(object sender, RoutedEventArgs e)
+		{
+			var dialog = new OpenFileDialog();
+			bool? showDialog = dialog.ShowDialog();
+			if (!showDialog.Value)
+				return;
+			Stream fileStream = dialog.OpenFile();
+			presentationEngine.InitializeStateFromFile(fileStream);
 		}
 
 		private readonly DixieModel model;
