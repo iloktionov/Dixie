@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Dixie.Core
 {
-	internal class TaskState
+	public class TaskState
 	{
 		internal TaskState(Task task)
 		{

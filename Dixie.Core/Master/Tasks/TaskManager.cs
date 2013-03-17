@@ -99,6 +99,11 @@ namespace Dixie.Core
 				assignationsMap.Remove(nodeId);
 		}
 
+		internal IEnumerable<TaskState> GetTaskStates()
+		{
+			return taskStates.Values;
+		} 
+
 		#region Logging
 		private void LogCompletionProgress()
 		{

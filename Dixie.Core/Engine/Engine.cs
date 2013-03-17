@@ -115,6 +115,11 @@ namespace Dixie.Core
 			get { return initialState; }
 		}
 
+		public Master Master
+		{
+			get { return master; }
+		}
+
 		private Thread StartHeartBeatsMechanism(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.Zero, thread => thread.Priority = ThreadPriority.Highest, syncEvent, OnUnexpectedError);

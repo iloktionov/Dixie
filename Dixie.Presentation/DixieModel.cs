@@ -47,6 +47,16 @@ namespace Dixie.Presentation
 			}
 		}
 
+		public IEnumerable<TaskState> TaskStates
+		{
+			get { return taskStates; }
+			set
+			{
+				taskStates = value;
+				RaisePropertyChanged("TaskStates");
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void RaisePropertyChanged(string property)
@@ -57,6 +67,7 @@ namespace Dixie.Presentation
 
 		private DixieGraph topologyGraph;
 		private PlotModel plotModel;
+		private IEnumerable<TaskState> taskStates;
 		private bool hasInitialState;
 		private List<ISchedulerAlgorithm> availableAlgorithms;
 	}

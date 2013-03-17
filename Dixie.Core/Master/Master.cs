@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Dixie.Core
 {
-	internal class Master
+	public class Master
 	{
 		public Master(TimeSpan deadabilityThreshold, ILog log)
 		{
@@ -15,7 +15,7 @@ namespace Dixie.Core
 			syncObject = new object();
 		}
 
-		public HeartBeatResponse HandleHeartBeatMessage(HeartBeatMessage message)
+		internal HeartBeatResponse HandleHeartBeatMessage(HeartBeatMessage message)
 		{
 			lock (syncObject)
 			{
@@ -25,7 +25,7 @@ namespace Dixie.Core
 			}
 		}
 
-		public void ExecuteSchedulerAlgorithm(ISchedulerAlgorithm algorithm)
+		internal void ExecuteSchedulerAlgorithm(ISchedulerAlgorithm algorithm)
 		{
 			lock (syncObject)
 			{
@@ -44,7 +44,7 @@ namespace Dixie.Core
 			}
 		}
 
-		public void RefillTasksIfNeeded(TasksGenerator tasksGenerator)
+		internal void RefillTasksIfNeeded(TasksGenerator tasksGenerator)
 		{
 			lock (syncObject)
 				if (taskManager.NeedsRefill())
@@ -54,7 +54,7 @@ namespace Dixie.Core
 				}
 		}
 
-		public void CollectGarbage(HashSet<Guid> permanentlyDeletedNodes)
+		internal void CollectGarbage(HashSet<Guid> permanentlyDeletedNodes)
 		{
 			lock (syncObject)
 			{
@@ -65,17 +65,22 @@ namespace Dixie.Core
 			}
 		}
 
-		public Double GetTotalWorkDone()
+		internal Double GetTotalWorkDone()
 		{
 			lock (syncObject)
 				return taskManager.TotalWorkDone;
 		}
 
-		public void DisableAccumulatingResults()
+		internal void DisableAccumulatingResults()
 		{
 			lock (syncObject)
 				taskManager.DisableAccumulatingNewResults();
 		}
+
+		public IEnumerable<TaskState> GetTaskStates()
+		{
+			return taskManager.GetTaskStates();
+		} 
 
 		internal int AliveNodesCount
 		{

@@ -19,6 +19,7 @@ namespace Dixie.Presentation
 			this.dispatcher = dispatcher;
 			dixieModel.AvailableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
 			topologyObserver = new DixieTopologyObserver(dixieModel);
+			tasksObserver = new DixieTasksObserver(dixieModel);
 			plotManager = new PlotManager(dixieModel);
 			random = new Random();
 			log = new FileBasedLog("Dixie.log");
@@ -31,6 +32,7 @@ namespace Dixie.Presentation
 			InitialGridState initialState = InitialGridState.GenerateNew(random.Next(15, 35), random);
 			engine = new Engine(initialState, log);
 			topologyObserver.TryUpdateModelGraph(initialState.Topology);
+			tasksObserver.TryUpdateTaskStates(engine.Master);
 			dixieModel.HasInitialState = true;
 		}
 
@@ -42,6 +44,7 @@ namespace Dixie.Presentation
 				InitialGridState initialState = InitialGridState.Deserialize(fileStream);
 				engine = new Engine(initialState, log);
 				topologyObserver.TryUpdateModelGraph(initialState.Topology);
+				tasksObserver.TryUpdateTaskStates(engine.Master);
 				dixieModel.HasInitialState = true;
 			}
 			catch (Exception error)
@@ -58,6 +61,7 @@ namespace Dixie.Presentation
 			Reset();
 			engine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
 			topologyObserver.TryUpdateModelGraph(engine.InitialState.Topology);
+			tasksObserver.TryUpdateTaskStates(engine.Master);
 
 			testProgressBar.Minimum = 0;
 			testProgressBar.Maximum = testDuration.TotalMilliseconds * algorithms.Count;
@@ -69,12 +73,13 @@ namespace Dixie.Presentation
 					ThreadPool.QueueUserWorkItem(obj => OnTestSuccess(result));
 				}, null, OnErrorInEngine);
 			graphUpdateThread = ThreadRunner.RunPeriodicAction(() => topologyObserver.TryUpdateModelGraph(engine.Topology), TopologyGraphUpdatePeriod);
+			tasksUpdateThread = ThreadRunner.RunPeriodicAction(() => tasksObserver.TryUpdateTaskStates(engine.Master), TaskStatesUpdatePeriod);
 		}
 		
 		public void Stop()
 		{
 			engine.Stop();
-			ThreadRunner.StopThreads(engineThread, graphUpdateThread);
+			ThreadRunner.StopThreads(engineThread, graphUpdateThread, tasksUpdateThread);
 			engine.Stop();
 			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = 0));
 		}
@@ -82,6 +87,7 @@ namespace Dixie.Presentation
 		public void Reset()
 		{
 			topologyObserver.Reset();
+			tasksObserver.Reset();
 			plotManager.Reset();
 			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = 0));
 		}
@@ -95,6 +101,7 @@ namespace Dixie.Presentation
 		private void OnTestSuccess(ComparisonTestResult result)
 		{
 			Stop();
+			tasksObserver.TryUpdateTaskStates(engine.Master);
 			onTestSuccess(result);
 		}
 
@@ -106,6 +113,7 @@ namespace Dixie.Presentation
 
 		private readonly DixieModel dixieModel;
 		private readonly DixieTopologyObserver topologyObserver;
+		private readonly DixieTasksObserver tasksObserver;
 		private readonly PlotManager plotManager;
 		private readonly Random random;
 		private readonly ILog log;
@@ -118,7 +126,9 @@ namespace Dixie.Presentation
 		private Action<Exception> onTestError;
 		private Thread engineThread;
 		private Thread graphUpdateThread;
+		private Thread tasksUpdateThread;
 
 		private static readonly TimeSpan TopologyGraphUpdatePeriod = TimeSpan.FromMilliseconds(350);
+		private static readonly TimeSpan TaskStatesUpdatePeriod = TimeSpan.FromMilliseconds(150);
 	}
 }

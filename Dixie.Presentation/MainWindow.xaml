@@ -104,5 +104,18 @@
                 </DockPanel >
             </GroupBox>
         </Grid>
+
+        <ItemsControl Name="taskStatesControl" ItemsSource="{Binding TaskStates, Mode=OneWay}" Grid.Row="0" Grid.Column="1">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding Status}" IsEnabled="False"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>
