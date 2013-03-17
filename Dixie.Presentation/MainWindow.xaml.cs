@@ -22,7 +22,6 @@ namespace Dixie.Presentation
 			presentationEngine = new DixiePresentationEngine(model, testProgressBar, Dispatcher);
 		}
 
-		#region Event handlers
 		private void SelectAlgorithmButtonClick(object sender, RoutedEventArgs e)
 		{
 			foreach (object selectedAlgorithm in availableAlgorithmsBox.SelectedItems)
@@ -69,11 +68,8 @@ namespace Dixie.Presentation
 
 		private void InitialStateTextChanged(object sender, TextChangedEventArgs e)
 		{
-			if (initialStateLabel.Text == InitialStateDescriptionConverter.Loaded)
-				initialStateLabel.Background = okBrush;
-			else initialStateLabel.Background = errorBrush;
-		} 
-		#endregion
+			initialStateLabel.Background = initialStateLabel.Text == InitialStateDescriptionConverter.Loaded ? okBrush : errorBrush;
+		}
 
 		private void GenerateState(object sender, RoutedEventArgs e)
 		{
@@ -123,6 +119,7 @@ namespace Dixie.Presentation
 		private void OnTestSuccess(ComparisonTestResult result)
 		{
 			MessageBox.Show(result.ToString());
+			SetControlsState(false, stopTestButton);
 			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
 		}
 
