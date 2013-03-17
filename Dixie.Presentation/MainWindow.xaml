@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="Resources/ProgressBarTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Dixie:InitialStateDescriptionConverter x:Key="stateLabelConverter" />
+            <Dixie:TaskStateColorConverter x:Key="taskColorConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -105,7 +106,7 @@
             </GroupBox>
         </Grid>
 
-        <ItemsControl Name="taskStatesControl" ItemsSource="{Binding TaskStates, Mode=OneWay}" Grid.Row="0" Grid.Column="1">
+        <ItemsControl Name="taskStatesControl" ItemsSource="{Binding TaskStates, Mode=OneWay}" Grid.Row="0" Grid.Column="1" Margin="5">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid />
@@ -113,7 +114,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Status}" IsEnabled="False"/>
+                    <Button Content="{Binding Status}" IsEnabled="False" Background="{Binding Status, Converter={StaticResource taskColorConverter}}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
