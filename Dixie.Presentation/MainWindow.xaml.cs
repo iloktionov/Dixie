@@ -116,6 +116,7 @@ namespace Dixie.Presentation
 			}
 			List<ISchedulerAlgorithm> algorithms = selectedAlgorithmsBox.Items.Cast<ISchedulerAlgorithm>().ToList();
 			SetControlsState(false, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
+			SetControlsState(true, stopTestButton);
 			presentationEngine.Start(algorithms, testDuration, resultCheckPeriod, OnTestSuccess, OnTestError);
 		}
 
@@ -128,12 +129,14 @@ namespace Dixie.Presentation
 		private void OnTestError(Exception error)
 		{
 			MessageBox.Show(error.ToString());
+			SetControlsState(false, stopTestButton);
 			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
 		}
 
 		private void StopTest(object sender, RoutedEventArgs e)
 		{
 			presentationEngine.Stop();
+			SetControlsState(false, stopTestButton);
 			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
 		}
 
