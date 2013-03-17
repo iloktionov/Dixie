@@ -22,7 +22,7 @@
     <DataTemplate DataType="{x:Type DixieCore:MasterFakeNode}">
         <Border BorderBrush="Black" BorderThickness="1" Padding="0" CornerRadius="5" Background="White">
             <StackPanel Orientation="Vertical">
-                <Image Source="{StaticResource MasterImage}" Width="36" Height="36" Margin="1" HorizontalAlignment="Center"/>
+                <Image Source="{StaticResource MasterImage}" Width="52" Height="52" Margin="1" HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
     </DataTemplate>
