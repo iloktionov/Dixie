@@ -87,14 +87,19 @@
             <GroupBox Header="Test flow"  Grid.Row="2" Grid.Column="0">
                 <DockPanel  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="8*"/>
+                            <RowDefinition Height="2*"/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Name="startTestButton"  Grid.Column="0" Click="StartTest">Start test</Button>
-                        <Button Name="stopTestButton" Grid.Column="1" Click="StopTest" IsEnabled="False">Stop test</Button>
-                        <Button Name="resetButton" Grid.Column="2" Click="ResetModel">Reset model</Button>
+                        <Button Name="startTestButton" Grid.Row="0" Grid.Column="0" Click="StartTest">Start test</Button>
+                        <Button Name="stopTestButton" Grid.Row="0" Grid.Column="1" Click="StopTest" IsEnabled="False">Stop test</Button>
+                        <Button Name="resetButton" Grid.Row="0" Grid.Column="2" Click="ResetModel">Reset model</Button>
+                        <ProgressBar Name="testProgressBar" Grid.Row="1" Grid.ColumnSpan="3"></ProgressBar>
                     </Grid>
                 </DockPanel >
             </GroupBox>

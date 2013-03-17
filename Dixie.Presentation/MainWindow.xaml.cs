@@ -19,7 +19,7 @@ namespace Dixie.Presentation
 			InitializeComponent();
 			DataContext = model;
 			topologyGraphLayout.SetupLayoutParameters();
-			presentationEngine = new DixiePresentationEngine(model);
+			presentationEngine = new DixiePresentationEngine(model, testProgressBar, Dispatcher);
 		}
 
 		#region Event handlers

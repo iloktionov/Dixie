@@ -4,20 +4,25 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using Dixie.Core;
 
 namespace Dixie.Presentation
 {
 	internal class DixiePresentationEngine
 	{
-		public DixiePresentationEngine(DixieModel dixieModel)
+		public DixiePresentationEngine(DixieModel dixieModel, ProgressBar testProgressBar, Dispatcher dispatcher)
 		{
 			this.dixieModel = dixieModel;
+			this.testProgressBar = testProgressBar;
+			this.dispatcher = dispatcher;
 			dixieModel.AvailableAlgorithms = AlgorithmsContainer.GetAvailableAlgorithms();
 			topologyObserver = new DixieTopologyObserver(dixieModel);
 			plotManager = new PlotManager(dixieModel);
 			random = new Random();
 			log = new FileBasedLog("Dixie.log");
+			watch = Stopwatch.StartNew();
 		}
 
 		public void GenerateNewState()
@@ -53,6 +58,11 @@ namespace Dixie.Presentation
 			Reset();
 			engine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
 			topologyObserver.TryUpdateModelGraph(engine.InitialState.Topology);
+
+			testProgressBar.Minimum = 0;
+			testProgressBar.Maximum = testDuration.TotalMilliseconds * algorithms.Count;
+			watch.Restart();
+
 			engineThread = ThreadRunner.Run(() =>
 				{
 					ComparisonTestResult result = engine.TestAlgorithms(algorithms, testDuration, resultCheckperiod);
@@ -66,17 +76,20 @@ namespace Dixie.Presentation
 			engine.Stop();
 			ThreadRunner.StopThreads(engineThread, graphUpdateThread);
 			engine.Stop();
+			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = 0));
 		}
 
 		public void Reset()
 		{
 			topologyObserver.Reset();
 			plotManager.Reset();
+			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = 0));
 		}
 
 		private void OnIntermediateTestResult(IntermediateTestResult result, string algorithmName)
 		{
 			plotManager.AddPointToSeries(algorithmName, result.TimeElapsed.TotalSeconds, result.WorkDone);
+			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = watch.Elapsed.TotalMilliseconds));
 		}
 
 		private void OnTestSuccess(ComparisonTestResult result)
@@ -96,6 +109,9 @@ namespace Dixie.Presentation
 		private readonly PlotManager plotManager;
 		private readonly Random random;
 		private readonly ILog log;
+		private readonly ProgressBar testProgressBar;
+		private readonly Dispatcher dispatcher;
+		private readonly Stopwatch watch;
 
 		private Engine engine;
 		private Action<ComparisonTestResult> onTestSuccess;
