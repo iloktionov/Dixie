@@ -16,5 +16,12 @@ namespace Dixie.Core
 				algorithm.Name = algorithm.Name.Substring(0, index) + "#" + (prevNumber + 1);
 			}
 		}
+
+		public static void RestoreAlgorithmName(ISchedulerAlgorithm algorithm)
+		{
+			int index = algorithm.Name.LastIndexOf("#", StringComparison.InvariantCulture);
+			if (index > 0)
+				algorithm.Name = algorithm.Name.Substring(0, index);
+		}
 	}
 }

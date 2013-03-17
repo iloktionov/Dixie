@@ -23,6 +23,8 @@ namespace Dixie.Core
 				AlgorithmNamesHelper.PrepareAlgorithmName(algorithm);
 				result.AddAlgorithmResult(algorithm, TestAlgorithm(algorithm, testDuration, intermediateCheckPeriod));
 			}
+			foreach (ISchedulerAlgorithm algorithm in algorithms)
+				AlgorithmNamesHelper.RestoreAlgorithmName(algorithm);
 			return result;
 		}
 
