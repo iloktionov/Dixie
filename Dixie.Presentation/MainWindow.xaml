@@ -25,7 +25,7 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
@@ -39,6 +39,24 @@
             >
             </Dixie:DixieGraphLayout>
         </Zoom:ZoomControl>
+        
         <oxy:Plot Grid.Row="1" Grid.Column="0" Model="{Binding PlotModel}" Name="resultsPlot" AutoAdjustPlotMargins="true" BorderThickness="1" BorderBrush="Black"/>
+
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+            <GroupBox Header="Initial state">
+                <StackPanel Orientation="Vertical">
+                    <Button Name="generateStateButton" Content="Generate"></Button>
+                    <Button Name="loadStateButton" Content="Load from file"></Button>
+                    <StatusBar>
+                        <Label HorizontalContentAlignment="Center" Content="{Binding HasInitialState}"></Label>
+                    </StatusBar>
+                </StackPanel>
+            </GroupBox>
+            
+            <GroupBox Header="Test settings">
+                <StackPanel Orientation="Horizontal">
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
     </Grid>
 </Window>

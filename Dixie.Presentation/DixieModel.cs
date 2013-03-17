@@ -25,6 +25,16 @@ namespace Dixie.Presentation
 			}
 		}
 
+		public bool HasInitialState
+		{
+			get { return hasInitialState; }
+			set
+			{
+				hasInitialState = value;
+				RaisePropertyChanged("HasInitialState");
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void RaisePropertyChanged(string property)
@@ -35,5 +45,6 @@ namespace Dixie.Presentation
 
 		private DixieGraph topologyGraph;
 		private PlotModel plotModel;
+		private bool hasInitialState;
 	}
 }
