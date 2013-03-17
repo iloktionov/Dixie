@@ -10,9 +10,10 @@ namespace Dixie.Presentation
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var state = (TaskState)value;
-			if (state.Status != TaskStatus.Assigned)
-				return state.Status.ToString();
-			return String.Format("{0:0.0}{1}{1}Assigned {2}{3} node(s)", state.Task.Volume, Environment.NewLine, Environment.NewLine, state.AssignedNodes.Count);
+			string description = String.Format("{0:0.0}{1}{1}{2}", state.Task.Volume, Environment.NewLine, state.Status);
+			if (state.Status == TaskStatus.Assigned)
+				description += String.Format("{0}{1} node(s)", Environment.NewLine, state.AssignedNodes.Count);
+			return description;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

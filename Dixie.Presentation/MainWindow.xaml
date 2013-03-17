@@ -107,7 +107,7 @@
             </GroupBox>
         </Grid>
 
-        <ItemsControl Name="taskStatesControl" ItemsSource="{Binding TaskStates, Mode=OneWay}" Grid.Row="0" Grid.Column="1" Margin="5">
+        <ItemsControl Name="taskStatesControl" ItemsSource="{Binding TaskStates, Mode=OneWay}" Grid.Row="0" Grid.Column="1" Margin="5" BorderThickness="1" BorderBrush="Gray">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid />
