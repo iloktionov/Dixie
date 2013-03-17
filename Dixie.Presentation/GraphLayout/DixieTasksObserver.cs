@@ -1,4 +1,5 @@
-﻿using Dixie.Core;
+﻿using System.Linq;
+using Dixie.Core;
 
 namespace Dixie.Presentation
 {
@@ -13,7 +14,7 @@ namespace Dixie.Presentation
 		{
 			if (master == null)
 				Reset();
-			else model.TaskStates = master.GetTaskStates();
+			else model.TaskStates = master.GetTaskStates().ToList();
 		}
 
 		public void Reset()
