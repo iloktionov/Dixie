@@ -96,6 +96,11 @@ namespace Dixie.Core
 			get { return topology; }
 		}
 
+		public InitialGridState InitialState
+		{
+			get { return initialState; }
+		}
+
 		private Thread StartHeartBeatsMechanism(WaitHandle syncEvent)
 		{
 			return ThreadRunner.RunPeriodicAction(heartBeatProcessor.DeliverMessagesAndResponses, TimeSpan.Zero, thread => thread.Priority = ThreadPriority.Highest, syncEvent, OnUnexpectedError);

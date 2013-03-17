@@ -20,7 +20,7 @@ namespace Dixie.Core
 					catch (Exception error)
 					{
 						if (onException != null)
-							onException(error);
+							ThreadPool.QueueUserWorkItem(obj => onException(error));
 						else throw;
 					}
 				};

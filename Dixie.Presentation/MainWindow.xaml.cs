@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Dixie.Core;
 using Microsoft.Win32;
 
@@ -114,12 +115,26 @@ namespace Dixie.Presentation
 				return;
 			}
 			List<ISchedulerAlgorithm> algorithms = selectedAlgorithmsBox.Items.Cast<ISchedulerAlgorithm>().ToList();
+			SetControlsState(false, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
+			presentationEngine.Start(algorithms, testDuration, resultCheckPeriod, OnTestSuccess, OnTestError);
 		}
 
-		private static void SetControlsState(bool enabled, params Control[] controls)
+		private void OnTestSuccess(ComparisonTestResult result)
+		{
+			MessageBox.Show(result.ToString());
+			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
+		}
+
+		private void OnTestError(Exception error)
+		{
+			MessageBox.Show(error.ToString());
+			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
+		}
+
+		private void SetControlsState(bool enabled, params Control[] controls)
 		{
 			foreach (Control control in controls)
-				control.IsEnabled = enabled;
+				Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => control.IsEnabled = enabled));
 		}
 
 		private readonly DixieModel model;

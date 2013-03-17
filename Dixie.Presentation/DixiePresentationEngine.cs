@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using Dixie.Core;
 
@@ -43,26 +46,30 @@ namespace Dixie.Presentation
 			}
 		}
 
-		public void Start()
+		public void Start(List<ISchedulerAlgorithm> algorithms, TimeSpan testDuration, TimeSpan resultCheckperiod, Action<ComparisonTestResult> onSuccess, Action<Exception> onError)
 		{
-//			ISchedulerAlgorithm algorithm = new RandomAlgorithm();
-//			gridEngine = new Engine(InitialGridState.GenerateNew(20), new FileBasedLog("test.log"));
-//			gridEngine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
-//			gridEngineThread = ThreadRunner.Run(() => gridEngine.TestAlgorithms(new List<ISchedulerAlgorithm>{algorithm, algorithm, algorithm, algorithm, algorithm},
-//				TimeSpan.FromSeconds(5), TimeSpan.FromMilliseconds(100)));
-//			modelUpdateThread = ThreadRunner.RunPeriodicAction(() => topologyObserver.TryUpdateModelGraph(gridEngine), ModelUpdatePeriod);
+			onTestSuccess = onSuccess;
+			onTestError = onError;
+			Reset();
+			engine.SetOnIntermediateResultCallback(OnIntermediateTestResult);
+			topologyObserver.TryUpdateModelGraph(engine.InitialState.Topology);
+			engineThread = ThreadRunner.Run(() =>
+				{
+					ComparisonTestResult result = engine.TestAlgorithms(algorithms, testDuration, resultCheckperiod);
+					ThreadPool.QueueUserWorkItem(obj => OnTestSuccess(result));
+				}, null, OnErrorInEngine);
+			graphUpdateThread = ThreadRunner.RunPeriodicAction(() => topologyObserver.TryUpdateModelGraph(engine.Topology), TopologyGraphUpdatePeriod);
 		}
-
+		
 		public void Stop()
 		{
-			
+			ThreadRunner.StopThreads(engineThread, graphUpdateThread);
 		}
 
 		public void Reset()
 		{
 			topologyObserver.Reset();
 			plotManager.Reset();
-			engine = null;
 		}
 
 		private void OnIntermediateTestResult(IntermediateTestResult result, string algorithmName)
@@ -70,13 +77,30 @@ namespace Dixie.Presentation
 			plotManager.AddPointToSeries(algorithmName, result.TimeElapsed.TotalSeconds, result.WorkDone);
 		}
 
+		private void OnTestSuccess(ComparisonTestResult result)
+		{
+			Stop();
+			onTestSuccess(result);
+		}
+
+		private void OnErrorInEngine(Exception error)
+		{
+			Stop();
+			onTestError(error);
+		}
+
 		private readonly DixieModel dixieModel;
 		private readonly DixieTopologyObserver topologyObserver;
 		private readonly PlotManager plotManager;
 		private readonly Random random;
 		private readonly ILog log;
-		private Engine engine;
 
-		private static readonly TimeSpan ModelUpdatePeriod = TimeSpan.FromMilliseconds(500);
+		private Engine engine;
+		private Action<ComparisonTestResult> onTestSuccess;
+		private Action<Exception> onTestError;
+		private Thread engineThread;
+		private Thread graphUpdateThread;
+
+		private static readonly TimeSpan TopologyGraphUpdatePeriod = TimeSpan.FromMilliseconds(350);
 	}
 }

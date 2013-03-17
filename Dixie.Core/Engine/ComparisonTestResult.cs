@@ -36,7 +36,7 @@ namespace Dixie.Core
 			foreach (KeyValuePair<string, AlgorithmTestResult> pair in AlgorithmResults.OrderByDescending(pair => pair.Value.TotalWorkDone))
 			{
 				builder.AppendLine();
-				builder.AppendFormat("{0}. {1}: {2}", index++, pair.Key, pair.Value.ToString(true));
+				builder.AppendFormat("{0}. {1}: {2}", ++index, pair.Key, pair.Value.ToString(true));
 			}
 			return builder.ToString();
 		}
