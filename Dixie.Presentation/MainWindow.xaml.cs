@@ -78,7 +78,7 @@ namespace Dixie.Presentation
 
 		private void ReadStateFromFile(object sender, RoutedEventArgs e)
 		{
-			var dialog = new OpenFileDialog();
+			var dialog = new OpenFileDialog {InitialDirectory = AppDomain.CurrentDomain.BaseDirectory};
 			bool? showDialog = dialog.ShowDialog();
 			if (!showDialog.Value)
 				return;
