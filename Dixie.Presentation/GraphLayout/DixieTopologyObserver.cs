@@ -14,6 +14,8 @@ namespace Dixie.Presentation
 
 		public void TryUpdateModelGraph(Topology topology)
 		{
+			if (!PresentationSettings.GetInstance().EnableTopologyRendering)
+				return;
 			DixieGraph displayGraph = null;
 			long actualVersion;
 			// (iloktionov): Построение графа выполняется под локом на уровне Topology.

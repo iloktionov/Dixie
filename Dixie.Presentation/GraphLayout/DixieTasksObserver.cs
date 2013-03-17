@@ -14,15 +14,20 @@ namespace Dixie.Presentation
 		{
 			if (master == null)
 				Reset();
-			else model.TaskStates = master
-				.GetTaskStates()
-				.OrderByDescending(state => state.Task.Volume)
-				.ToList();
+			else
+			{
+				if (!PresentationSettings.GetInstance().EnableTasksRendering)
+					return;
+				model.TaskStates = master
+					.GetTaskStates()
+					.OrderByDescending(state => state.Task.Volume)
+					.ToList();
+			}
 		}
 
 		public void Reset()
 		{
-			model.TaskStates = new TaskState[]{};
+			model.TaskStates = new TaskState[] { };
 		}
 
 		private readonly DixieModel model;
