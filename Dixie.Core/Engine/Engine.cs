@@ -74,7 +74,7 @@ namespace Dixie.Core
 				testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 				if (onIntermediateResult != null)
 					onIntermediateResult(testResult.IntermediateResults.Last(), algorithm.Name);
-				CheckErrors();
+				CheckErrors(engineThreads);
 			}
 
 			// (iloktionov): Теперь остановим подсчет результатов и возьмем финальное значение перед завершением потоков.
@@ -82,7 +82,7 @@ namespace Dixie.Core
 			testResult.AddIntermediateResult(master.GetTotalWorkDone(), watch.Elapsed);
 			StopThreads(engineThreads);
 			LogResult(testResult);
-			CheckErrors();
+			CheckErrors(engineThreads);
 			return testResult;
 		}
 
@@ -146,10 +146,13 @@ namespace Dixie.Core
 			Interlocked.Increment(ref errorsCount);
 		}
 
-		private void CheckErrors()
+		private void CheckErrors(Thread[] engineThreads)
 		{
 			if (errorsCount > 0)
+			{
+				StopThreads(engineThreads);
 				throw new EngineException("There were some errors in test threads. Can't continue.");
+			}
 		}
 
 		#region Logging
