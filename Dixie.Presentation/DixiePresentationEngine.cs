@@ -82,6 +82,8 @@ namespace Dixie.Presentation
 			ThreadRunner.StopThreads(engineThread, graphUpdateThread, tasksUpdateThread);
 			engine.Stop();
 			dispatcher.BeginInvoke(new Action(() => testProgressBar.Value = 0));
+			foreach (ISchedulerAlgorithm algorithm in dixieModel.AvailableAlgorithms)
+				AlgorithmNamesHelper.RestoreAlgorithmName(algorithm);
 		}
 
 		public void Reset()
