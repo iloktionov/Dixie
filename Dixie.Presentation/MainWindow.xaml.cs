@@ -137,6 +137,14 @@ namespace Dixie.Presentation
 			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
 		}
 
+		private void ResetModel(object sender, RoutedEventArgs e)
+		{
+			presentationEngine.Reset();
+			model.HasInitialState = false;
+			selectedAlgorithmsBox.Items.Clear();
+			OnSelectedAlgorithmsBoxItemsChanged();
+		}
+
 		private void SetControlsState(bool enabled, params Control[] controls)
 		{
 			foreach (Control control in controls)
