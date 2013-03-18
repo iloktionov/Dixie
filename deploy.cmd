@@ -8,4 +8,7 @@ xcopy Dixie.Core\bin\*.example Deploy\ /Y
 xcopy Dixie.Console\bin\Dixie.Console* Deploy\ /Y
 xcopy Dixie.Algorithms\bin\Dixie.Algorithms.dll Deploy\Algorithms\ /Y
 xcopy Dixie.Algorithms\bin\Dixie.Algorithms.pdb Deploy\Algorithms\ /Y
+ren Deploy\dixie.Topology.example dixie.Topology
+ren Deploy\dixie.Engine.example dixie.Engine
+ren Deploy\dixie.Presentation.example dixie.Presentation
 
