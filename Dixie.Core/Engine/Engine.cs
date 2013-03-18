@@ -79,6 +79,7 @@ namespace Dixie.Core
 				if (onIntermediateResult != null)
 					onIntermediateResult(testResult.IntermediateResults.Last(), algorithm.Name);
 				CheckErrors();
+				CheckAlivesOnMaster();
 			}
 
 			// (iloktionov): Теперь остановим подсчет результатов и возьмем финальное значение перед завершением потоков.
@@ -176,6 +177,14 @@ namespace Dixie.Core
 				StopThreads();
 				throw new EngineException("There were some errors in test threads. Can't continue.");
 			}
+		}
+
+		private void CheckAlivesOnMaster()
+		{
+			int alivesOnMaster = master.AliveNodesCount;
+			int alivesInTopology = topology.WorkerNodesCount;
+			if (alivesOnMaster < alivesInTopology * 0.8d)
+				testLog.Warn("HBM mechanism lags severely. Alive nodes on Master: {0}/{1}", alivesOnMaster, alivesInTopology);
 		}
 
 		#region Logging
