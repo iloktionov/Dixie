@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dixie.Core
 {
-	public class FileBasedLog : ILog
+	internal class FileBasedLog : ILog
 	{
 		public FileBasedLog(string fileName, FileMode fileMode = FileMode.Create, bool isDebugEnabled = false)
 		{

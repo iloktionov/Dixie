@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Dixie.Core
 {
-	public partial class Node
+	internal partial class Node
 	{
 		[TestFixture]
 		internal class Node_Tests

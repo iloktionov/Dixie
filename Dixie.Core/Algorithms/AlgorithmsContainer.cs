@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Dixie.Core
 {
-	public class AlgorithmsContainer
+	internal class AlgorithmsContainer
 	{
 		static AlgorithmsContainer()
 		{

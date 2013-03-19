@@ -12,7 +12,7 @@ namespace Dixie.Core
 	// Сценарий многопоточной работы:
 	// 1.) Один поток, осуществляющий добавление/удаление нод + повторное взвешивание ребер.
 	// 2.) Один или более потоков, получающих список всех нод, узнающих для них latency.
-	public partial class Topology
+	internal partial class Topology
 	{
 		public Topology(BidirectionalGraph<INode, NetworkLink> graph, Dictionary<Guid, Node> workerNodes, Dictionary<Guid, TimeSpan> workerLatencies, MasterFakeNode masterNode)
 		{

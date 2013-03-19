@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	public interface ILog
+	internal interface ILog
 	{
 		void Debug(string format, params object[] args);
 		void Info(string format, params object[] args);

@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	public class FakeLog : ILog
+	internal class FakeLog : ILog
 	{
 		public void Debug(string format, params object[] args) { }
 

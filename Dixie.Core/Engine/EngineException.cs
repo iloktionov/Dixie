@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public class EngineException : Exception
+	internal class EngineException : Exception
 	{
 		public EngineException(string message) 
 			: base(message)

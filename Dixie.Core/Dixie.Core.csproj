@@ -60,6 +60,7 @@
     <Compile Include="Engine\Engine_Tests.cs" />
     <Compile Include="Engine\IntermediateTestResult.cs" />
     <Compile Include="Engine\TasksGenerator.cs" />
+    <Compile Include="FriendAssembliesList.cs" />
     <Compile Include="GC\GarbageCollector_Tests.cs" />
     <Compile Include="Algorithms\ISchedulerAlgorithm.cs" />
     <Compile Include="Logging\ColorConsoleLog.cs" />

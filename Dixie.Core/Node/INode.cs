@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public interface INode
+	internal interface INode
 	{
 		Guid Id { get; }
 		Double Performance { get; }

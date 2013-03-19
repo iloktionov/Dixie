@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Dixie.Core
 {
-	public static class ThreadRunner
+	internal static class ThreadRunner
 	{
 		public static Thread Run(Action threadRoutine, Action<Thread> tuneThreadBeforeStart = null, Action<Exception> onException = null)
 		{

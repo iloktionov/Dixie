@@ -7,7 +7,7 @@ using ThreadState = System.Threading.ThreadState;
 
 namespace Dixie.Core
 {
-	public class Engine
+	internal class Engine
 	{
 		public Engine(InitialGridState initialState, ILog baseLog)
 		{

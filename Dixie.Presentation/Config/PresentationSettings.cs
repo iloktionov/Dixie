@@ -5,7 +5,7 @@ namespace Dixie.Presentation
 {
 	[Serializable]
 	[Configuration("dixie.Presentation", false)]
-	public class PresentationSettings
+	internal class PresentationSettings
 	{
 		public static PresentationSettings GetInstance()
 		{

@@ -1,6 +1,6 @@
 ﻿namespace Dixie.Core
 {
-	public class PrefixedILogWrapper : ILog
+	internal class PrefixedILogWrapper : ILog
 	{
 		public PrefixedILogWrapper(ILog baseLog, string prefix)
 		{

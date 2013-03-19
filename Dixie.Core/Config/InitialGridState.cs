@@ -5,7 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Dixie.Core
 {
 	[Serializable]
-	public class InitialGridState
+	internal class InitialGridState
 	{
 		public InitialGridState(Topology topology, int randomSeed, TopologySettings topologySettings, EngineSettings engineSettings)
 		{

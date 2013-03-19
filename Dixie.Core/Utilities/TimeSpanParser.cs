@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Dixie.Core
 {
-	public static class TimeSpanParser
+	internal static class TimeSpanParser
 	{
 		public static TimeSpan Parse(string input)
 		{

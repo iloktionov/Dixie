@@ -5,7 +5,7 @@ namespace Dixie.Core
 {
 	[Serializable]
 	[Configuration("dixie.Engine", false)]
-	public class EngineSettings
+	internal class EngineSettings
 	{
 		public static EngineSettings GetInstance()
 		{

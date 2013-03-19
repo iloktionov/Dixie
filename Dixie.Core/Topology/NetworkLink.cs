@@ -4,7 +4,7 @@ using QuickGraph;
 namespace Dixie.Core
 {
 	[Serializable]
-	public class NetworkLink : Edge<INode>
+	internal class NetworkLink : Edge<INode>
 	{
 		public NetworkLink(INode source, INode target, TimeSpan latency)
 			: base(source, target)

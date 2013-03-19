@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Dixie.Core
 {
-	public partial class Topology
+	internal partial class Topology
 	{
 		[TestFixture]
 		internal class Topology_Tests

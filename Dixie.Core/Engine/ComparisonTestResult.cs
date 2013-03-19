@@ -8,7 +8,7 @@ using System.Text;
 namespace Dixie.Core
 {
 	[Serializable]
-	public class ComparisonTestResult
+	internal class ComparisonTestResult
 	{
 		public ComparisonTestResult()
 		{

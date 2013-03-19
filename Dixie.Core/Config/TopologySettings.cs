@@ -5,7 +5,7 @@ namespace Dixie.Core
 {
 	[Serializable]
 	[Configuration("dixie.Topology", false)]
-	public class TopologySettings
+	internal class TopologySettings
 	{
 		public static TopologySettings GetInstance()
 		{

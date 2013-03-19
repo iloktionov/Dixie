@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Dixie.Core
 {
-	public class TopologyBuilder
+	internal class TopologyBuilder
 	{
 		internal TopologyBuilder(ITopologyConfigurator configurator, Random random)
 		{

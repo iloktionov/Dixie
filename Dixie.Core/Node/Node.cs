@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Dixie.Core
 {
 	[Serializable]
-	public partial class Node : INode, IDeserializationCallback
+	internal partial class Node : INode, IDeserializationCallback
 	{
 		private Node(Guid id, double performance, double failureProbability, NodeFailurePattern failurePattern)
 		{

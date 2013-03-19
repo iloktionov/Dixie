@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Dixie.Core
 {
-	public class Master
+	internal class Master
 	{
 		public Master(TimeSpan deadabilityThreshold, ILog log)
 		{

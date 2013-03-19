@@ -2,7 +2,7 @@
 
 namespace Dixie.Core
 {
-	public static class AlgorithmNamesHelper
+	internal static class AlgorithmNamesHelper
 	{
 		public static void PrepareAlgorithmName(ISchedulerAlgorithm algorithm)
 		{
