@@ -49,7 +49,7 @@ namespace Dixie.Presentation
 			}
 			catch (Exception error)
 			{
-				MessageBox.Show(String.Format("An error has occured in reading initial state from file: {0}", error));
+				MessageBox.Show(String.Format("An error has occured in reading initial state from file: {0}", error), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 				dixieModel.HasInitialState = false;
 			}
 		}
@@ -126,7 +126,7 @@ namespace Dixie.Presentation
 			}
 			catch (Exception error)
 			{
-				MessageBox.Show(String.Format("Error in loading algorithms: {0}", error));
+				MessageBox.Show(String.Format("Error in loading algorithms: {0}", error), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 				Application.Current.Shutdown(-1);
 			}
 		}

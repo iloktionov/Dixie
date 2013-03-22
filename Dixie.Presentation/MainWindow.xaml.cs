@@ -141,7 +141,7 @@ namespace Dixie.Presentation
 
 		private void OnTestError(Exception error)
 		{
-			MessageBox.Show(error.ToString());
+			MessageBox.Show(error.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 			SetControlsState(false, stopTestButton);
 			SetControlsState(true, startTestButton, resetButton, generateStateButton, loadStateButton, selectAlgorithmButton, removeAlgorithmButton);
 		}
