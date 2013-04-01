@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dixie.Core
 {
-	// TODO(iloktionov): Постараться сделать так, чтобы это работало не за квадратичное время.
+	// (iloktionov): Лобовое batch-применение MCT-алгоритма, используемого в online-режиме планирования.
 	[Export(typeof(ISchedulerAlgorithm))]
 	internal class MCTAlgorithm : ISchedulerAlgorithm
 	{
@@ -22,7 +22,6 @@ namespace Dixie.Core
 			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
 			var assignations = new List<TaskAssignation>(pendingTasks.Count);
-			PrepareTasks(pendingTasks);
 
 			for (int i = 0; i < pendingTasks.Count; i++)
 			{
@@ -51,8 +50,6 @@ namespace Dixie.Core
 		}
 
 		public string Name { get; set; }
-
-		protected virtual void PrepareTasks(List<Task> tasks) { }
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
 		protected Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
