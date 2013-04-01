@@ -15,12 +15,13 @@ namespace Dixie.Core
 			{
 				Guid node = Guid.NewGuid();
 				var manager = new NodesManager(TimeSpan.Zero, log);
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node, 1, 1) { CommunicationLatency = TimeSpan.FromSeconds(1)});
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node, 1, 1, null, TimeSpan.FromMinutes(1)) { CommunicationLatency = TimeSpan.FromSeconds(1)});
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				manager.HandleHeartBeatMessage(new HeartBeatMessage(Guid.NewGuid(), 0));
 				Assert.AreEqual(3, manager.AliveNodesCount);
 				Assert.AreEqual(1, manager.aliveNodeInfos[node].Performance);
 				Assert.AreEqual(1, manager.aliveNodeInfos[node].WorkBufferSize);
+				Assert.AreEqual(TimeSpan.FromMinutes(1), manager.aliveNodeInfos[node].AvailabilityTime);
 				Assert.AreEqual(TimeSpan.FromSeconds(1), manager.aliveNodeInfos[node].CommunicationLatency);
 			}
 
@@ -49,7 +50,7 @@ namespace Dixie.Core
 				for (int i = 0; i < 500; i++)
 				{
 					Thread.Sleep(1);
-					manager.HandleHeartBeatMessage(new HeartBeatMessage(nodeId, 1, 1));
+					manager.HandleHeartBeatMessage(new HeartBeatMessage(nodeId, 1, 1, null, TimeSpan.Zero));
 					Assert.Null(manager.RemoveDeadsOrNull());
 					Assert.AreEqual(1, manager.AliveNodesCount);
 					Assert.AreEqual(0, manager.OfflineNodesCount);
@@ -64,24 +65,25 @@ namespace Dixie.Core
 				Guid node1 = Guid.NewGuid();
 				Guid node2 = Guid.NewGuid();
 				Guid node3 = Guid.NewGuid();
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node1, 1, 1));
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node2, 1, 1));
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node3, 1, 1));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node1, 1, 1, null, TimeSpan.Zero));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node2, 1, 1, null, TimeSpan.Zero));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node3, 1, 1, null, TimeSpan.Zero));
 				Thread.Sleep(15);
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node1, 1, 1));
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node3, 1, 1));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node1, 1, 1, null, TimeSpan.Zero));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node3, 1, 1, null, TimeSpan.Zero));
 
 				Assert.AreEqual(node2, manager.RemoveDeadsOrNull().Single());
 				Assert.AreEqual(2, manager.AliveNodesCount);
 				Assert.AreEqual(1, manager.OfflineNodesCount);
 				Assert.True(manager.offlineNodeInfos.ContainsKey(node2));
 
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node2, 100, 200));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node2, 100, 200, null, TimeSpan.FromDays(1)));
 				Assert.AreEqual(3, manager.AliveNodesCount);
 				Assert.AreEqual(0, manager.OfflineNodesCount);
 				Assert.True(manager.aliveNodeInfos.ContainsKey(node2));
 				Assert.AreEqual(100, manager.aliveNodeInfos[node2].Performance);
 				Assert.AreEqual(200, manager.aliveNodeInfos[node2].WorkBufferSize);
+				Assert.AreEqual(TimeSpan.FromDays(1), manager.aliveNodeInfos[node2].AvailabilityTime);
 			}
 
 			[Test]
@@ -93,12 +95,12 @@ namespace Dixie.Core
 
 				for (int i = 0; i < FailuresCount; i++)
 				{
-					manager.HandleHeartBeatMessage(new HeartBeatMessage(node, i, i));
+					manager.HandleHeartBeatMessage(new HeartBeatMessage(node, i, i, null, TimeSpan.Zero));
 					Thread.Sleep(2);
 					Assert.AreEqual(1, manager.RemoveDeadsOrNull().Count);
 				}
 
-				manager.HandleHeartBeatMessage(new HeartBeatMessage(node, 1, 1));
+				manager.HandleHeartBeatMessage(new HeartBeatMessage(node, 1, 1, null, TimeSpan.Zero));
 				NodeFailureHistory failureHistory = manager.aliveNodeInfos[node].FailureHistory;
 				Assert.True(failureHistory.HasFailures());
 				Assert.AreEqual(FailuresCount, failureHistory.Failures.Count);

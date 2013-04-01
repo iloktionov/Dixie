@@ -37,7 +37,8 @@ namespace Dixie.Core
 			lock (syncObject)
 			{
 				List<Guid> completedTasks = workBuffer.PopCompletedOrNull();
-				return new HeartBeatMessage(Id, Performance, workBuffer.Size, completedTasks);
+				TimeSpan availabilityTime = workBuffer.GetAvailabilityTime();
+				return new HeartBeatMessage(Id, Performance, workBuffer.Size, completedTasks, availabilityTime);
 			}
 		}
 

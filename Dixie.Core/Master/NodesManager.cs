@@ -25,6 +25,7 @@ namespace Dixie.Core
 				nodeInfo.WorkBufferSize = message.WorkBufferSize;
 				nodeInfo.CommunicationLatency = message.CommunicationLatency;
 				nodeInfo.LastPingTimestamp = watch.Elapsed;
+				nodeInfo.AvailabilityTime = message.AvailabilityTime;
 			}
 			else if (offlineNodeInfos.TryGetValue(message.NodeId, out nodeInfo))
 			{
@@ -32,6 +33,7 @@ namespace Dixie.Core
 				nodeInfo.Performance = message.Performance;
 				nodeInfo.WorkBufferSize = message.WorkBufferSize;
 				nodeInfo.CommunicationLatency = message.CommunicationLatency;
+				nodeInfo.AvailabilityTime = message.AvailabilityTime;
 
 				TimeSpan pingTSBeforeFailure = nodeInfo.LastPingTimestamp;
 				nodeInfo.LastPingTimestamp = watch.Elapsed;
@@ -43,7 +45,7 @@ namespace Dixie.Core
 			else
 			{
 				// (iloktionov): Пришёл первый пинг от абсолютно новой ноды.
-				nodeInfo = new NodeInfo(message.NodeId, message.Performance, message.CommunicationLatency, message.WorkBufferSize, watch.Elapsed);
+				nodeInfo = new NodeInfo(message.NodeId, message.Performance, message.CommunicationLatency, message.WorkBufferSize, watch.Elapsed, message.AvailabilityTime);
 				aliveNodeInfos.Add(message.NodeId, nodeInfo);
 			}
 		}
