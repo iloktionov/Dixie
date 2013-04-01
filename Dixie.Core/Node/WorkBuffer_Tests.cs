@@ -90,6 +90,25 @@ namespace Dixie.Core
 				Assert.AreEqual(1, buffer.PopCompletedOrNull().Count);
 				Assert.AreEqual(0, buffer.Size);
 			}
+
+			[Test]
+			public void Test_GetAvailabilityTime()
+			{
+				var buffer = new WorkBuffer();
+				Thread.Sleep(100);
+				buffer.StopComputing();
+				Assert.AreEqual(TimeSpan.Zero, buffer.GetAvailabilityTime());
+				buffer.PutTask(Guid.NewGuid(), TimeSpan.FromMilliseconds(25));
+				Assert.AreEqual(TimeSpan.FromMilliseconds(25), buffer.GetAvailabilityTime());
+				buffer.PutTask(Guid.NewGuid(), TimeSpan.FromMilliseconds(25));
+				Assert.AreEqual(TimeSpan.FromMilliseconds(50), buffer.GetAvailabilityTime());
+
+				buffer.ResumeComputing();
+				Thread.Sleep(100);
+				Assert.AreEqual(TimeSpan.Zero, buffer.GetAvailabilityTime());
+				buffer.PopCompletedOrNull();
+				Assert.AreEqual(TimeSpan.Zero, buffer.GetAvailabilityTime());
+			}
 		}
 	}
 }

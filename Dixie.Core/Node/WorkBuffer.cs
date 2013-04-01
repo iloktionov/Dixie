@@ -36,6 +36,12 @@ namespace Dixie.Core
 			return result;
 		}
 
+		// (iloktionov): Отражает время, через которое в буфере выполнятся все задачи.
+		public TimeSpan GetAvailabilityTime()
+		{
+			return records.Count > 0 ? ExtendedMath.Max(TimeSpan.Zero, records.Last().Value - watch.Elapsed) : TimeSpan.Zero;
+		}
+
 		public bool IsComputing()
 		{
 			return watch.IsRunning;

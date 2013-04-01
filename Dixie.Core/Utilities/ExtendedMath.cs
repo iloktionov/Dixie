@@ -8,5 +8,10 @@ namespace Dixie.Core
 		{
 			return TimeSpan.FromTicks(Math.Min(t1.Ticks, t2.Ticks));
 		}
+
+		public static TimeSpan Max(TimeSpan t1, TimeSpan t2)
+		{
+			return TimeSpan.FromTicks(Math.Max(t1.Ticks, t2.Ticks));
+		}
 	}
 }
