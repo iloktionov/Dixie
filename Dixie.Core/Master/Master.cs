@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Dixie.Core
 {
@@ -42,7 +43,7 @@ namespace Dixie.Core
 				if (pendingTasks.Count <= 0)
 					return;
 				watch.Restart();
-				IEnumerable<TaskAssignation> assignations = algorithm.AssignNodes(aliveNodeInfos, pendingTasks);
+				TaskAssignation[] assignations = algorithm.AssignNodes(aliveNodeInfos, pendingTasks).ToArray();
 				LogAlgorithmWorkTime(watch.Elapsed, algorithm);
 				foreach (TaskAssignation assignation in assignations)
 					taskManager.AssignNodeToTask(assignation.Task, assignation.Node);
