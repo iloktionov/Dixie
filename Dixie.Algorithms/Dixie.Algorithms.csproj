@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="FirstNodeAlgorithm.cs" />
     <Compile Include="MCTAlgorithm.cs" />
+    <Compile Include="MinMinAlgorithm.cs" />
     <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
