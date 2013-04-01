@@ -13,6 +13,7 @@ namespace Dixie.Core
 			var topology = Topology.CreateEmpty();
 			var configurator = new TopologyConfigurator();
 			var mutator = new AddNodesMutator(new Random(), configurator, 1000);
+			topology.AddNode(new Node(1, 0), topology.MasterNode, TimeSpan.FromMilliseconds(1));
 
 			while (topology.WorkerNodesCount < 1000)
 				mutator.Mutate(topology);
