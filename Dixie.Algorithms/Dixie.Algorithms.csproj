@@ -39,6 +39,7 @@
     <Compile Include="MaxMinAlgorithm.cs" />
     <Compile Include="MCTAlgorithm.cs" />
     <Compile Include="MinMinAlgorithm.cs" />
+    <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
