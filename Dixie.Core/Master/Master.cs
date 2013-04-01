@@ -38,9 +38,14 @@ namespace Dixie.Core
 					LogNoAliveNodes();
 					return;
 				}
+				List<Task> pendingTasks = taskManager.GetPendingTasks();
+				if (pendingTasks.Count <= 0)
+					return;
 				watch.Restart();
-				algorithm.Work(aliveNodeInfos, taskManager);
+				IEnumerable<TaskAssignation> assignations = algorithm.AssignNodes(aliveNodeInfos, pendingTasks);
 				LogAlgorithmWorkTime(watch.Elapsed, algorithm);
+				foreach (TaskAssignation assignation in assignations)
+					taskManager.AssignNodeToTask(assignation.Task, assignation.Node);
 			}
 		}
 

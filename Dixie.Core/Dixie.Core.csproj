@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\AlgorithmsContainer.cs" />
+    <Compile Include="Algorithms\TaskAssignation.cs" />
     <Compile Include="Communication\HeartBeatMessage.cs" />
     <Compile Include="Communication\HeartBeatProcessor.cs" />
     <Compile Include="Communication\HeartBeatProcessor_Tests.cs" />

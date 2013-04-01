@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Dixie.Core
 {
-	public partial class TaskManager
+	internal partial class TaskManager
 	{
 		[TestFixture]
 		internal class TaskManager_Tests

@@ -65,7 +65,7 @@ namespace Dixie.Core
 
 		private class ErrorAlgorithm : ISchedulerAlgorithm
 		{
-			public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
+			public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 			{
 				throw new Exception("Test exception from ErrorAlgorithm!");
 			}

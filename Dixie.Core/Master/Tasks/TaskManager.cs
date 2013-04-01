@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Dixie.Core
 {
-	public partial class TaskManager
+	internal partial class TaskManager
 	{
 		internal TaskManager(ILog log)
 		{
@@ -28,7 +28,7 @@ namespace Dixie.Core
 			return completedTasksCount >= taskStates.Count;
 		}
 
-		public List<Task> GetPendingTasks()
+		internal List<Task> GetPendingTasks()
 		{
 			return taskStates.Values
 				.Where(state => state.Status == TaskStatus.Pending)
@@ -36,7 +36,7 @@ namespace Dixie.Core
 				.ToList();
 		}
 
-		public void AssignNodeToTask(Task task, Guid nodeId)
+		internal void AssignNodeToTask(Task task, Guid nodeId)
 		{
 			taskStates[task.Id].AssignNode(nodeId);
 			List<Task> nodeAssignations;

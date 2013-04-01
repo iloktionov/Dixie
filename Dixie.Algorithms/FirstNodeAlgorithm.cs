@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace Dixie.Core
 {
@@ -14,12 +15,9 @@ namespace Dixie.Core
 		public FirstNodeAlgorithm()
 			: this("FirstNodeAlgorithm") { }
 
-		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
+		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			if (aliveNodes.Count <= 0)
-				return;
-			foreach (Task pendingTask in taskManager.GetPendingTasks())
-				taskManager.AssignNodeToTask(pendingTask, aliveNodes[0].Id);
+			return pendingTasks.Select(pendingTask => new TaskAssignation(pendingTask, aliveNodes[0].Id));
 		}
 
 		public void Reset() { }

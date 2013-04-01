@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace Dixie.Core
 {
@@ -22,12 +23,9 @@ namespace Dixie.Core
 		public RandomAlgorithm() 
 			: this (new Random()) { }
 
-		public void Work(List<NodeInfo> aliveNodes, TaskManager taskManager)
+		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			if (aliveNodes.Count <= 0)
-				return;
-			foreach (Task pendingTask in taskManager.GetPendingTasks())
-				taskManager.AssignNodeToTask(pendingTask, aliveNodes[random.Next(aliveNodes.Count)].Id);
+			return pendingTasks.Select(pendingTask => new TaskAssignation(pendingTask, aliveNodes[random.Next(aliveNodes.Count)].Id));
 		}
 
 		public void Reset()
