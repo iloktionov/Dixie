@@ -27,8 +27,8 @@ namespace Dixie.Core
 
 		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
-			Double[,] ctMatrix = ConstructCTMatrix(aliveNodes, pendingTasks, etcMatrix);
+			Double[][] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
+			Double[][] ctMatrix = ConstructCTMatrix(aliveNodes, pendingTasks, etcMatrix);
 			var assignations = new List<TaskAssignation>(pendingTasks.Count);
 
 			var metaTask = new Dictionary<Guid, int>(pendingTasks.Count);
@@ -45,11 +45,14 @@ namespace Dixie.Core
 					Double minCompletionTime = Double.MaxValue;
 					Int32 assignedNodeIndex = Int32.MinValue;
 					for (int i = 0; i < aliveNodes.Count; i++)
-						if (ctMatrix[pair.Value, i] < minCompletionTime)
+					{
+						Double completionTime = ctMatrix[pair.Value][i];
+						if (completionTime < minCompletionTime)
 						{
-							minCompletionTime = ctMatrix[pair.Value, i];
+							minCompletionTime = completionTime;
 							assignedNodeIndex = i;
 						}
+					}
 					if (minCompletionTime < minCT)
 					{
 						minCT = minCompletionTime;
@@ -61,38 +64,37 @@ namespace Dixie.Core
 				metaTask.Remove(pendingTasks[taskIndex].Id);
 
 				// (iloktionov): Теперь нужно обновить CT-матрицу для оставшихся заданий.
-				Double executionTime = etcMatrix[taskIndex, assignedIndex];
+				Double executionTime = etcMatrix[taskIndex][assignedIndex];
 				foreach (KeyValuePair<Guid, int> pair in metaTask)
-					ctMatrix[pair.Value, assignedIndex] += executionTime;
+					ctMatrix[pair.Value][assignedIndex] += executionTime;
 			}
 
 			return assignations;
 		}
 
-		// (iloktionov): Элемент в позиции i соответствует времени, оставшемуся до полной готовности i-й машины.
-		protected Double[] ConstructAvailabilityVector(List<NodeInfo> aliveNodes)
-		{
-			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
-		}
-
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
-		protected Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		private static Double[][] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			var etcMatrix = new Double[pendingTasks.Count, aliveNodes.Count];
+			var etcMatrix = new Double[pendingTasks.Count][];
 			for (int i = 0; i < pendingTasks.Count; i++)
+			{
+				etcMatrix[i] = new Double[aliveNodes.Count];
 				for (int j = 0; j < aliveNodes.Count; j++)
-					etcMatrix[i, j] = pendingTasks[i].Volume / aliveNodes[j].Performance;
+					etcMatrix[i][j] = pendingTasks[i].Volume / aliveNodes[j].Performance;
+			}
 			return etcMatrix;
 		}
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени освобождения j-й машины при условии, что ей назначат i-е задание.
-		protected Double[,] ConstructCTMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks, Double[,] etcMatrix)
+		private static Double[][] ConstructCTMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks, Double[][] etcMatrix)
 		{
-			double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
-			var ctMatrix = new Double[pendingTasks.Count, aliveNodes.Count];
+			var ctMatrix = new Double[pendingTasks.Count][];
 			for (int i = 0; i < pendingTasks.Count; i++)
+			{
+				ctMatrix[i] = new Double[aliveNodes.Count];
 				for (int j = 0; j < aliveNodes.Count; j++)
-					ctMatrix[i, j] = availabilityVector[j] + etcMatrix[i, j];
+					ctMatrix[i][j] = aliveNodes[j].AvailabilityTime.TotalMilliseconds + etcMatrix[i][j];
+			}
 			return ctMatrix;
 		}
 	}
