@@ -8,7 +8,8 @@
         MinHeight="400"
         MinWidth="600"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        PreviewKeyDown="OnKeyDownHandler">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -22,7 +23,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid>
+    <Grid Name="layoutGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="3*"/>

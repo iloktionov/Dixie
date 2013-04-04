@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Dixie.Core;
@@ -167,8 +168,22 @@ namespace Dixie.Presentation
 				Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => control.IsEnabled = enabled));
 		}
 
+		private void OnKeyDownHandler(object sender, KeyEventArgs args)
+		{
+			if (args.Key == Key.Space)
+			{
+				isRenderingEnabled = !isRenderingEnabled;
+				PresentationSettings.ToggleRendering();
+				layoutGrid.RowDefinitions[0].Height = new GridLength(isRenderingEnabled ? 5 : 0, GridUnitType.Star);
+				topologyGraphLayout.IsEnabled = isRenderingEnabled;
+				taskStatesControl.IsEnabled = isRenderingEnabled;
+			}
+			args.Handled = true;
+		}
+
 		private readonly DixieModel model;
 		private readonly DixiePresentationEngine presentationEngine;
+		private bool isRenderingEnabled = true;
 		private static readonly SolidColorBrush okBrush = new SolidColorBrush(Colors.LightGreen);
 		private static readonly SolidColorBrush errorBrush = new SolidColorBrush(Colors.LightCoral);
 	}
