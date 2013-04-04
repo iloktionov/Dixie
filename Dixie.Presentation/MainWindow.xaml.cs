@@ -170,15 +170,13 @@ namespace Dixie.Presentation
 
 		private void OnKeyDownHandler(object sender, KeyEventArgs args)
 		{
-			if (args.Key == Key.Space)
-			{
-				isRenderingEnabled = !isRenderingEnabled;
-				PresentationSettings.ToggleRendering();
-				layoutGrid.RowDefinitions[0].Height = new GridLength(isRenderingEnabled ? 5 : 0, GridUnitType.Star);
-				topologyGraphLayout.IsEnabled = isRenderingEnabled;
-				taskStatesControl.IsEnabled = isRenderingEnabled;
-			}
-			args.Handled = true;
+			if (args.Key != Key.F1) 
+				return;
+			isRenderingEnabled = !isRenderingEnabled;
+			PresentationSettings.ToggleRendering();
+			layoutGrid.RowDefinitions[0].Height = new GridLength(isRenderingEnabled ? 5 : 0, GridUnitType.Star);
+			topologyGraphLayout.IsEnabled = isRenderingEnabled;
+			taskStatesControl.IsEnabled = isRenderingEnabled;
 		}
 
 		private readonly DixieModel model;
