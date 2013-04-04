@@ -61,9 +61,9 @@ namespace Dixie.Core
 				metaTask.Remove(pendingTasks[taskIndex].Id);
 
 				// (iloktionov): Теперь нужно обновить CT-матрицу для оставшихся заданий.
-				Double completionTime = etcMatrix[taskIndex, assignedIndex];
+				Double executionTime = etcMatrix[taskIndex, assignedIndex];
 				foreach (KeyValuePair<Guid, int> pair in metaTask)
-					ctMatrix[pair.Value, assignedIndex] += completionTime;
+					ctMatrix[pair.Value, assignedIndex] += executionTime;
 			}
 
 			return assignations;

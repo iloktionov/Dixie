@@ -4,7 +4,7 @@ namespace Dixie.Core
 {
 	public class NodeInfo
 	{
-		internal NodeInfo(Guid id, double performance, TimeSpan communicationLatency, int workBufferSize, TimeSpan lastPingTimestamp, TimeSpan availabilityTime)
+		public NodeInfo(Guid id, double performance, TimeSpan communicationLatency, int workBufferSize, TimeSpan lastPingTimestamp, TimeSpan availabilityTime)
 		{
 			Id = id;
 			Performance = performance;
