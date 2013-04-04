@@ -116,7 +116,7 @@ namespace Dixie.Core
 
 		private void LogAlgorithmWorkTime(TimeSpan elapsed, ISchedulerAlgorithm algorithm)
 		{
-			log.Debug("Executed algorithm {0} in {1}", algorithm.Name, elapsed);
+			log.Info("Executed algorithm {0} in {1}", algorithm.Name, elapsed);
 		}
 
 		private void LogNoAliveNodes()
