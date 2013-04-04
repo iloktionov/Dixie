@@ -19,23 +19,20 @@ namespace Dixie.Core
 			Double[][] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[][] ctMatrix = ConstructCTMatrix(aliveNodes, pendingTasks, etcMatrix);
 			var assignations = new List<TaskAssignation>(pendingTasks.Count);
-
-			var metaTask = new Dictionary<Guid, int>(pendingTasks.Count);
-			for (int i = 0; i < pendingTasks.Count; i++)
-				metaTask.Add(pendingTasks[i].Id, i);
+			var metaTask = new HashSet<int>(Enumerable.Range(0, pendingTasks.Count));
 
 			while (metaTask.Any())
 			{
 				Double bestCompletionTime = GetInitialBestCompletionTime();
-				Int32 assignedIndex = Int32.MinValue;
-				Int32 taskIndex = 0;
-				foreach (KeyValuePair<Guid, int> pair in metaTask)
+				Int32 bestNodeIndex = Int32.MinValue;
+				Int32 bestTaskIndex = 0;
+				foreach (Int32 taskIndex in metaTask)
 				{
 					Double minCompletionTime = Double.MaxValue;
 					Int32 assignedNodeIndex = Int32.MinValue;
 					for (int i = 0; i < aliveNodes.Count; i++)
 					{
-						Double completionTime = ctMatrix[pair.Value][i];
+						Double completionTime = ctMatrix[taskIndex][i];
 						if (completionTime < minCompletionTime)
 						{
 							minCompletionTime = completionTime;
@@ -45,17 +42,17 @@ namespace Dixie.Core
 					if (IsBetterTime(minCompletionTime, bestCompletionTime))
 					{
 						bestCompletionTime = minCompletionTime;
-						assignedIndex = assignedNodeIndex;
-						taskIndex = pair.Value;
+						bestNodeIndex = assignedNodeIndex;
+						bestTaskIndex = taskIndex;
 					}
 				}
-				assignations.Add(new TaskAssignation(pendingTasks[taskIndex], aliveNodes[assignedIndex].Id));
-				metaTask.Remove(pendingTasks[taskIndex].Id);
+				assignations.Add(new TaskAssignation(pendingTasks[bestTaskIndex], aliveNodes[bestNodeIndex].Id));
+				metaTask.Remove(bestTaskIndex);
 
 				// (iloktionov): Теперь нужно обновить CT-матрицу для оставшихся заданий.
-				Double executionTime = etcMatrix[taskIndex][assignedIndex];
-				foreach (KeyValuePair<Guid, int> pair in metaTask)
-					ctMatrix[pair.Value][assignedIndex] += executionTime;
+				Double executionTime = etcMatrix[bestTaskIndex][bestNodeIndex];
+				foreach (Int32 taskIndex in metaTask)
+					ctMatrix[taskIndex][bestNodeIndex] += executionTime;
 			}
 
 			return assignations;
