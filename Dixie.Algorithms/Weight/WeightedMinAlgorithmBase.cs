@@ -35,6 +35,18 @@ namespace Dixie.Core
 			return etcMatrix;
 		}
 
+		protected override double[][] ConstructCTMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks, double[][] etcMatrix)
+		{
+			var ctMatrix = new Double[pendingTasks.Count][];
+			for (int i = 0; i < pendingTasks.Count; i++)
+			{
+				ctMatrix[i] = new Double[aliveNodes.Count];
+				for (int j = 0; j < aliveNodes.Count; j++)
+					ctMatrix[i][j] = aliveNodes[j].AvailabilityTime.TotalMilliseconds * weightSelector.GetWeight(aliveNodes[j].Id) + etcMatrix[i][j];
+			}
+			return ctMatrix;
+		}
+
 		private readonly IWeightSelector weightSelector;
 	}
 }

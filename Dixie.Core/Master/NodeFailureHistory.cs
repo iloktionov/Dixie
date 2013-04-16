@@ -26,6 +26,11 @@ namespace Dixie.Core
 			return Failures.Min(failure => failure.Duration);
 		}
 
+		public TimeSpan Downtime()
+		{
+			return TimeSpan.FromTicks(Failures.Sum(failure => failure.Duration.Ticks));
+		}
+
 		internal void AddFailure(TimeSpan detectionTime, TimeSpan duration)
 		{
 			Failures.Add(new NodeFailure(detectionTime, duration));
