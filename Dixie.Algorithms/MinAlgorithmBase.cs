@@ -14,7 +14,7 @@ namespace Dixie.Core
 		protected abstract Double GetInitialBestCompletionTime();
 		protected abstract bool IsBetterTime(Double completionTime, Double currentBestTime);
 
-		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		public virtual IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
 			Double[][] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[][] ctMatrix = ConstructCTMatrix(aliveNodes, pendingTasks, etcMatrix);
@@ -58,7 +58,7 @@ namespace Dixie.Core
 			return assignations;
 		}
 
-		public void Reset() { }
+		public virtual void Reset() { }
 
 		public override string ToString()
 		{
@@ -68,7 +68,7 @@ namespace Dixie.Core
 		public string Name { get; set; }
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
-		private static Double[][] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		protected virtual Double[][] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
 			var etcMatrix = new Double[pendingTasks.Count][];
 			for (int i = 0; i < pendingTasks.Count; i++)
@@ -81,7 +81,7 @@ namespace Dixie.Core
 		}
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени освобождения j-й машины при условии, что ей назначат i-е задание.
-		private static Double[][] ConstructCTMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks, Double[][] etcMatrix)
+		protected virtual Double[][] ConstructCTMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks, Double[][] etcMatrix)
 		{
 			var ctMatrix = new Double[pendingTasks.Count][];
 			for (int i = 0; i < pendingTasks.Count; i++)
