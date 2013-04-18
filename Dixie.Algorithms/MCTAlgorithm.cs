@@ -17,7 +17,7 @@ namespace Dixie.Core
 		public MCTAlgorithm()
 			: this("MCTAlgorithm") { }
 
-		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		public virtual IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
 			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
@@ -42,7 +42,7 @@ namespace Dixie.Core
 			return assignations;
 		}
 
-		public void Reset() { }
+		public virtual void Reset() { }
 
 		public override string ToString()
 		{
@@ -52,7 +52,7 @@ namespace Dixie.Core
 		public string Name { get; set; }
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
-		protected Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		protected virtual Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
 			var etcMatrix = new Double[pendingTasks.Count, aliveNodes.Count];
 			for (int i = 0; i < pendingTasks.Count; i++)
@@ -62,7 +62,7 @@ namespace Dixie.Core
 		}
 
 		// (iloktionov): Элемент в позиции i соответствует времени, оставшемуся до полной готовности i-й машины.
-		protected Double[] ConstructAvailabilityVector(List<NodeInfo> aliveNodes)
+		protected virtual Double[] ConstructAvailabilityVector(List<NodeInfo> aliveNodes)
 		{
 			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
 		}

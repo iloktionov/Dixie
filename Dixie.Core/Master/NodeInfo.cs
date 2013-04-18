@@ -11,6 +11,7 @@ namespace Dixie.Core
 			CommunicationLatency = communicationLatency;
 			WorkBufferSize = workBufferSize;
 			LastPingTimestamp = lastPingTimestamp;
+			FirstPingTimestamp = lastPingTimestamp;
 			AvailabilityTime = availabilityTime;
 		}
 
@@ -24,7 +25,8 @@ namespace Dixie.Core
 		/// </summary>
 		public TimeSpan AvailabilityTime { get; set; }
 
-		internal TimeSpan LastPingTimestamp { get; set; }
+		public TimeSpan FirstPingTimestamp { get; private set; }
+		public TimeSpan LastPingTimestamp { get; set; }
 
 		public NodeFailureHistory FailureHistory
 		{

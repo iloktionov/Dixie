@@ -39,6 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Weight\UptimeMCTAlgorithm.cs" />
+    <Compile Include="Weight\WeightedMCTAlgorithmBase.cs" />
     <Compile Include="Weight\FailuresCountWeightSelector.cs" />
     <Compile Include="FirstNodeAlgorithm.cs" />
     <Compile Include="Weight\IWeightSelector.cs" />

@@ -8,13 +8,11 @@ namespace Dixie.Core
 	{
 		public UptimeWeightSelector()
 		{
-			watch = Stopwatch.StartNew();
 			weights = new Dictionary<Guid, double>();
 		}
 
 		public void Reset()
 		{
-			watch.Restart();
 		}
 
 		public double GetWeight(Guid nodeId)
@@ -25,21 +23,20 @@ namespace Dixie.Core
 		public void Update(List<NodeInfo> aliveNodes)
 		{
 			weights.Clear();
-			TimeSpan totalTimeElapsed = watch.Elapsed;
 			foreach (NodeInfo aliveNode in aliveNodes)
-				weights.Add(aliveNode.Id, GetWeight(aliveNode, totalTimeElapsed));
+				weights.Add(aliveNode.Id, GetWeight(aliveNode));
 		}
 
-		private static Double GetWeight(NodeInfo aliveNode, TimeSpan totalTimeElapsed)
+		private static Double GetWeight(NodeInfo aliveNode)
 		{
 			if (aliveNode.FailureHistory.Failures.Count <= 0)
 				return 1;
+			TimeSpan totalTime = aliveNode.LastPingTimestamp - aliveNode.FirstPingTimestamp;
 			TimeSpan downtime = aliveNode.FailureHistory.Downtime();
-			TimeSpan uptime = totalTimeElapsed - downtime;
-			return uptime > TimeSpan.Zero ? totalTimeElapsed.TotalMilliseconds / uptime.TotalMilliseconds : 1;
+			TimeSpan uptime = totalTime - downtime;
+			return uptime > TimeSpan.Zero ? totalTime.TotalMilliseconds / uptime.TotalMilliseconds : 1;
 		}
 
-		private readonly Stopwatch watch;
 		private readonly Dictionary<Guid, Double> weights;
 	}
 }
