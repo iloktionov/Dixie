@@ -39,21 +39,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Weight\UptimeMCTAlgorithm.cs" />
-    <Compile Include="Weight\WeightedMCTAlgorithmBase.cs" />
-    <Compile Include="Weight\FailuresCountWeightSelector.cs" />
     <Compile Include="FirstNodeAlgorithm.cs" />
-    <Compile Include="Weight\IWeightSelector.cs" />
     <Compile Include="MaxMinAlgorithm.cs" />
     <Compile Include="MCTAlgorithm.cs" />
     <Compile Include="MinAlgorithmBase.cs" />
     <Compile Include="MinMinAlgorithm.cs" />
     <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Weight\UptimeMaxMinAlgorithm.cs" />
-    <Compile Include="Weight\UptimeMinMinAlgorithm.cs" />
-    <Compile Include="Weight\UptimeWeightSelector.cs" />
-    <Compile Include="Weight\WeightedMinAlgorithmBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dixie.Core\Dixie.Core.csproj">
