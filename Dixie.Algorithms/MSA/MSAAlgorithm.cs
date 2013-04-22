@@ -32,7 +32,7 @@ namespace Dixie.Core
 			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
 
 			Int32[] bestSolution = initialSolution;
-			Double bestMakespan = GetMakeSpan(initialSolution, etcMatrix, availabilityVector);
+			Double bestMakespan = MakespanCalculator.Calculate(initialSolution, etcMatrix, availabilityVector);
 
 			Int32[] currentSolution = bestSolution;
 			Double currentMakespan = bestMakespan;
@@ -46,7 +46,7 @@ namespace Dixie.Core
 				var solutions = new[] {solution1, solution2};
 				for (int j = 0; j < 2; j++)
 				{
-					Double makespan = GetMakeSpan(solutions[j], etcMatrix, availabilityVector);
+					Double makespan = MakespanCalculator.Calculate(solutions[j], etcMatrix, availabilityVector);
 					Double delta = Math.Exp((currentMakespan - makespan) / temperature);
 					if (random.NextDouble() < delta)
 					{
@@ -77,26 +77,6 @@ namespace Dixie.Core
 		}
 
 		public string Name { get; set; }
-
-		private static Double GetMakeSpan(Int32[] solution, Double[,] etcMatrix, Double[] availabilityVector)
-		{
-			var completionTimes = new Double[availabilityVector.Length];
-			Double maxCompletionTime = 0d;
-			for (int i = 0; i < availabilityVector.Length; i++)
-			{
-				completionTimes[i] = availabilityVector[i];
-				if (completionTimes[i] > maxCompletionTime)
-					maxCompletionTime = completionTimes[i];
-			}
-			for (int i = 0; i < solution.Length; i++)
-			{
-				Int32 nodeIndex = solution[i];
-				completionTimes[nodeIndex] += etcMatrix[i, nodeIndex];
-				if (completionTimes[nodeIndex] > maxCompletionTime)
-					maxCompletionTime = completionTimes[nodeIndex];
-			}
-			return maxCompletionTime;
-		}
 
 		private Int32[] CloneWithExchange(Int32[] initialSolution)
 		{
