@@ -33,7 +33,7 @@ namespace Dixie.Core
 				for (int i = 0; i < 1000; i++)
 					aliveNodes.Add(new NodeInfo(Guid.NewGuid(), random.Next(50, 100), TimeSpan.Zero, 0, TimeSpan.Zero, TimeSpan.Zero));
 				for (int i = 0; i < 3000; i++)
-					tasks.Add(new Task(random.Next(500, 1000)));
+					tasks.Add(new Task(random.Next(500, 100000)));
 
 				var algorithm = new MSAAlgorithm();
 				var watch = Stopwatch.StartNew();

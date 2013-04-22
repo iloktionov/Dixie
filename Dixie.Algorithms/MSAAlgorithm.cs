@@ -18,14 +18,14 @@ namespace Dixie.Core
 		}
 
 		public MSAAlgorithm()
-			: this("MSAAlgorithm", 1000d, 0.99d, 1000) { }
+			: this("MSAAlgorithm", 1000d, 0.99d, 10 * 1000) { }
 
 		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			var mctAlgorithm = new MCTAlgorithm();
-			Int32[] initialSolution = mctAlgorithm.AssignNodesInternal(aliveNodes, pendingTasks);
+			var mctAlgorithm = new RandomMCTAlgorithm(random);
+			Int32[] initialSolution = mctAlgorithm.AssignNodes(aliveNodes, pendingTasks);
 			Double[,] etcMatrix = mctAlgorithm.EtcMatrix;
-			Double[] availabilityVector = mctAlgorithm.AvailabilityVector;
+			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
 
 			Int32[] bestSolution = initialSolution;
 			Double bestMakespan = GetMakeSpan(initialSolution, etcMatrix, availabilityVector);
@@ -113,6 +113,12 @@ namespace Dixie.Core
 			Int32 tmp = solution[index1];
 			solution[index1] = solution[index2];
 			solution[index2] = tmp;
+		}
+
+		// (iloktionov): Элемент в позиции i соответствует времени, оставшемуся до полной готовности i-й машины.
+		private static Double[] ConstructAvailabilityVector(IEnumerable<NodeInfo> aliveNodes)
+		{
+			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
 		}
 
 		private readonly Double initialTemperature;

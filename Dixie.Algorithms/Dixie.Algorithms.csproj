@@ -48,6 +48,7 @@
     <Compile Include="MSAAlgorithm_Tests.cs" />
     <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomMCTAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dixie.Core\Dixie.Core.csproj">

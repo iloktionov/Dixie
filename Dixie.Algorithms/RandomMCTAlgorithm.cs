@@ -1,46 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 
 namespace Dixie.Core
 {
-	// (iloktionov): Лобовое batch-применение MCT-алгоритма, используемого в online-режиме планирования.
-	[Export(typeof(ISchedulerAlgorithm))]
-	internal class MCTAlgorithm : ISchedulerAlgorithm
+	internal class RandomMCTAlgorithm
 	{
-		public MCTAlgorithm(string name)
+		public RandomMCTAlgorithm(Random random)
 		{
-			Name = name;
+			this.random = random;
 		}
 
-		public MCTAlgorithm()
-			: this("MCTAlgorithm") { }
-
-		public virtual IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		public Int32[] AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			return AssignNodesInternal(aliveNodes, pendingTasks)
-				.Select((nodeIdx, taskIdx) => new TaskAssignation(pendingTasks[taskIdx], aliveNodes[nodeIdx].Id))
-				.ToList();
-		}
-
-		public Int32[] AssignNodesInternal(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
-		{
-			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
+			etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
 			var assignations = new Int32[pendingTasks.Count];
 
 			for (int i = 0; i < pendingTasks.Count; i++)
 			{
-				Double minCompletionTime = Double.MaxValue;
-				Int32 assignedNodeIndex = Int32.MinValue;
-				for (int j = 0; j < aliveNodes.Count; j++)
+				Int32 assignedNodeIndex;
+				if (i < aliveNodes.Count / 2)
+					assignedNodeIndex = random.Next(aliveNodes.Count);
+				else
 				{
-					Double completionTime = availabilityVector[j] + etcMatrix[i, j];
-					if (completionTime < minCompletionTime)
+					Double minCompletionTime = Double.MaxValue;
+					assignedNodeIndex = Int32.MinValue;
+					for (int j = 0; j < aliveNodes.Count; j++)
 					{
-						minCompletionTime = completionTime;
-						assignedNodeIndex = j;
+						Double completionTime = availabilityVector[j] + etcMatrix[i, j];
+						if (completionTime < minCompletionTime)
+						{
+							minCompletionTime = completionTime;
+							assignedNodeIndex = j;
+						}
 					}
 				}
 				availabilityVector[assignedNodeIndex] += etcMatrix[i, assignedNodeIndex];
@@ -49,14 +42,10 @@ namespace Dixie.Core
 			return assignations;
 		}
 
-		public virtual void Reset() { }
-
-		public override string ToString()
+		public Double[,] EtcMatrix
 		{
-			return Name;
+			get { return etcMatrix; }
 		}
-
-		public string Name { get; set; }
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
 		protected virtual Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
@@ -73,5 +62,8 @@ namespace Dixie.Core
 		{
 			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
 		}
+
+		private readonly Random random;
+		private Double[,] etcMatrix;
 	}
 }
