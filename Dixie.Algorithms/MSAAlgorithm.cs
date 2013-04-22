@@ -8,23 +8,27 @@ namespace Dixie.Core
 	[Export(typeof(ISchedulerAlgorithm))]
 	internal partial class MSAAlgorithm : ISchedulerAlgorithm
 	{
-		public MSAAlgorithm(string name, double initialTemperature, double coolingFactor, int iterations)
+		public MSAAlgorithm(string name, double initialTemperature, double coolingFactor, int iterations, ILog log)
 		{
 			Name = name;
 			this.initialTemperature = initialTemperature;
 			this.coolingFactor = coolingFactor;
 			this.iterations = iterations;
+			this.log = log;
 			random = new Random();
 		}
 
+		public MSAAlgorithm(ILog log)
+			: this("MSAAlgorithm", 1000d, 0.99d, 10 * 1000, log) { }
+
 		public MSAAlgorithm()
-			: this("MSAAlgorithm", 1000d, 0.99d, 10 * 1000) { }
+			: this(new FakeLog()) { }
 
 		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			var mctAlgorithm = new RandomMCTAlgorithm(random);
-			Int32[] initialSolution = mctAlgorithm.AssignNodes(aliveNodes, pendingTasks);
-			Double[,] etcMatrix = mctAlgorithm.EtcMatrix;
+			var mctAlgorithm = new MCTAlgorithm();
+			Int32[] initialSolution = mctAlgorithm.AssignNodesInternal(aliveNodes, pendingTasks);
+			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
 
 			Int32[] bestSolution = initialSolution;
@@ -34,6 +38,7 @@ namespace Dixie.Core
 			Double currentMakespan = bestMakespan;
 			Double temperature = initialTemperature;
 
+			log.Info("Initial solution makespan: {0:0.00000}", bestMakespan);
 			for (int i = 0; i < iterations; i++)
 			{
 				Int32[] solution1 = CloneWithExchange(currentSolution);
@@ -52,10 +57,12 @@ namespace Dixie.Core
 					{
 						bestMakespan = currentMakespan;
 						bestSolution = currentSolution;
+						log.Info("Found better makespan: {0:0.00000}", bestMakespan);
 					}
 				}
 				temperature *= coolingFactor;
 			}
+			log.Info("Best solution makespan: {0:0.00000}", bestMakespan);
 
 			return bestSolution
 				.Select((nodeIdx, taskIdx) => new TaskAssignation(pendingTasks[taskIdx], aliveNodes[nodeIdx].Id))
@@ -115,6 +122,16 @@ namespace Dixie.Core
 			solution[index2] = tmp;
 		}
 
+		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
+		protected virtual Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		{
+			var etcMatrix = new Double[pendingTasks.Count, aliveNodes.Count];
+			for (int i = 0; i < pendingTasks.Count; i++)
+				for (int j = 0; j < aliveNodes.Count; j++)
+					etcMatrix[i, j] = pendingTasks[i].Volume / aliveNodes[j].Performance;
+			return etcMatrix;
+		}
+
 		// (iloktionov): Элемент в позиции i соответствует времени, оставшемуся до полной готовности i-й машины.
 		private static Double[] ConstructAvailabilityVector(IEnumerable<NodeInfo> aliveNodes)
 		{
@@ -125,5 +142,6 @@ namespace Dixie.Core
 		private readonly Double coolingFactor;
 		private readonly Int32 iterations;
 		private readonly Random random;
+		private readonly ILog log;
 	}
 }

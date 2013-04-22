@@ -35,7 +35,7 @@ namespace Dixie.Core
 				for (int i = 0; i < 3000; i++)
 					tasks.Add(new Task(random.Next(500, 100000)));
 
-				var algorithm = new MSAAlgorithm();
+				var algorithm = new MSAAlgorithm(new ColorConsoleLog());
 				var watch = Stopwatch.StartNew();
 				algorithm.AssignNodes(aliveNodes, tasks);
 				Console.Out.WriteLine(watch.Elapsed);
