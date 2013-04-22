@@ -19,7 +19,9 @@ namespace Dixie.Core
 
 		public virtual IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			return AssignNodesInternal(aliveNodes, pendingTasks).Select((nodeIdx, taskIdx) => new TaskAssignation(pendingTasks[taskIdx], aliveNodes[nodeIdx].Id));
+			return AssignNodesInternal(aliveNodes, pendingTasks)
+				.Select((nodeIdx, taskIdx) => new TaskAssignation(pendingTasks[taskIdx], aliveNodes[nodeIdx].Id))
+				.ToList();
 		}
 
 		public Int32[] AssignNodesInternal(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
