@@ -17,6 +17,11 @@ namespace Dixie.Core
 		public MCTAlgorithm()
 			: this("MCTAlgorithm") { }
 
+		internal MCTAlgorithm(Double[,] etcMatrix)
+		{
+			this.etcMatrix = etcMatrix;
+		}
+
 		public virtual IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
 			return AssignNodesInternal(aliveNodes, pendingTasks)
@@ -26,8 +31,9 @@ namespace Dixie.Core
 
 		public Int32[] AssignNodesInternal(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
-			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
+			if (etcMatrix == null)
+				etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
+			Double[] availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
 			var assignations = new Int32[pendingTasks.Count];
 
 			for (int i = 0; i < pendingTasks.Count; i++)
@@ -58,20 +64,6 @@ namespace Dixie.Core
 
 		public string Name { get; set; }
 
-		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
-		protected virtual Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
-		{
-			var etcMatrix = new Double[pendingTasks.Count, aliveNodes.Count];
-			for (int i = 0; i < pendingTasks.Count; i++)
-				for (int j = 0; j < aliveNodes.Count; j++)
-					etcMatrix[i, j] = pendingTasks[i].Volume / aliveNodes[j].Performance;
-			return etcMatrix;
-		}
-
-		// (iloktionov): Элемент в позиции i соответствует времени, оставшемуся до полной готовности i-й машины.
-		protected virtual Double[] ConstructAvailabilityVector(List<NodeInfo> aliveNodes)
-		{
-			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
-		}
+		private Double[,] etcMatrix;
 	}
 }

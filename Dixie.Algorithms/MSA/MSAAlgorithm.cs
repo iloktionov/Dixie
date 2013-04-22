@@ -26,10 +26,9 @@ namespace Dixie.Core
 
 		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			var mctAlgorithm = new MCTAlgorithm();
-			Int32[] initialSolution = mctAlgorithm.AssignNodesInternal(aliveNodes, pendingTasks);
 			Double[,] etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
 			Double[] availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
+			Int32[] initialSolution = new MCTAlgorithm(etcMatrix).AssignNodesInternal(aliveNodes, pendingTasks);
 
 			Int32[] bestSolution = initialSolution;
 			Double bestMakespan = MakespanCalculator.Calculate(initialSolution, etcMatrix, availabilityVector);
