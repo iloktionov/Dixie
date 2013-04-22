@@ -44,6 +44,7 @@
     <Compile Include="MCTAlgorithm.cs" />
     <Compile Include="MinAlgorithmBase.cs" />
     <Compile Include="MinMinAlgorithm.cs" />
+    <Compile Include="MSAAlgorithm.cs" />
     <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

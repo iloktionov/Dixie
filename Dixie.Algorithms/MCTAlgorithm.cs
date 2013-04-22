@@ -19,9 +19,14 @@ namespace Dixie.Core
 
 		public virtual IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
-			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
-			var assignations = new List<TaskAssignation>(pendingTasks.Count);
+			return AssignNodesInternal(aliveNodes, pendingTasks).Select((nodeIdx, taskIdx) => new TaskAssignation(pendingTasks[taskIdx], aliveNodes[nodeIdx].Id));
+		}
+
+		public Int32[] AssignNodesInternal(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
+		{
+			etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
+			availabilityVector = ConstructAvailabilityVector(aliveNodes);
+			var assignations = new Int32[pendingTasks.Count];
 
 			for (int i = 0; i < pendingTasks.Count; i++)
 			{
@@ -37,7 +42,7 @@ namespace Dixie.Core
 					}
 				}
 				availabilityVector[assignedNodeIndex] += etcMatrix[i, assignedNodeIndex];
-				assignations.Add(new TaskAssignation(pendingTasks[i], aliveNodes[assignedNodeIndex].Id));
+				assignations[i] = assignedNodeIndex;
 			}
 			return assignations;
 		}
@@ -50,6 +55,16 @@ namespace Dixie.Core
 		}
 
 		public string Name { get; set; }
+
+		public Double[,] EtcMatrix
+		{
+			get { return etcMatrix; }
+		}
+
+		public Double[] AvailabilityVector
+		{
+			get { return availabilityVector; }
+		}
 
 		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
 		protected virtual Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
@@ -66,5 +81,8 @@ namespace Dixie.Core
 		{
 			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
 		}
+
+		private Double[,] etcMatrix;
+		private Double[] availabilityVector;
 	}
 }
