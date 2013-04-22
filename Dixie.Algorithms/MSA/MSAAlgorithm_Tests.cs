@@ -11,19 +11,6 @@ namespace Dixie.Core
 		internal class MSAAlgorithm_Tests
 		{
 			[Test]
-			public void Test_CloneWithExchange()
-			{
-				var algorithm = new MSAAlgorithm();
-				var solution = new[] { 1, 2, 3, 3, 2, 1 };
-				for (int i = 0; i < 10; i++)
-				{
-					var solution2 = algorithm.CloneWithExchange(solution);
-					PrintSolution(solution);
-					PrintSolution(solution2);
-				}
-			}
-
-			[Test]
 			[Ignore]
 			public void Test_Speed()
 			{
@@ -39,11 +26,6 @@ namespace Dixie.Core
 				var watch = Stopwatch.StartNew();
 				algorithm.AssignNodes(aliveNodes, tasks);
 				Console.Out.WriteLine(watch.Elapsed);
-			}
-
-			private void PrintSolution(IEnumerable<int> solution)
-			{
-				Console.Out.WriteLine(String.Join(" ", solution));
 			}
 		}
 	}

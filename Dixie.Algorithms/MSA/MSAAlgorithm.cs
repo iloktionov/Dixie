@@ -28,8 +28,8 @@ namespace Dixie.Core
 		{
 			var mctAlgorithm = new MCTAlgorithm();
 			Int32[] initialSolution = mctAlgorithm.AssignNodesInternal(aliveNodes, pendingTasks);
-			Double[,] etcMatrix = ConstructETCMatrix(aliveNodes, pendingTasks);
-			Double[] availabilityVector = ConstructAvailabilityVector(aliveNodes);
+			Double[,] etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
+			Double[] availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
 
 			Int32[] bestSolution = initialSolution;
 			Double bestMakespan = MakespanCalculator.Calculate(initialSolution, etcMatrix, availabilityVector);
@@ -100,22 +100,6 @@ namespace Dixie.Core
 			Int32 tmp = solution[index1];
 			solution[index1] = solution[index2];
 			solution[index2] = tmp;
-		}
-
-		// (iloktionov): Элемент в позиции (i, j) соответствует времени выполнения i-го задания j-й машиной.
-		protected virtual Double[,] ConstructETCMatrix(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
-		{
-			var etcMatrix = new Double[pendingTasks.Count, aliveNodes.Count];
-			for (int i = 0; i < pendingTasks.Count; i++)
-				for (int j = 0; j < aliveNodes.Count; j++)
-					etcMatrix[i, j] = pendingTasks[i].Volume / aliveNodes[j].Performance;
-			return etcMatrix;
-		}
-
-		// (iloktionov): Элемент в позиции i соответствует времени, оставшемуся до полной готовности i-й машины.
-		private static Double[] ConstructAvailabilityVector(IEnumerable<NodeInfo> aliveNodes)
-		{
-			return aliveNodes.Select(info => info.AvailabilityTime.TotalMilliseconds).ToArray();
 		}
 
 		private readonly Double initialTemperature;

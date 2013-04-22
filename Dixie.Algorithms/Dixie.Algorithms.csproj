@@ -45,6 +45,7 @@
     <Compile Include="MCTAlgorithm.cs" />
     <Compile Include="MinAlgorithmBase.cs" />
     <Compile Include="MinMinAlgorithm.cs" />
+    <Compile Include="MSA\MatricesHelper.cs" />
     <Compile Include="MSA\MSAAlgorithm.cs" />
     <Compile Include="MSA\MSAAlgorithm_Tests.cs" />
     <Compile Include="OLBAlgorithm.cs" />
