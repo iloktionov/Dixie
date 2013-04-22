@@ -48,6 +48,7 @@
     <Compile Include="MatricesHelper.cs" />
     <Compile Include="MSA\MSAAlgorithm.cs" />
     <Compile Include="MSA\MSAAlgorithm_Tests.cs" />
+    <Compile Include="MSA\SingleExchangeMutation.cs" />
     <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomMCTAlgorithm.cs" />

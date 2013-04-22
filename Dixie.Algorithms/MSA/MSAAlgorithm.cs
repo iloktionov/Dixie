@@ -82,23 +82,9 @@ namespace Dixie.Core
 			var newSolution = new Int32[initialSolution.Length];
 			for (int i = 0; i < initialSolution.Length; i++)
 				newSolution[i] = initialSolution[i];
-			ApplySingleExchangeMutation(ref newSolution);
+			SingleExchangeMutation mutation = SingleExchangeMutation.Generate(initialSolution, random);
+			mutation.Apply(newSolution);
 			return newSolution;
-		}
-
-		private void ApplySingleExchangeMutation(ref Int32[] solution)
-		{
-			Int32 index1;
-			Int32 index2;
-			do
-			{
-				index1 = random.Next(solution.Length);
-				index2 = random.Next(solution.Length);
-			}
-			while (index1 == index2 || solution[index1] == solution[index2]);
-			Int32 tmp = solution[index1];
-			solution[index1] = solution[index2];
-			solution[index2] = tmp;
 		}
 
 		private readonly Double initialTemperature;
