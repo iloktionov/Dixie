@@ -5,11 +5,7 @@ using System.Linq;
 
 namespace Dixie.Core
 {
-	// (iloktionov): Makespan решения, мутирующего из initialSolution можно не считать каждый раз.
-	// Достаточно один раз запомнить все completionTimes в отсортированном виде.
-
 	// (iloktionov): Makespan решения, получающегося из current, необходимо полностью пересчитывать лишь тогда, когда перестановка затрагивает худшую ноду.
-
 	[Export(typeof(ISchedulerAlgorithm))]
 	internal partial class MSAAlgorithm : ISchedulerAlgorithm
 	{
@@ -39,18 +35,19 @@ namespace Dixie.Core
 			if (pendingTasks.Count < aliveNodes.Count / 4)
 				return ConvertSolution(initialSolution, aliveNodes, pendingTasks);
 
-			bestSolution = initialSolution;
+			bestSolution = initialSolution.CloneSolution();
 			bestMakespan = MakespanCalculator.Calculate(initialSolution, etcMatrix, availabilityVector);
 
-			currentSolution = bestSolution;
+			currentSolution = initialSolution.CloneSolution();
 			currentMakespan = bestMakespan;
 			Double temperature = initialTemperature;
 
+			var initialProcessor = new InitialMutationsProcessor(initialSolution, random, etcMatrix, availabilityVector);
 			log.Info("Initial solution makespan: {0:0.00000}", bestMakespan);
 			for (int i = 0; i < iterations; i++)
 			{
 				TryMutateCurrentSolution(temperature);
-				TryMutateInitialSolution(temperature);
+				TryMutateInitialSolution(temperature, initialProcessor);
 				temperature *= coolingFactor;
 			}
 			log.Info("Best solution makespan: {0:0.00000}", bestMakespan);
@@ -83,20 +80,21 @@ namespace Dixie.Core
 			}
 		}
 
-		private void TryMutateInitialSolution(Double temperature)
+		private void TryMutateInitialSolution(Double temperature, InitialMutationsProcessor initialProcessor)
 		{
-			Int32[] candidate = CloneWithExchange(initialSolution);
-			Double makespan = MakespanCalculator.Calculate(candidate, etcMatrix, availabilityVector);
+			SingleExchangeMutation mutation = initialProcessor.Mutate();
+			Double makespan = initialProcessor.GetMakespan(mutation);
 			Double delta = Math.Exp((currentMakespan - makespan) / temperature);
 			if (random.NextDouble() < delta)
 			{
-				currentSolution = candidate;
+				currentSolution = initialProcessor.CloneSolution();
 				currentMakespan = makespan;
 			}
+			initialProcessor.Rollback(mutation);
 			if (currentMakespan < bestMakespan)
 			{
 				bestMakespan = currentMakespan;
-				bestSolution = currentSolution;
+				bestSolution = currentSolution.CloneSolution();
 				log.Info("Found better makespan: {0:0.00000}", bestMakespan);
 			}
 		}

@@ -23,5 +23,18 @@ namespace Dixie.Core
 			}
 			return maxCompletionTime;
 		}
+
+		public static Double[] GetSortedCompletionTimes(Int32[] solution, Double[,] etcMatrix, Double[] availabilityVector)
+		{
+			var completionTimes = new Double[availabilityVector.Length];
+			Array.Copy(availabilityVector, completionTimes, availabilityVector.Length);
+			for (int i = 0; i < solution.Length; i++)
+			{
+				Int32 nodeIndex = solution[i];
+				completionTimes[nodeIndex] += etcMatrix[i, nodeIndex];
+			}
+			Array.Sort(completionTimes);
+			return completionTimes;
+		}
 	}
 }
