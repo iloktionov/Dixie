@@ -29,51 +29,34 @@ namespace Dixie.Core
 		public MSAAlgorithm()
 			: this(new FakeLog()) { }
 
+		public void Reset() { }
+
 		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
-			Double[,] etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
-			Double[] availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
-			Int32[] initialSolution = new MCTAlgorithm(etcMatrix).AssignNodesInternal(aliveNodes, pendingTasks);
+			etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
+			availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
+			initialSolution = new MCTAlgorithm(etcMatrix).AssignNodesInternal(aliveNodes, pendingTasks);
 			if (pendingTasks.Count < aliveNodes.Count / 4)
 				return ConvertSolution(initialSolution, aliveNodes, pendingTasks);
 
-			Int32[] bestSolution = initialSolution;
-			Double bestMakespan = MakespanCalculator.Calculate(initialSolution, etcMatrix, availabilityVector);
+			bestSolution = initialSolution;
+			bestMakespan = MakespanCalculator.Calculate(initialSolution, etcMatrix, availabilityVector);
 
-			Int32[] currentSolution = bestSolution;
-			Double currentMakespan = bestMakespan;
+			currentSolution = bestSolution;
+			currentMakespan = bestMakespan;
 			Double temperature = initialTemperature;
 
 			log.Info("Initial solution makespan: {0:0.00000}", bestMakespan);
 			for (int i = 0; i < iterations; i++)
 			{
-				Int32[] solution1 = CloneWithExchange(currentSolution);
-				Int32[] solution2 = CloneWithExchange(initialSolution);
-				var solutions = new[] {solution1, solution2};
-				for (int j = 0; j < 2; j++)
-				{
-					Double makespan = MakespanCalculator.Calculate(solutions[j], etcMatrix, availabilityVector);
-					Double delta = Math.Exp((currentMakespan - makespan) / temperature);
-					if (random.NextDouble() < delta)
-					{
-						currentSolution = solutions[j];
-						currentMakespan = makespan;
-					}
-					if (currentMakespan < bestMakespan)
-					{
-						bestMakespan = currentMakespan;
-						bestSolution = currentSolution;
-						log.Info("Found better makespan: {0:0.00000}", bestMakespan);
-					}
-				}
+				TryMutateCurrentSolution(temperature);
+				TryMutateInitialSolution(temperature);
 				temperature *= coolingFactor;
 			}
 			log.Info("Best solution makespan: {0:0.00000}", bestMakespan);
 
 			return ConvertSolution(bestSolution, aliveNodes, pendingTasks);
 		}
-
-		public virtual void Reset() { }
 
 		public override string ToString()
 		{
@@ -82,6 +65,42 @@ namespace Dixie.Core
 
 		public string Name { get; set; }
 
+		private void TryMutateCurrentSolution(Double temperature)
+		{
+			Int32[] candidate = CloneWithExchange(currentSolution);
+			Double makespan = MakespanCalculator.Calculate(candidate, etcMatrix, availabilityVector);
+			Double delta = Math.Exp((currentMakespan - makespan) / temperature);
+			if (random.NextDouble() < delta)
+			{
+				currentSolution = candidate;
+				currentMakespan = makespan;
+			}
+			if (currentMakespan < bestMakespan)
+			{
+				bestMakespan = currentMakespan;
+				bestSolution = currentSolution;
+				log.Info("Found better makespan: {0:0.00000}", bestMakespan);
+			}
+		}
+
+		private void TryMutateInitialSolution(Double temperature)
+		{
+			Int32[] candidate = CloneWithExchange(initialSolution);
+			Double makespan = MakespanCalculator.Calculate(candidate, etcMatrix, availabilityVector);
+			Double delta = Math.Exp((currentMakespan - makespan) / temperature);
+			if (random.NextDouble() < delta)
+			{
+				currentSolution = candidate;
+				currentMakespan = makespan;
+			}
+			if (currentMakespan < bestMakespan)
+			{
+				bestMakespan = currentMakespan;
+				bestSolution = currentSolution;
+				log.Info("Found better makespan: {0:0.00000}", bestMakespan);
+			}
+		}
+
 		private static IEnumerable<TaskAssignation> ConvertSolution(IEnumerable<Int32> solution, List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
 			return solution
@@ -89,12 +108,12 @@ namespace Dixie.Core
 				.ToList();
 		} 
 
-		private Int32[] CloneWithExchange(Int32[] initialSolution)
+		private Int32[] CloneWithExchange(Int32[] solution)
 		{
-			var newSolution = new Int32[initialSolution.Length];
-			for (int i = 0; i < initialSolution.Length; i++)
-				newSolution[i] = initialSolution[i];
-			SingleExchangeMutation mutation = SingleExchangeMutation.Generate(initialSolution, random);
+			var newSolution = new Int32[solution.Length];
+			for (int i = 0; i < solution.Length; i++)
+				newSolution[i] = solution[i];
+			SingleExchangeMutation mutation = SingleExchangeMutation.Generate(solution, random);
 			mutation.Apply(newSolution);
 			return newSolution;
 		}
@@ -104,5 +123,13 @@ namespace Dixie.Core
 		private readonly Int32 iterations;
 		private readonly Random random;
 		private readonly ILog log;
+
+		private Double[,] etcMatrix;
+		private Double[] availabilityVector;
+		private Int32[] initialSolution;
+		private Int32[] currentSolution;
+		private Int32[] bestSolution;
+		private Double currentMakespan;
+		private Double bestMakespan;
 	}
 }
