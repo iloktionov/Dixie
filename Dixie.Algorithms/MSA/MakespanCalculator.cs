@@ -6,7 +6,8 @@ namespace Dixie.Core
 	{
 		public static Double Calculate(Int32[] solution, Double[,] etcMatrix, Double[] availabilityVector)
 		{
-			var completionTimes = new Double[availabilityVector.Length];
+			if (completionTimes == null || completionTimes.Length < availabilityVector.Length)
+				completionTimes = new Double[availabilityVector.Length];
 			Double maxCompletionTime = 0d;
 			for (int i = 0; i < availabilityVector.Length; i++)
 			{
@@ -23,5 +24,7 @@ namespace Dixie.Core
 			}
 			return maxCompletionTime;
 		}
+
+		private static Double[] completionTimes;
 	}
 }

@@ -74,12 +74,12 @@ namespace Dixie.Core
 			{
 				currentSolution = candidate;
 				currentMakespan = makespan;
-			}
-			if (currentMakespan < bestMakespan)
-			{
-				bestMakespan = currentMakespan;
-				bestSolution = currentSolution;
-				log.Info("Found better makespan: {0:0.00000}", bestMakespan);
+				if (currentMakespan < bestMakespan)
+				{
+					bestMakespan = currentMakespan;
+					bestSolution = currentSolution;
+					log.Info("Found better makespan: {0:0.00000}", bestMakespan);
+				}
 			}
 		}
 
@@ -92,12 +92,12 @@ namespace Dixie.Core
 			{
 				currentSolution = candidate;
 				currentMakespan = makespan;
-			}
-			if (currentMakespan < bestMakespan)
-			{
-				bestMakespan = currentMakespan;
-				bestSolution = currentSolution;
-				log.Info("Found better makespan: {0:0.00000}", bestMakespan);
+				if (currentMakespan < bestMakespan)
+				{
+					bestMakespan = currentMakespan;
+					bestSolution = currentSolution;
+					log.Info("Found better makespan: {0:0.00000}", bestMakespan);
+				}
 			}
 		}
 
@@ -111,10 +111,18 @@ namespace Dixie.Core
 		private Int32[] CloneWithExchange(Int32[] solution)
 		{
 			var newSolution = new Int32[solution.Length];
-			for (int i = 0; i < solution.Length; i++)
-				newSolution[i] = solution[i];
-			SingleExchangeMutation mutation = SingleExchangeMutation.Generate(solution, random);
-			mutation.Apply(newSolution);
+			Array.Copy(solution, newSolution, solution.Length);
+			Int32 index1;
+			Int32 index2;
+			do
+			{
+				index1 = random.Next(solution.Length);
+				index2 = random.Next(solution.Length);
+			}
+			while (index1 == index2 || solution[index1] == solution[index2]);
+			Int32 tmp = newSolution[index1];
+			newSolution[index1] = newSolution[index2];
+			newSolution[index2] = tmp;
 			return newSolution;
 		}
 
