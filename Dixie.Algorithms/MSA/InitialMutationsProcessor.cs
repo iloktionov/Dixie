@@ -9,7 +9,8 @@ namespace Dixie.Core
 			this.initialSolution = initialSolution;
 			this.random = random;
 			this.etcMatrix = etcMatrix;
-			completionTimes = MakespanCalculator.GetSortedCompletionTimes(initialSolution, etcMatrix, availabilityVector);
+			Double maxCompletionTime;
+			completionTimes = MakespanCalculator.GetCompletionTimes(initialSolution, etcMatrix, availabilityVector, out maxCompletionTime, out worstNodeIndex);
 		}
 
 		public SingleExchangeMutation Mutate()
@@ -27,7 +28,7 @@ namespace Dixie.Core
 			completionTimes[node1] -= etcMatrix[mutation.SecondIndex, node1];
 			completionTimes[node2] += etcMatrix[mutation.SecondIndex, node2];
 			completionTimes[node2] -= etcMatrix[mutation.FirstIndex, node2];
-			return ExtendedMath.Max(completionTimes[node1], completionTimes[node2], completionTimes[completionTimes.Length - 1]);
+			return ExtendedMath.Max(completionTimes[node1], completionTimes[node2], completionTimes[worstNodeIndex]);
 		}
 
 		public Int32[] CloneSolution()
@@ -49,6 +50,7 @@ namespace Dixie.Core
 		private readonly Int32[] initialSolution;
 		private readonly Double[,] etcMatrix;
 		private readonly Double[] completionTimes;
+		private readonly Int32 worstNodeIndex;
 		private readonly Random random;
 	}
 }
