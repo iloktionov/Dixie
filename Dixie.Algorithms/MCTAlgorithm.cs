@@ -52,7 +52,6 @@ namespace Dixie.Core
 				availabilityVector[assignedNodeIndex] += etcMatrix[i, assignedNodeIndex];
 				assignations[i] = assignedNodeIndex;
 			}
-			etcMatrix = null;
 			return assignations;
 		}
 
