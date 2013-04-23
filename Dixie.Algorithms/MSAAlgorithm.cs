@@ -18,7 +18,7 @@ namespace Dixie.Core
 		}
 
 		public MSAAlgorithm()
-			: this("MSAAlgorithm", 1000d, 0.99d, 20 * 1000) { }
+			: this("MSAAlgorithm", 1000d, 0.99d, 25 * 1000) { }
 
 		public void Reset() { }
 
@@ -27,7 +27,7 @@ namespace Dixie.Core
 			pendingTasks.Sort((task, task1) => task1.Volume.CompareTo(task.Volume));
 			etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
 			availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
-			initialSolution = new RandomMCTAlgorithm(random, 1).AssignNodes(aliveNodes, pendingTasks);
+			initialSolution = new RandomMCTAlgorithm(random).AssignNodes(aliveNodes, pendingTasks);
 			if (pendingTasks.Count < aliveNodes.Count / 4)
 				return ConvertSolution(initialSolution, aliveNodes, pendingTasks);
 
