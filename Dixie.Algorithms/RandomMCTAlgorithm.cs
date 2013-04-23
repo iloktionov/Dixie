@@ -6,10 +6,14 @@ namespace Dixie.Core
 {
 	internal class RandomMCTAlgorithm
 	{
-		public RandomMCTAlgorithm(Random random)
+		public RandomMCTAlgorithm(Random random, int randomAssignations)
 		{
 			this.random = random;
+			this.randomAssignations = randomAssignations;
 		}
+
+		public RandomMCTAlgorithm(Random random)
+			: this (random, 0) { }
 
 		public Int32[] AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
@@ -20,7 +24,7 @@ namespace Dixie.Core
 			for (int i = 0; i < pendingTasks.Count; i++)
 			{
 				Int32 assignedNodeIndex;
-				if (i < aliveNodes.Count / 2)
+				if (i < randomAssignations)
 					assignedNodeIndex = random.Next(aliveNodes.Count);
 				else
 				{
@@ -64,6 +68,7 @@ namespace Dixie.Core
 		}
 
 		private readonly Random random;
+		private readonly Int32 randomAssignations;
 		private Double[,] etcMatrix;
 	}
 }

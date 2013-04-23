@@ -40,14 +40,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FirstNodeAlgorithm.cs" />
-    <Compile Include="MSA\MakespanCalculator.cs" />
+    <Compile Include="MakespanCalculator.cs" />
     <Compile Include="MaxMinAlgorithm.cs" />
     <Compile Include="MCTAlgorithm.cs" />
     <Compile Include="MinAlgorithmBase.cs" />
     <Compile Include="MinMinAlgorithm.cs" />
     <Compile Include="MatricesHelper.cs" />
-    <Compile Include="MSA\MSAAlgorithm.cs" />
-    <Compile Include="MSA\MSAAlgorithm_Tests.cs" />
+    <Compile Include="MSAAlgorithm.cs" />
     <Compile Include="OLBAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomMCTAlgorithm.cs" />

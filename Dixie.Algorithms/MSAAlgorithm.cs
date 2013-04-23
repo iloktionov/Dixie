@@ -5,37 +5,29 @@ using System.Linq;
 
 namespace Dixie.Core
 {
-	// (iloktionov): Makespan решения, мутирующего из initialSolution можно не считать каждый раз.
-	// Достаточно один раз запомнить все completionTimes в отсортированном виде.
-
-	// (iloktionov): Makespan решения, получающегося из current, необходимо полностью пересчитывать лишь тогда, когда перестановка затрагивает худшую ноду.
-
 	[Export(typeof(ISchedulerAlgorithm))]
 	internal partial class MSAAlgorithm : ISchedulerAlgorithm
 	{
-		public MSAAlgorithm(string name, double initialTemperature, double coolingFactor, int iterations, ILog log)
+		public MSAAlgorithm(string name, double initialTemperature, double coolingFactor, int iterations)
 		{
 			Name = name;
 			this.initialTemperature = initialTemperature;
 			this.coolingFactor = coolingFactor;
 			this.iterations = iterations;
-			this.log = log;
 			random = new Random();
 		}
 
-		public MSAAlgorithm(ILog log)
-			: this("MSAAlgorithm", 1000d, 0.99d, 10 * 1000, log) { }
-
 		public MSAAlgorithm()
-			: this(new FakeLog()) { }
+			: this("MSAAlgorithm", 1000d, 0.99d, 20 * 1000) { }
 
 		public void Reset() { }
 
 		public IEnumerable<TaskAssignation> AssignNodes(List<NodeInfo> aliveNodes, List<Task> pendingTasks)
 		{
+			pendingTasks.Sort((task, task1) => task1.Volume.CompareTo(task.Volume));
 			etcMatrix = MatricesHelper.ConstructETCMatrix(aliveNodes, pendingTasks);
 			availabilityVector = MatricesHelper.ConstructAvailabilityVector(aliveNodes);
-			initialSolution = new MCTAlgorithm(etcMatrix).AssignNodesInternal(aliveNodes, pendingTasks);
+			initialSolution = new RandomMCTAlgorithm(random, 1).AssignNodes(aliveNodes, pendingTasks);
 			if (pendingTasks.Count < aliveNodes.Count / 4)
 				return ConvertSolution(initialSolution, aliveNodes, pendingTasks);
 
@@ -46,15 +38,12 @@ namespace Dixie.Core
 			currentMakespan = bestMakespan;
 			Double temperature = initialTemperature;
 
-			log.Info("Initial solution makespan: {0:0.00000}", bestMakespan);
 			for (int i = 0; i < iterations; i++)
 			{
 				TryMutateCurrentSolution(temperature);
 				TryMutateInitialSolution(temperature);
 				temperature *= coolingFactor;
 			}
-			log.Info("Best solution makespan: {0:0.00000}", bestMakespan);
-
 			return ConvertSolution(bestSolution, aliveNodes, pendingTasks);
 		}
 
@@ -78,7 +67,6 @@ namespace Dixie.Core
 				{
 					bestMakespan = currentMakespan;
 					bestSolution = currentSolution;
-					log.Info("Found better makespan: {0:0.00000}", bestMakespan);
 				}
 			}
 		}
@@ -96,7 +84,6 @@ namespace Dixie.Core
 				{
 					bestMakespan = currentMakespan;
 					bestSolution = currentSolution;
-					log.Info("Found better makespan: {0:0.00000}", bestMakespan);
 				}
 			}
 		}
@@ -122,7 +109,7 @@ namespace Dixie.Core
 			while (index1 == index2 || solution[index1] == solution[index2]);
 			Int32 tmp = newSolution[index1];
 			newSolution[index1] = newSolution[index2];
-			newSolution[index2] = tmp;
+			newSolution[index2] = tmp; 
 			return newSolution;
 		}
 
@@ -130,7 +117,6 @@ namespace Dixie.Core
 		private readonly Double coolingFactor;
 		private readonly Int32 iterations;
 		private readonly Random random;
-		private readonly ILog log;
 
 		private Double[,] etcMatrix;
 		private Double[] availabilityVector;
